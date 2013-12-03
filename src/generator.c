@@ -1078,6 +1078,10 @@ static void generate_phrase(FILE *of, char *parser_name, egg_token *t)
       fprintf(of, "\n");
       fprintf(of, "  nt = t1 = t2 = NULL;\n");
       fprintf(of, "\n");
+      fprintf(of, "  count = 0;\n");
+      fprintf(of, "\n");
+      fprintf(of, "  dir = %s_token_below;\n", parser_name);
+      fprintf(of, "\n");
       fprintf(of, "  nt = %s_token_new(%s_token_type_",
                     parser_name, parser_name);
       fprintf(of, "%s", pns);

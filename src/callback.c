@@ -114,7 +114,7 @@ int callback_by_index(callback_table *cbt,
                       callback_type type,
                       void *data)
 {
-  int r;
+  int (*func)(void *data);
 
   if (!cbt)
     return -1;
@@ -128,17 +128,20 @@ int callback_by_index(callback_table *cbt,
   switch (type)
   {
     case entry:
-      r = ((callback_entry *)cbt->data)[index].enter(data);
+      func = ((callback_entry *)cbt->data)[index].enter;
       break;
     case success:
-      r = ((callback_entry *)cbt->data)[index].succeed(data);
+      func = ((callback_entry *)cbt->data)[index].succeed;
       break;
     case fail:
-      r = ((callback_entry *)cbt->data)[index].fail(data);
+      func = ((callback_entry *)cbt->data)[index].fail;
       break;
   }
 
-  return r;
+  if (!func)
+    return -1;
+
+  return func(data);
 }
 
 int callback_by_tag(callback_table *cbt,

@@ -1,0 +1,7 @@
+In most GNU/POSIX development environments, issuing the 'make' command
+should build the embryo command that is executable in the host
+environment.
+
+  NOTE:  You will need to install the traditional GNU build tools,
+         such as gcc, binutils, etc.
+

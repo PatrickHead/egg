@@ -1,0 +1,13 @@
+(* comment *)
+decimal-alit=/65/;
+hex-alit=/0x4142434445464748/;
+octal-alit=/0o101/;
+binary-alit=/0b01000001/;
+multi-alit=/12345/ + /0x42/;
+qlit="this 'is' cool";
+sqlit='this "is" cool';
+hello=sqlit+alit;
+goodbye=sqlit|alit{2,*};
+multi-part=a+b+c|d+e+f;
+
+question = 'print' + variable + 'file' + filename ;

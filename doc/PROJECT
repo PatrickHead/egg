@@ -1,0 +1,137 @@
+                    EGG and Embryo Project Development Plan
+
+Status
+------
+
+DONE    Stage I:  start 2013-10-26
+
+          1)  Develop the grammar definition grammar.
+
+          NOTE:  Grammar to be named YAB (for Yet Another Backus-Naur Form)
+
+
+DONE    Stage II:  start 2013-10-27
+
+          1)  Develop the supporting input and tokenization code.
+
+          2)  Develop the basic parser code.   This is hand coded.
+
+          NOTE:  Changed name of YAB to EGG (loosely, but not officially an
+                 acronym for Expression Grammar, Grammar)
+
+          NOTE:  The parser is named egg-parser (a module for linking later)
+
+
+        Stage III:  start 2013-11-01
+
+          1)  Develop parser generation code:
+                A)  embryo
+
+          2)  Develop generator support code:
+                A)  generator
+                B)  token-util
+
+          NOTE:  Generator creates:
+                   <PROJECT>-parser.c
+                   <PROJECT>-parser.h
+                   <PROJECT>-token-type.h
+                   <PROJECT>-token.c
+                   <PROJECT>-token.h
+                   <PROJECT>-token-util.c
+                   <PROJECT>-token-util.h
+                   <PROJECT>-walker.c
+                   Makefile
+
+
+WIP     Stage IV:  start 2013-11-24
+
+CURR      1)  Increased robustness of generated code:
+
+DONE            A)  Add input line/char position tracking.
+
+DONE            B)  Integrate tracking into token support.
+
+CANCEL          C)  Generic Error handling capability.
+
+WIP             D)  Support for user registered callbacks for each phrase
+                    parsing function.
+                        i)  Registerable callback at function entry.
+                       ii)  Registerable callback at successful function exit.
+                      iii)  Registerable callback for function failure.
+
+          2)  Documentation:
+
+                A)  In source annotations.
+
+                B)  Reference documentation (auto generated from code.)
+
+                C)  User documentation.
+
+                D)  Tutorial.
+
+                E)  Examples (use SPICE model and EGG grammar)
+
+                F)  Complete and proper GNU license inclusion
+
+DONE      3)  Add generic (syntax checking only) parser for any project.
+              NOTE:  named <PROJECT>-walker
+
+          4)  Project Management utilities.
+
+          5)  Template Makefile for high level project management
+
+          6)  Additional generators:
+
+                A)  EGG to EBNF
+
+                B)  EGG to ABNF
+
+                C)  EGG to XSchema
+
+                D)  Grammar mapping/diagramming utility
+
+          7)  Converters:
+
+                A)  EBNF to EGG
+
+                B)  ABNF to EGG
+
+          8)  Speed optimizations for parser code.
+
+        Stage V:  start 
+
+          1)  Deployment and maintenance environments:
+
+                A)  Version control
+
+                B)  GIT repository support (both official EGG/Embryo and user
+                    project)
+
+                C)  GNU package support
+
+                D)  Source tarball
+
+                E)  RPMS from above
+
+                F)  RPM and DEB from above
+
+                G)  Sourceforge, Freshmeat and/or equivalent
+
+          2)  Promotion
+
+                A)  Request inclusion in FSF/GNU projects
+
+                B)  Request inclusion in distributions:
+                         i)  Fedora
+                        ii)  Red Hat
+                       iii)  SUSE
+                        iv)  Debian
+                         v)  Mandriva
+                        vi)  Ubuntu
+                       vii)  Linux Mint
+                      viii)  Slackware
+                        ix)  CentOS
+                         x)  Scientific Linux
+                       xii)  Oracle Linux
+                      xiii)  Gentoo
+

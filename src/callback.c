@@ -47,23 +47,27 @@ callback_table *callback_initialize()
 int callback_create(callback_table *cbt,
                     char *tag)
 {
+  callback_entry *cbe;
+
   if (!cbt)
     return -1;
 
   if (!tag)
     return -1;
 
-  if ((find_entry_by_tag(cbt, tag)) < 0)
+  if ((find_entry_by_tag(cbt, tag)) >= 0)
     return -1;
 
   if (!cbt->size)
     cbt->data = malloc(sizeof(callback_entry));
   else
-    cbt->data = realloc(cbt->data, sizeof(cbt->data) + sizeof(callback_entry));
+    cbt->data = realloc(cbt->data, sizeof(callback_entry) * (cbt->size + 1));
 	if (!cbt->data)
 		return -1;
 
-  memset(&((callback_entry *)cbt->data)[cbt->size], 0, sizeof(cbt->data));
+  cbe  = &((callback_entry *)cbt->data)[cbt->size];
+
+  memset(cbe, 0, sizeof(callback_entry));
 
   if (tag)
     ((callback_entry *)cbt->data)[cbt->size].tag = strdup(tag);
@@ -122,7 +126,7 @@ int callback_by_index(callback_table *cbt,
   if (index < 0)
     return -1;
 
-  if (index >= sizeof(cbt->data) / sizeof(callback_entry))
+  if (index >= cbt->size)
     return -1;
 
   switch (type)

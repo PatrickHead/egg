@@ -12,7 +12,7 @@ _parser: obj/input.o \
 	@(cd parser/obj; ln -fs ../../obj/strapp.o)
 	@make --no-print-directory -C parser
 
-tests: test-stdin test-file test-buffer
+tests: test-stdin test-file test-buffer test-callback
 
 embryo: _parser bin/embryo
 
@@ -85,6 +85,18 @@ obj/callback.o: src/callback.c \
 		include/callback.h
 	$(CC) $(COPTS) -o obj/callback.o -c src/callback.c
                   
+test-callback: test/callback/callback
+
+test/callback/callback: test/callback/callback.o \
+		obj/callback.o
+	$(CC) $(COPTS) -o test/callback/callback \
+    				test/callback/callback.o \
+    				obj/callback.o
+
+test/callback/callback.o: test/callback/callback.c \
+		include/callback.h
+	$(CC) $(COPTS) -o test/callback/callback.o -c test/callback/callback.c
+
 test-stdin: test/input/stdin
 
 test/input/stdin: test/input/stdin.o \
@@ -184,6 +196,7 @@ git: .git
 	@git add examples/
 	@git add misc/
 	@git add test/input/*.c
+	@git add test/callback/*.c
 	@git add parser/Makefile
 	@git add parser/src
 	@git add parser/include

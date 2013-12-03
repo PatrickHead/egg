@@ -192,4 +192,4 @@ commit:
 	git commit -a
 
 push:
-	git push origin master
+	git push backup master

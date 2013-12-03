@@ -1071,16 +1071,12 @@ static void generate_phrase(FILE *of, char *parser_name, egg_token *t)
       fprintf(of, "  int count;\n");
       fprintf(of, "  %s_token_direction dir;\n", parser_name);
       fprintf(of, "\n");
-      fprintf(of, "  count = 0;\n");
-      fprintf(of, "\n");
       fprintf(of, "  if (input_eof())\n");
       fprintf(of, "    return NULL;\n");
       fprintf(of, "\n");
-      fprintf(of, "  nt = t1 = t2 = NULL;\n");
-      fprintf(of, "\n");
       fprintf(of, "  count = 0;\n");
       fprintf(of, "\n");
-      fprintf(of, "  dir = %s_token_below;\n", parser_name);
+      fprintf(of, "  nt = t1 = t2 = NULL;\n");
       fprintf(of, "\n");
       fprintf(of, "  nt = %s_token_new(%s_token_type_",
                     parser_name, parser_name);
@@ -1757,12 +1753,8 @@ static void emit_comment_string(FILE *of, char *s)
 
 static void emit_gnu_license(FILE *of)
 {
-  char *yr;
-
   if (!of)
     of = stdout;
-
-  yr = get_year();
 
   fprintf(of, "    Copyright (C) %s  Patrick Head\n", get_year());
   fprintf(of, "\n");

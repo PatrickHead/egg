@@ -34,10 +34,10 @@ egg_token *nul(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -70,10 +70,10 @@ egg_token *soh(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -106,10 +106,10 @@ egg_token *stx(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -142,10 +142,10 @@ egg_token *etx(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -178,10 +178,10 @@ egg_token *eot(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -214,10 +214,10 @@ egg_token *enq(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -250,10 +250,10 @@ egg_token *ack(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -286,10 +286,10 @@ egg_token *bel(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -322,10 +322,10 @@ egg_token *bs(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -358,10 +358,10 @@ egg_token *ht(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -394,10 +394,10 @@ egg_token *lf(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -430,10 +430,10 @@ egg_token *vt(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -466,10 +466,10 @@ egg_token *ff(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -502,10 +502,10 @@ egg_token *cr(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -538,10 +538,10 @@ egg_token *so(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -574,10 +574,10 @@ egg_token *si(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -610,10 +610,10 @@ egg_token *dle(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -646,10 +646,10 @@ egg_token *dc1(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -682,10 +682,10 @@ egg_token *dc2(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -718,10 +718,10 @@ egg_token *dc3(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -754,10 +754,10 @@ egg_token *dc4(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -790,10 +790,10 @@ egg_token *nak(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -826,10 +826,10 @@ egg_token *syn(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -862,10 +862,10 @@ egg_token *etb(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -898,10 +898,10 @@ egg_token *can(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -934,10 +934,10 @@ egg_token *em(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -970,10 +970,10 @@ egg_token *sub(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1006,10 +1006,10 @@ egg_token *esc(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1042,10 +1042,10 @@ egg_token *fs(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1078,10 +1078,10 @@ egg_token *gs(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1114,10 +1114,10 @@ egg_token *rs(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1150,10 +1150,10 @@ egg_token *us(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1186,10 +1186,10 @@ egg_token *space(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1222,10 +1222,10 @@ egg_token *exclamation_point(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1258,10 +1258,10 @@ egg_token *quote(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1294,10 +1294,10 @@ egg_token *number_sign(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1330,10 +1330,10 @@ egg_token *dollar(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1366,10 +1366,10 @@ egg_token *percent(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1402,10 +1402,10 @@ egg_token *ampersand(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1438,10 +1438,10 @@ egg_token *single_quote(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1474,10 +1474,10 @@ egg_token *open_parenthesis(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1510,10 +1510,10 @@ egg_token *close_parenthesis(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1546,10 +1546,10 @@ egg_token *asterisk(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1582,10 +1582,10 @@ egg_token *plus(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1618,10 +1618,10 @@ egg_token *comma(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1654,10 +1654,10 @@ egg_token *minus(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1690,10 +1690,10 @@ egg_token *period(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1726,10 +1726,10 @@ egg_token *slash(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1762,10 +1762,10 @@ egg_token *zero(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1798,10 +1798,10 @@ egg_token *one(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1834,10 +1834,10 @@ egg_token *two(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1870,10 +1870,10 @@ egg_token *three(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1906,10 +1906,10 @@ egg_token *four(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1942,10 +1942,10 @@ egg_token *five(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -1978,10 +1978,10 @@ egg_token *six(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2014,10 +2014,10 @@ egg_token *seven(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2050,10 +2050,10 @@ egg_token *eight(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2086,10 +2086,10 @@ egg_token *nine(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2122,10 +2122,10 @@ egg_token *colon(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2158,10 +2158,10 @@ egg_token *semicolon(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2194,10 +2194,10 @@ egg_token *less_than(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2230,10 +2230,10 @@ egg_token *equal(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2266,10 +2266,10 @@ egg_token *greater_than(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2302,10 +2302,10 @@ egg_token *question_mark(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2338,10 +2338,10 @@ egg_token *at(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2374,10 +2374,10 @@ egg_token *A(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2410,10 +2410,10 @@ egg_token *B(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2446,10 +2446,10 @@ egg_token *C(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2482,10 +2482,10 @@ egg_token *D(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2518,10 +2518,10 @@ egg_token *E(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2554,10 +2554,10 @@ egg_token *F(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2590,10 +2590,10 @@ egg_token *G(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2626,10 +2626,10 @@ egg_token *H(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2662,10 +2662,10 @@ egg_token *I(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2698,10 +2698,10 @@ egg_token *J(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2734,10 +2734,10 @@ egg_token *K(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2770,10 +2770,10 @@ egg_token *L(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2806,10 +2806,10 @@ egg_token *M(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2842,10 +2842,10 @@ egg_token *N(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2878,10 +2878,10 @@ egg_token *O(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2914,10 +2914,10 @@ egg_token *P(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2950,10 +2950,10 @@ egg_token *Q(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -2986,10 +2986,10 @@ egg_token *R(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3022,10 +3022,10 @@ egg_token *S(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3058,10 +3058,10 @@ egg_token *T(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3094,10 +3094,10 @@ egg_token *U(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3130,10 +3130,10 @@ egg_token *V(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3166,10 +3166,10 @@ egg_token *W(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3202,10 +3202,10 @@ egg_token *X(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3238,10 +3238,10 @@ egg_token *Y(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3274,10 +3274,10 @@ egg_token *Z(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3310,10 +3310,10 @@ egg_token *open_bracket(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3346,10 +3346,10 @@ egg_token *back_slash(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3382,10 +3382,10 @@ egg_token *close_bracket(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3418,10 +3418,10 @@ egg_token *carat(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3454,10 +3454,10 @@ egg_token *underscore(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3490,10 +3490,10 @@ egg_token *back_quote(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3526,10 +3526,10 @@ egg_token *a(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3562,10 +3562,10 @@ egg_token *b(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3598,10 +3598,10 @@ egg_token *c(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3634,10 +3634,10 @@ egg_token *d(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3670,10 +3670,10 @@ egg_token *e(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3706,10 +3706,10 @@ egg_token *f(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3742,10 +3742,10 @@ egg_token *g(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3778,10 +3778,10 @@ egg_token *h(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3814,10 +3814,10 @@ egg_token *i(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3850,10 +3850,10 @@ egg_token *j(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3886,10 +3886,10 @@ egg_token *k(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3922,10 +3922,10 @@ egg_token *l(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3958,10 +3958,10 @@ egg_token *m(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -3994,10 +3994,10 @@ egg_token *n(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -4030,10 +4030,10 @@ egg_token *o(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -4066,10 +4066,10 @@ egg_token *p(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -4102,10 +4102,10 @@ egg_token *q(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -4138,10 +4138,10 @@ egg_token *r(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -4174,10 +4174,10 @@ egg_token *s(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -4210,10 +4210,10 @@ egg_token *t(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -4246,10 +4246,10 @@ egg_token *u(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -4282,10 +4282,10 @@ egg_token *v(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -4318,10 +4318,10 @@ egg_token *w(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -4354,10 +4354,10 @@ egg_token *x(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -4390,10 +4390,10 @@ egg_token *y(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -4426,10 +4426,10 @@ egg_token *z(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -4462,10 +4462,10 @@ egg_token *open_brace(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -4498,10 +4498,10 @@ egg_token *bar(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -4534,10 +4534,10 @@ egg_token *close_brace(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -4570,10 +4570,10 @@ egg_token *tilde(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -4606,10 +4606,10 @@ egg_token *del(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -4645,10 +4645,10 @@ egg_token *control_character(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -4901,10 +4901,10 @@ egg_token *upper_case_letter(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -5141,10 +5141,10 @@ egg_token *lower_case_letter(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -5379,10 +5379,10 @@ egg_token *letter(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -5425,10 +5425,10 @@ egg_token *binary_digit(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -5471,10 +5471,10 @@ egg_token *octal_digit(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -5566,10 +5566,10 @@ egg_token *decimal_digit(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -5679,10 +5679,10 @@ egg_token *hexadecimal_digit(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -5885,10 +5885,10 @@ egg_token *white_space(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -5969,10 +5969,10 @@ egg_token *common_character(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -6227,10 +6227,10 @@ egg_token *literal_character(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -6301,10 +6301,10 @@ egg_token *comment_basic_character(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -6372,10 +6372,10 @@ egg_token *non_comment_start_character(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -6419,10 +6419,10 @@ egg_token *non_comment_end_character(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -6466,10 +6466,10 @@ egg_token *non_comment_start_sequence(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -6510,10 +6510,10 @@ egg_token *non_comment_end_sequence(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -6556,10 +6556,10 @@ egg_token *comment_character(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -6618,10 +6618,10 @@ egg_token *single_quoted_character(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -6664,10 +6664,10 @@ egg_token *quoted_character(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -6710,10 +6710,10 @@ egg_token *phrase_conjugator(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -6756,10 +6756,10 @@ egg_token *phrase_name_character(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -6810,10 +6810,10 @@ egg_token *binary_indicator(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -6856,10 +6856,10 @@ egg_token *octal_indicator(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -6902,10 +6902,10 @@ egg_token *hexadecimal_indicator(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -6948,10 +6948,10 @@ egg_token *comment_start_symbol(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -6991,10 +6991,10 @@ egg_token *comment_end_symbol(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -7034,10 +7034,10 @@ egg_token *alternation_symbol(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -7072,10 +7072,10 @@ egg_token *concatenation_symbol(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -7110,10 +7110,10 @@ egg_token *phrase_terminator_symbol(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -7150,10 +7150,10 @@ egg_token *binary_integer(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -7210,10 +7210,10 @@ egg_token *octal_integer(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -7270,10 +7270,10 @@ egg_token *hexadecimal_integer(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -7328,10 +7328,10 @@ egg_token *decimal_integer(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -7379,10 +7379,10 @@ egg_token *integer(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -7443,10 +7443,10 @@ egg_token *single_quoted_literal(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -7501,10 +7501,10 @@ egg_token *quoted_literal(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -7559,10 +7559,10 @@ egg_token *absolute_literal(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -7637,10 +7637,10 @@ egg_token *literal(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -7691,10 +7691,10 @@ egg_token *comment_item(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -7739,10 +7739,10 @@ egg_token *comment(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -7797,10 +7797,10 @@ egg_token *illumination(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -7843,10 +7843,10 @@ egg_token *non_grammar_item(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -7889,10 +7889,10 @@ egg_token *non_grammar_element(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -7937,10 +7937,10 @@ egg_token *phrase_name(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -7990,10 +7990,10 @@ egg_token *quantifier_item(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -8036,10 +8036,10 @@ egg_token *quantifier_option(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -8082,10 +8082,10 @@ egg_token *quantifier(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -8145,10 +8145,10 @@ egg_token *atom(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -8191,10 +8191,10 @@ egg_token *item(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -8247,10 +8247,10 @@ egg_token *sequence_continuation(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -8320,10 +8320,10 @@ egg_token *sequence(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -8376,10 +8376,10 @@ egg_token *definition_continuation(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -8449,10 +8449,10 @@ egg_token *definition(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -8508,10 +8508,10 @@ egg_token *phrase(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -8606,10 +8606,10 @@ egg_token *grammar_element(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 
@@ -8659,10 +8659,10 @@ egg_token *grammar(void)
   int count;
   egg_token_direction dir;
 
-  count = 0;
-
   if (input_eof())
     return NULL;
+
+  count = 0;
 
   nt = t1 = t2 = NULL;
 

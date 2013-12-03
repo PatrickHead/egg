@@ -150,6 +150,9 @@ doc/printable.egg: doc/.egg
 	@pr -F -W 70 -o 10 -h "EGG Grammar Definition" \
 		-D "$$(date -r doc/.egg +'rev. %Y%m%d')" doc/.egg > doc/printable.egg
 
+code-stats:
+	@wc -l include/*.h src/*.c parser/include/*.h parser/src/*.c test/*/*.c doc/* misc/* Makefile parser/Makefile
+
 clean:
 	@rm -f bin/embryo
 	@rm -f obj/*.o

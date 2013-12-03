@@ -925,7 +925,7 @@ void generate_makefile(FILE *of, char *parser_name)
     return;
 
   fprintf(of, "CC = gcc\n");
-  fprintf(of, "COPTS = -g -Wall -O0 -I include\n");
+  fprintf(of, "COPTS = -g -Wall -Wno-unused-but-set-variable -O0 -I include\n");
   fprintf(of, "\n");
   fprintf(of, "all: %s-walker\n", parser_name);
   fprintf(of, "\n");

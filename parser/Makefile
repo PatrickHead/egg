@@ -1,5 +1,5 @@
 CC = gcc
-COPTS = -g -Wall -O0 -I include
+COPTS = -g -Wall -Wno-unused-but-set-variable -O0 -I include
 
 all: egg-walker
 

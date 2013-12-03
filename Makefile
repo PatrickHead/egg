@@ -150,21 +150,6 @@ doc/printable.egg: doc/.egg
 	@pr -F -W 70 -o 10 -h "EGG Grammar Definition" \
 		-D "$$(date -r doc/.egg +'rev. %Y%m%d')" doc/.egg > doc/printable.egg
 
-lcp: list-checkpoints
-
-list-checkpoints:
-	@(for cp in $$(ls check-points); \
-    do \
-    jd=$$(echo $$cp | cut -d'.' -f2); \
-    echo $$(date --date=@$$jd) - $$cp; \
-    done)
-
-cp: checkpoint
-
-checkpoint:
-	@mkdir -p check-points
-	@tar czf check-points/embryo."$$(date +'%s')".tgz --exclude=check-points .
-
 clean:
 	@rm -f bin/embryo
 	@rm -f obj/*.o

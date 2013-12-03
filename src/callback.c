@@ -24,56 +24,157 @@
 typedef struct callback_entry
 {
   char *tag;
-  void (*ef)(void *data);
-  void (*sf)(void *data);
-  void (*ff)(void *data);
+  int (*enter)(void *data);
+  int (*succeed)(void *data);
+  int (*fail)(void *data);
 } callback_entry;
 
-callback_system *callback_initialize(int n_items)
+static int find_entry_by_tag(callback_table *cbt, char *tag);
+
+callback_table *callback_initialize()
 {
-  callback_system *cbs;
+  callback_table *cbt;
 
-  cbs = (callback_system *)malloc(sizeof(callback_system));
-  if (!cbs)
+  cbt = (callback_table *)malloc(sizeof(callback_table));
+  if (!cbt)
     return NULL;
 
-  memset(cbs, 0, sizeof(callback_system));
+  memset(cbt, 0, sizeof(callback_table));
 
-  cbs->ht = (struct hsearch_data *)malloc(sizeof(struct hsearch_data));
-  if (!cbs->ht)
+  return cbt;
+}
+
+int callback_create(callback_table *cbt,
+                    char *tag)
+{
+  if (!cbt)
+    return -1;
+
+  if (!tag)
+    return -1;
+
+  if ((find_entry_by_tag(cbt, tag)) < 0)
+    return -1;
+
+  if (!cbt->size)
+    cbt->data = malloc(sizeof(callback_entry));
+  else
+    cbt->data = realloc(cbt->data, sizeof(cbt->data) + sizeof(callback_entry));
+	if (!cbt->data)
+		return -1;
+
+  memset(&((callback_entry *)cbt->data)[cbt->size], 0, sizeof(cbt->data));
+
+  if (tag)
+    ((callback_entry *)cbt->data)[cbt->size].tag = strdup(tag);
+
+  ++cbt->size;
+
+  return 0;
+}
+
+int callback_register(callback_table *cbt,
+                      char *tag,
+                      callback_type type,
+                      int (*function)(void *data))
+{
+  callback_entry *cbe;
+  int i;
+
+  if (!cbt)
+    return -1;
+
+  if (!tag)
+    return -1;
+
+  i = find_entry_by_tag(cbt, tag);
+  if (i < 0)
+    return -1;
+
+  cbe  = &((callback_entry *)cbt->data)[i];
+
+  switch (type)
   {
-    free(cbs);
-    return NULL;
+    case entry:
+      cbe->enter = function;
+      break;
+    case success:
+      cbe->succeed = function;
+      break;
+    case fail:
+      cbe->fail = function;
+      break;
   }
 
-  memset(cbs->ht, 0, sizeof(struct hsearch_data));
+  return 0;
+}
 
-  if (!hcreate_r(n_items, cbs->ht))
+int callback_by_index(callback_table *cbt,
+                      int index,
+                      callback_type type,
+                      void *data)
+{
+  int r;
+
+  if (!cbt)
+    return -1;
+
+  if (index < 0)
+    return -1;
+
+  if (index >= sizeof(cbt->data) / sizeof(callback_entry))
+    return -1;
+
+  switch (type)
   {
-    free(cbs->ht);
-    free(cbs);
-    return NULL;
+    case entry:
+      r = ((callback_entry *)cbt->data)[index].enter(data);
+      break;
+    case success:
+      r = ((callback_entry *)cbt->data)[index].succeed(data);
+      break;
+    case fail:
+      r = ((callback_entry *)cbt->data)[index].fail(data);
+      break;
   }
 
-  return cbs;
+  return r;
 }
 
-void callback_create(callback_system *cbs,
-                     char *tag)
+int callback_by_tag(callback_table *cbt,
+                    char *tag,
+                    callback_type type,
+                    void *data)
 {
+  int i;
+
+  if (!cbt)
+    return -1;
+
+  if (!tag)
+    return -1;
+
+  i = find_entry_by_tag(cbt, tag);
+  if (i < 0)
+    return -1;
+
+  return callback_by_index(cbt, i, type, data);
 }
 
-void callback_register(callback_system *cbs,
-                       char *tag,
-                       callback_type type,
-                       void (*function)(void *data))
+static int find_entry_by_tag(callback_table *cbt, char *tag)
 {
-}
+  int i;
 
-void callback(callback_system *cbs,
-              char *tag,
-              callback_type type,
-              void *data)
-{
+  if (!cbt)
+    return -1;
+
+  if (!tag)
+    return -1;
+
+  for (i = 0; i < cbt->size; i++)
+    if (!strcmp(((callback_entry *)cbt->data)[i].tag, tag))
+      return i;
+
+  return -1;
 }
 

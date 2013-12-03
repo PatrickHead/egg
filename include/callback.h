@@ -25,24 +25,29 @@
 
 #include <search.h>
 
-typedef struct callback_system
+typedef struct callback_table
 {
-  struct hsearch_data *ht;
-} callback_system;
+  int size;
+  void *data;
+} callback_table;
 
 typedef enum { entry = 0, success, fail } callback_type;
 
-void callback(callback_system *cbs, \
-              char *tag, \
-              callback_type type, \
-              void *data);
-void callback_create(callback_system *cbs, \
-                     char *tag);
-void callback_register(callback_system *cbs, \
-                       char *tag, \
-                       callback_type type, \
-                       void (*function)(void *data));
-callback_system *callback_initialize(int n_items);
+int callback_by_index(callback_table *cbt,
+                      int index,
+                      callback_type type,
+                      void *data);
+int callback_by_tag(callback_table *cbt,
+                    char *tag,
+                    callback_type type,
+                    void *data);
+int callback_create(callback_table *cbt,
+                    char *tag);
+int callback_register(callback_table *cbt,
+                      char *tag,
+                      callback_type type,
+                      int (*function)(void *data));
+callback_table *callback_initialize(void);
 
 #endif // CALLBACK_H
 

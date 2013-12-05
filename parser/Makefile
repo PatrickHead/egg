@@ -15,6 +15,7 @@ bin/egg-walker: obj/egg-walker.o \
 		obj/egg-token.o \
 		obj/egg-token-util.o \
 		obj/strapp.o \
+		obj/callback.o \
 		obj/input.o
 
 obj/egg-walker.o: src/egg-walker.c \

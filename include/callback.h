@@ -19,16 +19,18 @@
 #ifndef CALLBACK_H
 #define CALLBACK_H
 
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE 1
-#endif // _GNU_SOURCE
-
-#include <search.h>
+typedef struct callback_entry
+{
+  char *tag;
+  int (*enter)(void *data);
+  int (*succeed)(void *data);
+  int (*fail)(void *data);
+} callback_entry;
 
 typedef struct callback_table
 {
   int size;
-  void *data;
+  callback_entry *callbacks;
 } callback_table;
 
 typedef enum { entry = 0, success, fail } callback_type;

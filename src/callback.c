@@ -21,14 +21,6 @@
 
 #include "callback.h"
 
-typedef struct callback_entry
-{
-  char *tag;
-  int (*enter)(void *data);
-  int (*succeed)(void *data);
-  int (*fail)(void *data);
-} callback_entry;
-
 static int find_entry_by_tag(callback_table *cbt, char *tag);
 
 callback_table *callback_initialize()
@@ -59,18 +51,19 @@ int callback_create(callback_table *cbt,
     return -1;
 
   if (!cbt->size)
-    cbt->data = malloc(sizeof(callback_entry));
+    cbt->callbacks = malloc(sizeof(callback_entry));
   else
-    cbt->data = realloc(cbt->data, sizeof(callback_entry) * (cbt->size + 1));
-	if (!cbt->data)
+    cbt->callbacks = realloc(cbt->callbacks,
+                             sizeof(callback_entry) * (cbt->size + 1));
+	if (!cbt->callbacks)
 		return -1;
 
-  cbe  = &((callback_entry *)cbt->data)[cbt->size];
+  cbe  = &cbt->callbacks[cbt->size];
 
   memset(cbe, 0, sizeof(callback_entry));
 
   if (tag)
-    ((callback_entry *)cbt->data)[cbt->size].tag = strdup(tag);
+    cbt->callbacks[cbt->size].tag = strdup(tag);
 
   ++cbt->size;
 
@@ -95,7 +88,7 @@ int callback_register(callback_table *cbt,
   if (i < 0)
     return -1;
 
-  cbe  = &((callback_entry *)cbt->data)[i];
+  cbe  = &cbt->callbacks[i];
 
   switch (type)
   {
@@ -132,13 +125,13 @@ int callback_by_index(callback_table *cbt,
   switch (type)
   {
     case entry:
-      func = ((callback_entry *)cbt->data)[index].enter;
+      func = cbt->callbacks[index].enter;
       break;
     case success:
-      func = ((callback_entry *)cbt->data)[index].succeed;
+      func = cbt->callbacks[index].succeed;
       break;
     case fail:
-      func = ((callback_entry *)cbt->data)[index].fail;
+      func = cbt->callbacks[index].fail;
       break;
   }
 
@@ -179,7 +172,7 @@ static int find_entry_by_tag(callback_table *cbt, char *tag)
     return -1;
 
   for (i = 0; i < cbt->size; i++)
-    if (!strcmp(((callback_entry *)cbt->data)[i].tag, tag))
+    if (!strcmp(cbt->callbacks[i].tag, tag))
       return i;
 
   return -1;

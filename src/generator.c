@@ -51,8 +51,12 @@ static void emit_comment_string(FILE *of, char *s);
 static void emit_gnu_license(FILE *of);
 void isolate_top_level_phrases(phrase_map_item **pmi);
 
+static phrase_map_item *_pml = NULL;
+
 void generate_parser_source(FILE *of, char *parser_name, egg_token *t)
 {
+  phrase_map_item *pmi;
+
   if (!of)
     of = stdout;
 
@@ -60,6 +64,10 @@ void generate_parser_source(FILE *of, char *parser_name, egg_token *t)
     return;
 
   if (!t)
+    return;
+
+  _pml = phrase_map(t);
+  if (!_pml)
     return;
 
   fprintf(of, "/*\n");
@@ -70,12 +78,39 @@ void generate_parser_source(FILE *of, char *parser_name, egg_token *t)
   fprintf(of, "#include <stdlib.h>\n");
   fprintf(of, "\n");
   fprintf(of, "#include \"input.h\"\n");
+  fprintf(of, "#include \"callback.h\"\n");
   fprintf(of, "\n");
   fprintf(of, "#include \"%s-token.h\"\n", parser_name);
   fprintf(of, "#include \"%s-parser.h\"\n", parser_name);
   fprintf(of, "\n");
 
+  fprintf(of, "static callback_entry _callbacks[] =\n");
+  fprintf(of, "{\n");
+  pmi = _pml;
+  while (pmi)
+  {
+    fprintf(of, "  { \"%s\", NULL, NULL, NULL }", pmi->name);
+    if (pmi->next)
+      fprintf(of, ",");
+    fprintf(of, "\n");
+    pmi = pmi->next;
+  }
+  fprintf(of, "};\n");
+  fprintf(of, "\n");
+
+  fprintf(of, "static callback_table _cbt = { %d, _callbacks };\n",
+              phrase_map_list_count_items(_pml));
+  fprintf(of, "\n");
+
+  fprintf(of, "callback_table *%s_get_callback_table(void)\n", parser_name);
+  fprintf(of, "{\n");
+  fprintf(of, "  return &_cbt;\n");
+  fprintf(of, "}\n");
+  fprintf(of, "\n");
+
   generate_grammar(of, parser_name, t, 0);
+
+  phrase_map_list_delete(_pml);
 
   return;
 }
@@ -111,6 +146,12 @@ void generate_parser_header(FILE *of, char *parser_name, egg_token *t)
 
   fprintf(of, "#ifndef %s\n", hn);
   fprintf(of, "#define %s\n", hn);
+  fprintf(of, "\n");
+
+  fprintf(of, "#include \"callback.h\"\n");
+  fprintf(of, "\n");
+
+  fprintf(of, "callback_table *%s_get_callback_table(void);\n", parser_name);
   fprintf(of, "\n");
 
   if ((ge = egg_token_find(t->d, egg_token_type_grammar_element)))
@@ -943,6 +984,7 @@ void generate_makefile(FILE *of, char *parser_name)
   fprintf(of, "\t\tobj/%s-token.o \\\n", parser_name);
   fprintf(of, "\t\tobj/%s-token-util.o \\\n", parser_name);
   fprintf(of, "\t\tobj/strapp.o \\\n");
+  fprintf(of, "\t\tobj/callback.o \\\n");
   fprintf(of, "\t\tobj/input.o\n");
   fprintf(of, "\n");
   fprintf(of, "obj/%s-walker.o: src/%s-walker.c \\\n",
@@ -1023,11 +1065,13 @@ static void generate_grammar(FILE *of, char *parser_name, egg_token *t, int leve
   return;
 }
 
+char *_pns = NULL;
+char *_pns_f = NULL;
+
 static void generate_phrase(FILE *of, char *parser_name, egg_token *t)
 {
   egg_token *pn;
   egg_token *def;
-  char *pns = NULL;
   char *ds = NULL;
 
   if (!t)
@@ -1041,6 +1085,8 @@ static void generate_phrase(FILE *of, char *parser_name, egg_token *t)
 
   if (!of)
     of = stdout;
+
+  _pns = _pns_f = NULL;
 
   t = t->d;
 
@@ -1057,19 +1103,26 @@ static void generate_phrase(FILE *of, char *parser_name, egg_token *t)
   pn = egg_token_find(t, egg_token_type_phrase_name);
   if (pn)
   {
-    pns = egg_token_to_string(pn->d, pns);
-    if (pns)
+    _pns = egg_token_to_string(pn->d, _pns);
+    if (_pns)
     {
-      pns = fix_identifier(pns);
+      _pns_f = fix_identifier(strdup(_pns));
 
       fprintf(of, "%s_token *", parser_name);
-      fprintf(of, "%s", pns);
+      fprintf(of, "%s", _pns_f);
       fprintf(of, "(void)\n");
       fprintf(of, "{\n");
       fprintf(of, "  long pos = input_get_position();\n");
       fprintf(of, "  %s_token *nt, *t1, *t2;\n", parser_name);
       fprintf(of, "  int count;\n");
       fprintf(of, "  %s_token_direction dir;\n", parser_name);
+      fprintf(of, "\n");
+      fprintf(of, "  callback_by_index(&_cbt,\n"
+                  "                    %d,\n"
+                  "                    entry,\n"
+                  "                    (void *)%s_token_type_%s);\n",
+                    phrase_map_list_get_item_index(_pml, _pns),
+                    parser_name, _pns_f);
       fprintf(of, "\n");
       fprintf(of, "  if (input_eof())\n");
       fprintf(of, "    return NULL;\n");
@@ -1078,26 +1131,43 @@ static void generate_phrase(FILE *of, char *parser_name, egg_token *t)
       fprintf(of, "\n");
       fprintf(of, "  nt = t1 = t2 = NULL;\n");
       fprintf(of, "\n");
-      fprintf(of, "  nt = %s_token_new(%s_token_type_",
-                    parser_name, parser_name);
-      fprintf(of, "%s", pns);
-      fprintf(of, ");\n");
+      fprintf(of, "  nt = %s_token_new(%s_token_type_%s);\n",
+                    parser_name, parser_name, _pns_f);
       fprintf(of, "  if (!nt)\n");
+      fprintf(of, "  {\n");
+      fprintf(of, "    callback_by_index(&_cbt,\n"
+                  "                      %d,\n"
+                  "                      fail,\n"
+                  "                      (void *)%s_token_type_%s);\n",
+                    phrase_map_list_get_item_index(_pml, _pns),
+                    parser_name, _pns_f);
       fprintf(of, "    return NULL;\n");
+      fprintf(of, "  }\n");
       fprintf(of, "\n");
       fprintf(of, "  t1 = nt;\n");
       fprintf(of, "\n");
 
       def = egg_token_find(t, egg_token_type_definition);
       generate_definition(of, parser_name, def);
-
-      free(pns);
     }
   }
+
+	fprintf(of, "  callback_by_index(&_cbt,\n"
+              "                    %d,\n"
+              "                    fail,\n"
+							"                    (void *)%s_token_type_%s);\n",
+								phrase_map_list_get_item_index(_pml, _pns),
+								parser_name, _pns_f);
+  fprintf(of, "\n");
 
   fprintf(of, "  return NULL;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
+
+  if (_pns)
+	  free(_pns);
+  if (_pns_f)
+	  free(_pns_f);
 
   return;
 }
@@ -1193,6 +1263,17 @@ static void generate_sequence(FILE *of, char *parser_name, egg_token *t)
       cont = cont->n;
     }
 
+    emit_indent(of);
+		fprintf(of, "  callback_by_index(&_cbt,\n");
+    emit_indent(of);
+    fprintf(of, "                    %d,\n",
+									phrase_map_list_get_item_index(_pml, _pns));
+    emit_indent(of);
+    fprintf(of, "                    success,\n");
+    emit_indent(of);
+    fprintf(of, "                    (void *)%s_token_type_%s);\n",
+									parser_name, _pns_f);
+    fprintf(of, "\n");
     emit_indent(of);
     fprintf(of, "  return nt;\n");
 

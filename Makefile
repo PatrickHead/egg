@@ -4,11 +4,14 @@ COPTS = -g -Wall -O0 -I include -I parser/include
 all: embryo tests printable-egg egg-pdf git
 
 _parser: obj/input.o \
+		obj/callback.o \
 		obj/strapp.o
 	@(cd parser/include; ln -fs ../../include/common.h)
 	@(cd parser/include; ln -fs ../../include/input.h)
+	@(cd parser/include; ln -fs ../../include/callback.h)
 	@(cd parser/include; ln -fs ../../include/strapp.h)
 	@(cd parser/obj; ln -fs ../../obj/input.o)
+	@(cd parser/obj; ln -fs ../../obj/callback.o)
 	@(cd parser/obj; ln -fs ../../obj/strapp.o)
 	@make --no-print-directory -C parser
 
@@ -19,11 +22,13 @@ embryo: _parser bin/embryo
 bin/embryo: obj/embryo.o \
 		obj/generator.o \
 		obj/map.o \
+		obj/callback.o \
 		obj/mkdir_p.o
 	$(CC) $(COPTS) -o bin/embryo \
 		obj/embryo.o \
 		obj/generator.o \
 		obj/map.o \
+		obj/callback.o \
 		obj/mkdir_p.o \
 		parser/obj/egg-parser.o \
 		parser/obj/egg-token.o \

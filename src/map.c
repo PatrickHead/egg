@@ -268,3 +268,46 @@ phrase_map_item *phrase_map_list_append_item_by_name(phrase_map_item **list,
   return npmi;
 }
 
+int phrase_map_list_get_item_index(phrase_map_item *list, char *name)
+{
+  phrase_map_item *tpmi;
+  int index = 0;
+
+  if (!list)
+    return -1;
+
+  if (!name)
+    return -1;
+
+  tpmi = list;
+  while (tpmi)
+  {
+    if (!strcmp(tpmi->name, name))
+      return index;
+
+    ++index;
+
+    tpmi = tpmi->next;
+  }
+
+  return -1;
+}
+
+int phrase_map_list_count_items(phrase_map_item *list)
+{
+  phrase_map_item *tpmi;
+  int count = 0;
+
+  if (!list)
+    return -1;
+
+  tpmi = list;
+  while (tpmi)
+  {
+    ++count;
+    tpmi = tpmi->next;
+  }
+
+  return count;
+}
+

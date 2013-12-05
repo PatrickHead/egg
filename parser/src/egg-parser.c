@@ -19,9 +19,205 @@
 #include <stdlib.h>
 
 #include "input.h"
+#include "callback.h"
 
 #include "egg-token.h"
 #include "egg-parser.h"
+
+static callback_entry _callbacks[] =
+{
+  { "nul", NULL, NULL, NULL },
+  { "soh", NULL, NULL, NULL },
+  { "stx", NULL, NULL, NULL },
+  { "etx", NULL, NULL, NULL },
+  { "eot", NULL, NULL, NULL },
+  { "enq", NULL, NULL, NULL },
+  { "ack", NULL, NULL, NULL },
+  { "bel", NULL, NULL, NULL },
+  { "bs", NULL, NULL, NULL },
+  { "ht", NULL, NULL, NULL },
+  { "lf", NULL, NULL, NULL },
+  { "vt", NULL, NULL, NULL },
+  { "ff", NULL, NULL, NULL },
+  { "cr", NULL, NULL, NULL },
+  { "so", NULL, NULL, NULL },
+  { "si", NULL, NULL, NULL },
+  { "dle", NULL, NULL, NULL },
+  { "dc1", NULL, NULL, NULL },
+  { "dc2", NULL, NULL, NULL },
+  { "dc3", NULL, NULL, NULL },
+  { "dc4", NULL, NULL, NULL },
+  { "nak", NULL, NULL, NULL },
+  { "syn", NULL, NULL, NULL },
+  { "etb", NULL, NULL, NULL },
+  { "can", NULL, NULL, NULL },
+  { "em", NULL, NULL, NULL },
+  { "sub", NULL, NULL, NULL },
+  { "esc", NULL, NULL, NULL },
+  { "fs", NULL, NULL, NULL },
+  { "gs", NULL, NULL, NULL },
+  { "rs", NULL, NULL, NULL },
+  { "us", NULL, NULL, NULL },
+  { "space", NULL, NULL, NULL },
+  { "exclamation-point", NULL, NULL, NULL },
+  { "quote", NULL, NULL, NULL },
+  { "number-sign", NULL, NULL, NULL },
+  { "dollar", NULL, NULL, NULL },
+  { "percent", NULL, NULL, NULL },
+  { "ampersand", NULL, NULL, NULL },
+  { "single-quote", NULL, NULL, NULL },
+  { "open-parenthesis", NULL, NULL, NULL },
+  { "close-parenthesis", NULL, NULL, NULL },
+  { "asterisk", NULL, NULL, NULL },
+  { "plus", NULL, NULL, NULL },
+  { "comma", NULL, NULL, NULL },
+  { "minus", NULL, NULL, NULL },
+  { "period", NULL, NULL, NULL },
+  { "slash", NULL, NULL, NULL },
+  { "zero", NULL, NULL, NULL },
+  { "one", NULL, NULL, NULL },
+  { "two", NULL, NULL, NULL },
+  { "three", NULL, NULL, NULL },
+  { "four", NULL, NULL, NULL },
+  { "five", NULL, NULL, NULL },
+  { "six", NULL, NULL, NULL },
+  { "seven", NULL, NULL, NULL },
+  { "eight", NULL, NULL, NULL },
+  { "nine", NULL, NULL, NULL },
+  { "colon", NULL, NULL, NULL },
+  { "semicolon", NULL, NULL, NULL },
+  { "less-than", NULL, NULL, NULL },
+  { "equal", NULL, NULL, NULL },
+  { "greater-than", NULL, NULL, NULL },
+  { "question-mark", NULL, NULL, NULL },
+  { "at", NULL, NULL, NULL },
+  { "A", NULL, NULL, NULL },
+  { "B", NULL, NULL, NULL },
+  { "C", NULL, NULL, NULL },
+  { "D", NULL, NULL, NULL },
+  { "E", NULL, NULL, NULL },
+  { "F", NULL, NULL, NULL },
+  { "G", NULL, NULL, NULL },
+  { "H", NULL, NULL, NULL },
+  { "I", NULL, NULL, NULL },
+  { "J", NULL, NULL, NULL },
+  { "K", NULL, NULL, NULL },
+  { "L", NULL, NULL, NULL },
+  { "M", NULL, NULL, NULL },
+  { "N", NULL, NULL, NULL },
+  { "O", NULL, NULL, NULL },
+  { "P", NULL, NULL, NULL },
+  { "Q", NULL, NULL, NULL },
+  { "R", NULL, NULL, NULL },
+  { "S", NULL, NULL, NULL },
+  { "T", NULL, NULL, NULL },
+  { "U", NULL, NULL, NULL },
+  { "V", NULL, NULL, NULL },
+  { "W", NULL, NULL, NULL },
+  { "X", NULL, NULL, NULL },
+  { "Y", NULL, NULL, NULL },
+  { "Z", NULL, NULL, NULL },
+  { "open-bracket", NULL, NULL, NULL },
+  { "back-slash", NULL, NULL, NULL },
+  { "close-bracket", NULL, NULL, NULL },
+  { "carat", NULL, NULL, NULL },
+  { "underscore", NULL, NULL, NULL },
+  { "back-quote", NULL, NULL, NULL },
+  { "a", NULL, NULL, NULL },
+  { "b", NULL, NULL, NULL },
+  { "c", NULL, NULL, NULL },
+  { "d", NULL, NULL, NULL },
+  { "e", NULL, NULL, NULL },
+  { "f", NULL, NULL, NULL },
+  { "g", NULL, NULL, NULL },
+  { "h", NULL, NULL, NULL },
+  { "i", NULL, NULL, NULL },
+  { "j", NULL, NULL, NULL },
+  { "k", NULL, NULL, NULL },
+  { "l", NULL, NULL, NULL },
+  { "m", NULL, NULL, NULL },
+  { "n", NULL, NULL, NULL },
+  { "o", NULL, NULL, NULL },
+  { "p", NULL, NULL, NULL },
+  { "q", NULL, NULL, NULL },
+  { "r", NULL, NULL, NULL },
+  { "s", NULL, NULL, NULL },
+  { "t", NULL, NULL, NULL },
+  { "u", NULL, NULL, NULL },
+  { "v", NULL, NULL, NULL },
+  { "w", NULL, NULL, NULL },
+  { "x", NULL, NULL, NULL },
+  { "y", NULL, NULL, NULL },
+  { "z", NULL, NULL, NULL },
+  { "open-brace", NULL, NULL, NULL },
+  { "bar", NULL, NULL, NULL },
+  { "close-brace", NULL, NULL, NULL },
+  { "tilde", NULL, NULL, NULL },
+  { "del", NULL, NULL, NULL },
+  { "control-character", NULL, NULL, NULL },
+  { "upper-case-letter", NULL, NULL, NULL },
+  { "lower-case-letter", NULL, NULL, NULL },
+  { "letter", NULL, NULL, NULL },
+  { "binary-digit", NULL, NULL, NULL },
+  { "octal-digit", NULL, NULL, NULL },
+  { "decimal-digit", NULL, NULL, NULL },
+  { "hexadecimal-digit", NULL, NULL, NULL },
+  { "white-space", NULL, NULL, NULL },
+  { "common-character", NULL, NULL, NULL },
+  { "literal-character", NULL, NULL, NULL },
+  { "comment-basic-character", NULL, NULL, NULL },
+  { "non-comment-start-character", NULL, NULL, NULL },
+  { "non-comment-end-character", NULL, NULL, NULL },
+  { "non-comment-start-sequence", NULL, NULL, NULL },
+  { "non-comment-end-sequence", NULL, NULL, NULL },
+  { "comment-character", NULL, NULL, NULL },
+  { "single-quoted-character", NULL, NULL, NULL },
+  { "quoted-character", NULL, NULL, NULL },
+  { "phrase-conjugator", NULL, NULL, NULL },
+  { "phrase-name-character", NULL, NULL, NULL },
+  { "binary-indicator", NULL, NULL, NULL },
+  { "octal-indicator", NULL, NULL, NULL },
+  { "hexadecimal-indicator", NULL, NULL, NULL },
+  { "comment-start-symbol", NULL, NULL, NULL },
+  { "comment-end-symbol", NULL, NULL, NULL },
+  { "alternation-symbol", NULL, NULL, NULL },
+  { "concatenation-symbol", NULL, NULL, NULL },
+  { "phrase-terminator-symbol", NULL, NULL, NULL },
+  { "binary-integer", NULL, NULL, NULL },
+  { "octal-integer", NULL, NULL, NULL },
+  { "hexadecimal-integer", NULL, NULL, NULL },
+  { "decimal-integer", NULL, NULL, NULL },
+  { "integer", NULL, NULL, NULL },
+  { "single-quoted-literal", NULL, NULL, NULL },
+  { "quoted-literal", NULL, NULL, NULL },
+  { "absolute-literal", NULL, NULL, NULL },
+  { "literal", NULL, NULL, NULL },
+  { "comment-item", NULL, NULL, NULL },
+  { "comment", NULL, NULL, NULL },
+  { "illumination", NULL, NULL, NULL },
+  { "non-grammar-item", NULL, NULL, NULL },
+  { "non-grammar-element", NULL, NULL, NULL },
+  { "phrase-name", NULL, NULL, NULL },
+  { "quantifier-item", NULL, NULL, NULL },
+  { "quantifier-option", NULL, NULL, NULL },
+  { "quantifier", NULL, NULL, NULL },
+  { "atom", NULL, NULL, NULL },
+  { "item", NULL, NULL, NULL },
+  { "sequence-continuation", NULL, NULL, NULL },
+  { "sequence", NULL, NULL, NULL },
+  { "definition-continuation", NULL, NULL, NULL },
+  { "definition", NULL, NULL, NULL },
+  { "phrase", NULL, NULL, NULL },
+  { "grammar-element", NULL, NULL, NULL },
+  { "grammar", NULL, NULL, NULL }
+};
+
+static callback_table _cbt = { 184, _callbacks };
+
+callback_table *egg_get_callback_table(void)
+{
+  return &_cbt;
+}
 
 /*
  * nul =               /0x00/ ;
@@ -34,6 +230,11 @@ egg_token *nul(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    0,
+                    entry,
+                    (void *)egg_token_type_nul);
+
   if (input_eof())
     return NULL;
 
@@ -43,18 +244,34 @@ egg_token *nul(void)
 
   nt = egg_token_new(egg_token_type_nul);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      0,
+                      fail,
+                      (void *)egg_token_type_nul);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x00)
   {
+    callback_by_index(&_cbt,
+                      0,
+                      success,
+                      (void *)egg_token_type_nul);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    0,
+                    fail,
+                    (void *)egg_token_type_nul);
 
   return NULL;
 }
@@ -70,6 +287,11 @@ egg_token *soh(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    1,
+                    entry,
+                    (void *)egg_token_type_soh);
+
   if (input_eof())
     return NULL;
 
@@ -79,18 +301,34 @@ egg_token *soh(void)
 
   nt = egg_token_new(egg_token_type_soh);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      1,
+                      fail,
+                      (void *)egg_token_type_soh);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x01)
   {
+    callback_by_index(&_cbt,
+                      1,
+                      success,
+                      (void *)egg_token_type_soh);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    1,
+                    fail,
+                    (void *)egg_token_type_soh);
 
   return NULL;
 }
@@ -106,6 +344,11 @@ egg_token *stx(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    2,
+                    entry,
+                    (void *)egg_token_type_stx);
+
   if (input_eof())
     return NULL;
 
@@ -115,18 +358,34 @@ egg_token *stx(void)
 
   nt = egg_token_new(egg_token_type_stx);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      2,
+                      fail,
+                      (void *)egg_token_type_stx);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x02)
   {
+    callback_by_index(&_cbt,
+                      2,
+                      success,
+                      (void *)egg_token_type_stx);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    2,
+                    fail,
+                    (void *)egg_token_type_stx);
 
   return NULL;
 }
@@ -142,6 +401,11 @@ egg_token *etx(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    3,
+                    entry,
+                    (void *)egg_token_type_etx);
+
   if (input_eof())
     return NULL;
 
@@ -151,18 +415,34 @@ egg_token *etx(void)
 
   nt = egg_token_new(egg_token_type_etx);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      3,
+                      fail,
+                      (void *)egg_token_type_etx);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x03)
   {
+    callback_by_index(&_cbt,
+                      3,
+                      success,
+                      (void *)egg_token_type_etx);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    3,
+                    fail,
+                    (void *)egg_token_type_etx);
 
   return NULL;
 }
@@ -178,6 +458,11 @@ egg_token *eot(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    4,
+                    entry,
+                    (void *)egg_token_type_eot);
+
   if (input_eof())
     return NULL;
 
@@ -187,18 +472,34 @@ egg_token *eot(void)
 
   nt = egg_token_new(egg_token_type_eot);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      4,
+                      fail,
+                      (void *)egg_token_type_eot);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x04)
   {
+    callback_by_index(&_cbt,
+                      4,
+                      success,
+                      (void *)egg_token_type_eot);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    4,
+                    fail,
+                    (void *)egg_token_type_eot);
 
   return NULL;
 }
@@ -214,6 +515,11 @@ egg_token *enq(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    5,
+                    entry,
+                    (void *)egg_token_type_enq);
+
   if (input_eof())
     return NULL;
 
@@ -223,18 +529,34 @@ egg_token *enq(void)
 
   nt = egg_token_new(egg_token_type_enq);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      5,
+                      fail,
+                      (void *)egg_token_type_enq);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x05)
   {
+    callback_by_index(&_cbt,
+                      5,
+                      success,
+                      (void *)egg_token_type_enq);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    5,
+                    fail,
+                    (void *)egg_token_type_enq);
 
   return NULL;
 }
@@ -250,6 +572,11 @@ egg_token *ack(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    6,
+                    entry,
+                    (void *)egg_token_type_ack);
+
   if (input_eof())
     return NULL;
 
@@ -259,18 +586,34 @@ egg_token *ack(void)
 
   nt = egg_token_new(egg_token_type_ack);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      6,
+                      fail,
+                      (void *)egg_token_type_ack);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x06)
   {
+    callback_by_index(&_cbt,
+                      6,
+                      success,
+                      (void *)egg_token_type_ack);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    6,
+                    fail,
+                    (void *)egg_token_type_ack);
 
   return NULL;
 }
@@ -286,6 +629,11 @@ egg_token *bel(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    7,
+                    entry,
+                    (void *)egg_token_type_bel);
+
   if (input_eof())
     return NULL;
 
@@ -295,18 +643,34 @@ egg_token *bel(void)
 
   nt = egg_token_new(egg_token_type_bel);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      7,
+                      fail,
+                      (void *)egg_token_type_bel);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x07)
   {
+    callback_by_index(&_cbt,
+                      7,
+                      success,
+                      (void *)egg_token_type_bel);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    7,
+                    fail,
+                    (void *)egg_token_type_bel);
 
   return NULL;
 }
@@ -322,6 +686,11 @@ egg_token *bs(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    8,
+                    entry,
+                    (void *)egg_token_type_bs);
+
   if (input_eof())
     return NULL;
 
@@ -331,18 +700,34 @@ egg_token *bs(void)
 
   nt = egg_token_new(egg_token_type_bs);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      8,
+                      fail,
+                      (void *)egg_token_type_bs);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x08)
   {
+    callback_by_index(&_cbt,
+                      8,
+                      success,
+                      (void *)egg_token_type_bs);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    8,
+                    fail,
+                    (void *)egg_token_type_bs);
 
   return NULL;
 }
@@ -358,6 +743,11 @@ egg_token *ht(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    9,
+                    entry,
+                    (void *)egg_token_type_ht);
+
   if (input_eof())
     return NULL;
 
@@ -367,18 +757,34 @@ egg_token *ht(void)
 
   nt = egg_token_new(egg_token_type_ht);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      9,
+                      fail,
+                      (void *)egg_token_type_ht);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x09)
   {
+    callback_by_index(&_cbt,
+                      9,
+                      success,
+                      (void *)egg_token_type_ht);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    9,
+                    fail,
+                    (void *)egg_token_type_ht);
 
   return NULL;
 }
@@ -394,6 +800,11 @@ egg_token *lf(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    10,
+                    entry,
+                    (void *)egg_token_type_lf);
+
   if (input_eof())
     return NULL;
 
@@ -403,18 +814,34 @@ egg_token *lf(void)
 
   nt = egg_token_new(egg_token_type_lf);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      10,
+                      fail,
+                      (void *)egg_token_type_lf);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x0A)
   {
+    callback_by_index(&_cbt,
+                      10,
+                      success,
+                      (void *)egg_token_type_lf);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    10,
+                    fail,
+                    (void *)egg_token_type_lf);
 
   return NULL;
 }
@@ -430,6 +857,11 @@ egg_token *vt(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    11,
+                    entry,
+                    (void *)egg_token_type_vt);
+
   if (input_eof())
     return NULL;
 
@@ -439,18 +871,34 @@ egg_token *vt(void)
 
   nt = egg_token_new(egg_token_type_vt);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      11,
+                      fail,
+                      (void *)egg_token_type_vt);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x0B)
   {
+    callback_by_index(&_cbt,
+                      11,
+                      success,
+                      (void *)egg_token_type_vt);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    11,
+                    fail,
+                    (void *)egg_token_type_vt);
 
   return NULL;
 }
@@ -466,6 +914,11 @@ egg_token *ff(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    12,
+                    entry,
+                    (void *)egg_token_type_ff);
+
   if (input_eof())
     return NULL;
 
@@ -475,18 +928,34 @@ egg_token *ff(void)
 
   nt = egg_token_new(egg_token_type_ff);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      12,
+                      fail,
+                      (void *)egg_token_type_ff);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x0C)
   {
+    callback_by_index(&_cbt,
+                      12,
+                      success,
+                      (void *)egg_token_type_ff);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    12,
+                    fail,
+                    (void *)egg_token_type_ff);
 
   return NULL;
 }
@@ -502,6 +971,11 @@ egg_token *cr(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    13,
+                    entry,
+                    (void *)egg_token_type_cr);
+
   if (input_eof())
     return NULL;
 
@@ -511,18 +985,34 @@ egg_token *cr(void)
 
   nt = egg_token_new(egg_token_type_cr);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      13,
+                      fail,
+                      (void *)egg_token_type_cr);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x0D)
   {
+    callback_by_index(&_cbt,
+                      13,
+                      success,
+                      (void *)egg_token_type_cr);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    13,
+                    fail,
+                    (void *)egg_token_type_cr);
 
   return NULL;
 }
@@ -538,6 +1028,11 @@ egg_token *so(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    14,
+                    entry,
+                    (void *)egg_token_type_so);
+
   if (input_eof())
     return NULL;
 
@@ -547,18 +1042,34 @@ egg_token *so(void)
 
   nt = egg_token_new(egg_token_type_so);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      14,
+                      fail,
+                      (void *)egg_token_type_so);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x0E)
   {
+    callback_by_index(&_cbt,
+                      14,
+                      success,
+                      (void *)egg_token_type_so);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    14,
+                    fail,
+                    (void *)egg_token_type_so);
 
   return NULL;
 }
@@ -574,6 +1085,11 @@ egg_token *si(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    15,
+                    entry,
+                    (void *)egg_token_type_si);
+
   if (input_eof())
     return NULL;
 
@@ -583,18 +1099,34 @@ egg_token *si(void)
 
   nt = egg_token_new(egg_token_type_si);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      15,
+                      fail,
+                      (void *)egg_token_type_si);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x0F)
   {
+    callback_by_index(&_cbt,
+                      15,
+                      success,
+                      (void *)egg_token_type_si);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    15,
+                    fail,
+                    (void *)egg_token_type_si);
 
   return NULL;
 }
@@ -610,6 +1142,11 @@ egg_token *dle(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    16,
+                    entry,
+                    (void *)egg_token_type_dle);
+
   if (input_eof())
     return NULL;
 
@@ -619,18 +1156,34 @@ egg_token *dle(void)
 
   nt = egg_token_new(egg_token_type_dle);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      16,
+                      fail,
+                      (void *)egg_token_type_dle);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x10)
   {
+    callback_by_index(&_cbt,
+                      16,
+                      success,
+                      (void *)egg_token_type_dle);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    16,
+                    fail,
+                    (void *)egg_token_type_dle);
 
   return NULL;
 }
@@ -646,6 +1199,11 @@ egg_token *dc1(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    17,
+                    entry,
+                    (void *)egg_token_type_dc1);
+
   if (input_eof())
     return NULL;
 
@@ -655,18 +1213,34 @@ egg_token *dc1(void)
 
   nt = egg_token_new(egg_token_type_dc1);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      17,
+                      fail,
+                      (void *)egg_token_type_dc1);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x11)
   {
+    callback_by_index(&_cbt,
+                      17,
+                      success,
+                      (void *)egg_token_type_dc1);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    17,
+                    fail,
+                    (void *)egg_token_type_dc1);
 
   return NULL;
 }
@@ -682,6 +1256,11 @@ egg_token *dc2(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    18,
+                    entry,
+                    (void *)egg_token_type_dc2);
+
   if (input_eof())
     return NULL;
 
@@ -691,18 +1270,34 @@ egg_token *dc2(void)
 
   nt = egg_token_new(egg_token_type_dc2);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      18,
+                      fail,
+                      (void *)egg_token_type_dc2);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x12)
   {
+    callback_by_index(&_cbt,
+                      18,
+                      success,
+                      (void *)egg_token_type_dc2);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    18,
+                    fail,
+                    (void *)egg_token_type_dc2);
 
   return NULL;
 }
@@ -718,6 +1313,11 @@ egg_token *dc3(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    19,
+                    entry,
+                    (void *)egg_token_type_dc3);
+
   if (input_eof())
     return NULL;
 
@@ -727,18 +1327,34 @@ egg_token *dc3(void)
 
   nt = egg_token_new(egg_token_type_dc3);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      19,
+                      fail,
+                      (void *)egg_token_type_dc3);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x13)
   {
+    callback_by_index(&_cbt,
+                      19,
+                      success,
+                      (void *)egg_token_type_dc3);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    19,
+                    fail,
+                    (void *)egg_token_type_dc3);
 
   return NULL;
 }
@@ -754,6 +1370,11 @@ egg_token *dc4(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    20,
+                    entry,
+                    (void *)egg_token_type_dc4);
+
   if (input_eof())
     return NULL;
 
@@ -763,18 +1384,34 @@ egg_token *dc4(void)
 
   nt = egg_token_new(egg_token_type_dc4);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      20,
+                      fail,
+                      (void *)egg_token_type_dc4);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x14)
   {
+    callback_by_index(&_cbt,
+                      20,
+                      success,
+                      (void *)egg_token_type_dc4);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    20,
+                    fail,
+                    (void *)egg_token_type_dc4);
 
   return NULL;
 }
@@ -790,6 +1427,11 @@ egg_token *nak(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    21,
+                    entry,
+                    (void *)egg_token_type_nak);
+
   if (input_eof())
     return NULL;
 
@@ -799,18 +1441,34 @@ egg_token *nak(void)
 
   nt = egg_token_new(egg_token_type_nak);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      21,
+                      fail,
+                      (void *)egg_token_type_nak);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x15)
   {
+    callback_by_index(&_cbt,
+                      21,
+                      success,
+                      (void *)egg_token_type_nak);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    21,
+                    fail,
+                    (void *)egg_token_type_nak);
 
   return NULL;
 }
@@ -826,6 +1484,11 @@ egg_token *syn(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    22,
+                    entry,
+                    (void *)egg_token_type_syn);
+
   if (input_eof())
     return NULL;
 
@@ -835,18 +1498,34 @@ egg_token *syn(void)
 
   nt = egg_token_new(egg_token_type_syn);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      22,
+                      fail,
+                      (void *)egg_token_type_syn);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x16)
   {
+    callback_by_index(&_cbt,
+                      22,
+                      success,
+                      (void *)egg_token_type_syn);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    22,
+                    fail,
+                    (void *)egg_token_type_syn);
 
   return NULL;
 }
@@ -862,6 +1541,11 @@ egg_token *etb(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    23,
+                    entry,
+                    (void *)egg_token_type_etb);
+
   if (input_eof())
     return NULL;
 
@@ -871,18 +1555,34 @@ egg_token *etb(void)
 
   nt = egg_token_new(egg_token_type_etb);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      23,
+                      fail,
+                      (void *)egg_token_type_etb);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x17)
   {
+    callback_by_index(&_cbt,
+                      23,
+                      success,
+                      (void *)egg_token_type_etb);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    23,
+                    fail,
+                    (void *)egg_token_type_etb);
 
   return NULL;
 }
@@ -898,6 +1598,11 @@ egg_token *can(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    24,
+                    entry,
+                    (void *)egg_token_type_can);
+
   if (input_eof())
     return NULL;
 
@@ -907,18 +1612,34 @@ egg_token *can(void)
 
   nt = egg_token_new(egg_token_type_can);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      24,
+                      fail,
+                      (void *)egg_token_type_can);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x18)
   {
+    callback_by_index(&_cbt,
+                      24,
+                      success,
+                      (void *)egg_token_type_can);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    24,
+                    fail,
+                    (void *)egg_token_type_can);
 
   return NULL;
 }
@@ -934,6 +1655,11 @@ egg_token *em(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    25,
+                    entry,
+                    (void *)egg_token_type_em);
+
   if (input_eof())
     return NULL;
 
@@ -943,18 +1669,34 @@ egg_token *em(void)
 
   nt = egg_token_new(egg_token_type_em);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      25,
+                      fail,
+                      (void *)egg_token_type_em);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x19)
   {
+    callback_by_index(&_cbt,
+                      25,
+                      success,
+                      (void *)egg_token_type_em);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    25,
+                    fail,
+                    (void *)egg_token_type_em);
 
   return NULL;
 }
@@ -970,6 +1712,11 @@ egg_token *sub(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    26,
+                    entry,
+                    (void *)egg_token_type_sub);
+
   if (input_eof())
     return NULL;
 
@@ -979,18 +1726,34 @@ egg_token *sub(void)
 
   nt = egg_token_new(egg_token_type_sub);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      26,
+                      fail,
+                      (void *)egg_token_type_sub);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x1A)
   {
+    callback_by_index(&_cbt,
+                      26,
+                      success,
+                      (void *)egg_token_type_sub);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    26,
+                    fail,
+                    (void *)egg_token_type_sub);
 
   return NULL;
 }
@@ -1006,6 +1769,11 @@ egg_token *esc(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    27,
+                    entry,
+                    (void *)egg_token_type_esc);
+
   if (input_eof())
     return NULL;
 
@@ -1015,18 +1783,34 @@ egg_token *esc(void)
 
   nt = egg_token_new(egg_token_type_esc);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      27,
+                      fail,
+                      (void *)egg_token_type_esc);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x1B)
   {
+    callback_by_index(&_cbt,
+                      27,
+                      success,
+                      (void *)egg_token_type_esc);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    27,
+                    fail,
+                    (void *)egg_token_type_esc);
 
   return NULL;
 }
@@ -1042,6 +1826,11 @@ egg_token *fs(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    28,
+                    entry,
+                    (void *)egg_token_type_fs);
+
   if (input_eof())
     return NULL;
 
@@ -1051,18 +1840,34 @@ egg_token *fs(void)
 
   nt = egg_token_new(egg_token_type_fs);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      28,
+                      fail,
+                      (void *)egg_token_type_fs);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x1C)
   {
+    callback_by_index(&_cbt,
+                      28,
+                      success,
+                      (void *)egg_token_type_fs);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    28,
+                    fail,
+                    (void *)egg_token_type_fs);
 
   return NULL;
 }
@@ -1078,6 +1883,11 @@ egg_token *gs(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    29,
+                    entry,
+                    (void *)egg_token_type_gs);
+
   if (input_eof())
     return NULL;
 
@@ -1087,18 +1897,34 @@ egg_token *gs(void)
 
   nt = egg_token_new(egg_token_type_gs);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      29,
+                      fail,
+                      (void *)egg_token_type_gs);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x1D)
   {
+    callback_by_index(&_cbt,
+                      29,
+                      success,
+                      (void *)egg_token_type_gs);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    29,
+                    fail,
+                    (void *)egg_token_type_gs);
 
   return NULL;
 }
@@ -1114,6 +1940,11 @@ egg_token *rs(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    30,
+                    entry,
+                    (void *)egg_token_type_rs);
+
   if (input_eof())
     return NULL;
 
@@ -1123,18 +1954,34 @@ egg_token *rs(void)
 
   nt = egg_token_new(egg_token_type_rs);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      30,
+                      fail,
+                      (void *)egg_token_type_rs);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x1E)
   {
+    callback_by_index(&_cbt,
+                      30,
+                      success,
+                      (void *)egg_token_type_rs);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    30,
+                    fail,
+                    (void *)egg_token_type_rs);
 
   return NULL;
 }
@@ -1150,6 +1997,11 @@ egg_token *us(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    31,
+                    entry,
+                    (void *)egg_token_type_us);
+
   if (input_eof())
     return NULL;
 
@@ -1159,18 +2011,34 @@ egg_token *us(void)
 
   nt = egg_token_new(egg_token_type_us);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      31,
+                      fail,
+                      (void *)egg_token_type_us);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x1F)
   {
+    callback_by_index(&_cbt,
+                      31,
+                      success,
+                      (void *)egg_token_type_us);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    31,
+                    fail,
+                    (void *)egg_token_type_us);
 
   return NULL;
 }
@@ -1186,6 +2054,11 @@ egg_token *space(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    32,
+                    entry,
+                    (void *)egg_token_type_space);
+
   if (input_eof())
     return NULL;
 
@@ -1195,18 +2068,34 @@ egg_token *space(void)
 
   nt = egg_token_new(egg_token_type_space);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      32,
+                      fail,
+                      (void *)egg_token_type_space);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x20)
   {
+    callback_by_index(&_cbt,
+                      32,
+                      success,
+                      (void *)egg_token_type_space);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    32,
+                    fail,
+                    (void *)egg_token_type_space);
 
   return NULL;
 }
@@ -1222,6 +2111,11 @@ egg_token *exclamation_point(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    33,
+                    entry,
+                    (void *)egg_token_type_exclamation_point);
+
   if (input_eof())
     return NULL;
 
@@ -1231,18 +2125,34 @@ egg_token *exclamation_point(void)
 
   nt = egg_token_new(egg_token_type_exclamation_point);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      33,
+                      fail,
+                      (void *)egg_token_type_exclamation_point);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x21)
   {
+    callback_by_index(&_cbt,
+                      33,
+                      success,
+                      (void *)egg_token_type_exclamation_point);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    33,
+                    fail,
+                    (void *)egg_token_type_exclamation_point);
 
   return NULL;
 }
@@ -1258,6 +2168,11 @@ egg_token *quote(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    34,
+                    entry,
+                    (void *)egg_token_type_quote);
+
   if (input_eof())
     return NULL;
 
@@ -1267,18 +2182,34 @@ egg_token *quote(void)
 
   nt = egg_token_new(egg_token_type_quote);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      34,
+                      fail,
+                      (void *)egg_token_type_quote);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x22)
   {
+    callback_by_index(&_cbt,
+                      34,
+                      success,
+                      (void *)egg_token_type_quote);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    34,
+                    fail,
+                    (void *)egg_token_type_quote);
 
   return NULL;
 }
@@ -1294,6 +2225,11 @@ egg_token *number_sign(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    35,
+                    entry,
+                    (void *)egg_token_type_number_sign);
+
   if (input_eof())
     return NULL;
 
@@ -1303,18 +2239,34 @@ egg_token *number_sign(void)
 
   nt = egg_token_new(egg_token_type_number_sign);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      35,
+                      fail,
+                      (void *)egg_token_type_number_sign);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x23)
   {
+    callback_by_index(&_cbt,
+                      35,
+                      success,
+                      (void *)egg_token_type_number_sign);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    35,
+                    fail,
+                    (void *)egg_token_type_number_sign);
 
   return NULL;
 }
@@ -1330,6 +2282,11 @@ egg_token *dollar(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    36,
+                    entry,
+                    (void *)egg_token_type_dollar);
+
   if (input_eof())
     return NULL;
 
@@ -1339,18 +2296,34 @@ egg_token *dollar(void)
 
   nt = egg_token_new(egg_token_type_dollar);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      36,
+                      fail,
+                      (void *)egg_token_type_dollar);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x24)
   {
+    callback_by_index(&_cbt,
+                      36,
+                      success,
+                      (void *)egg_token_type_dollar);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    36,
+                    fail,
+                    (void *)egg_token_type_dollar);
 
   return NULL;
 }
@@ -1366,6 +2339,11 @@ egg_token *percent(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    37,
+                    entry,
+                    (void *)egg_token_type_percent);
+
   if (input_eof())
     return NULL;
 
@@ -1375,18 +2353,34 @@ egg_token *percent(void)
 
   nt = egg_token_new(egg_token_type_percent);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      37,
+                      fail,
+                      (void *)egg_token_type_percent);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x25)
   {
+    callback_by_index(&_cbt,
+                      37,
+                      success,
+                      (void *)egg_token_type_percent);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    37,
+                    fail,
+                    (void *)egg_token_type_percent);
 
   return NULL;
 }
@@ -1402,6 +2396,11 @@ egg_token *ampersand(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    38,
+                    entry,
+                    (void *)egg_token_type_ampersand);
+
   if (input_eof())
     return NULL;
 
@@ -1411,18 +2410,34 @@ egg_token *ampersand(void)
 
   nt = egg_token_new(egg_token_type_ampersand);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      38,
+                      fail,
+                      (void *)egg_token_type_ampersand);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x26)
   {
+    callback_by_index(&_cbt,
+                      38,
+                      success,
+                      (void *)egg_token_type_ampersand);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    38,
+                    fail,
+                    (void *)egg_token_type_ampersand);
 
   return NULL;
 }
@@ -1438,6 +2453,11 @@ egg_token *single_quote(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    39,
+                    entry,
+                    (void *)egg_token_type_single_quote);
+
   if (input_eof())
     return NULL;
 
@@ -1447,18 +2467,34 @@ egg_token *single_quote(void)
 
   nt = egg_token_new(egg_token_type_single_quote);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      39,
+                      fail,
+                      (void *)egg_token_type_single_quote);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x27)
   {
+    callback_by_index(&_cbt,
+                      39,
+                      success,
+                      (void *)egg_token_type_single_quote);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    39,
+                    fail,
+                    (void *)egg_token_type_single_quote);
 
   return NULL;
 }
@@ -1474,6 +2510,11 @@ egg_token *open_parenthesis(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    40,
+                    entry,
+                    (void *)egg_token_type_open_parenthesis);
+
   if (input_eof())
     return NULL;
 
@@ -1483,18 +2524,34 @@ egg_token *open_parenthesis(void)
 
   nt = egg_token_new(egg_token_type_open_parenthesis);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      40,
+                      fail,
+                      (void *)egg_token_type_open_parenthesis);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x28)
   {
+    callback_by_index(&_cbt,
+                      40,
+                      success,
+                      (void *)egg_token_type_open_parenthesis);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    40,
+                    fail,
+                    (void *)egg_token_type_open_parenthesis);
 
   return NULL;
 }
@@ -1510,6 +2567,11 @@ egg_token *close_parenthesis(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    41,
+                    entry,
+                    (void *)egg_token_type_close_parenthesis);
+
   if (input_eof())
     return NULL;
 
@@ -1519,18 +2581,34 @@ egg_token *close_parenthesis(void)
 
   nt = egg_token_new(egg_token_type_close_parenthesis);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      41,
+                      fail,
+                      (void *)egg_token_type_close_parenthesis);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x29)
   {
+    callback_by_index(&_cbt,
+                      41,
+                      success,
+                      (void *)egg_token_type_close_parenthesis);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    41,
+                    fail,
+                    (void *)egg_token_type_close_parenthesis);
 
   return NULL;
 }
@@ -1546,6 +2624,11 @@ egg_token *asterisk(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    42,
+                    entry,
+                    (void *)egg_token_type_asterisk);
+
   if (input_eof())
     return NULL;
 
@@ -1555,18 +2638,34 @@ egg_token *asterisk(void)
 
   nt = egg_token_new(egg_token_type_asterisk);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      42,
+                      fail,
+                      (void *)egg_token_type_asterisk);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x2A)
   {
+    callback_by_index(&_cbt,
+                      42,
+                      success,
+                      (void *)egg_token_type_asterisk);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    42,
+                    fail,
+                    (void *)egg_token_type_asterisk);
 
   return NULL;
 }
@@ -1582,6 +2681,11 @@ egg_token *plus(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    43,
+                    entry,
+                    (void *)egg_token_type_plus);
+
   if (input_eof())
     return NULL;
 
@@ -1591,18 +2695,34 @@ egg_token *plus(void)
 
   nt = egg_token_new(egg_token_type_plus);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      43,
+                      fail,
+                      (void *)egg_token_type_plus);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x2B)
   {
+    callback_by_index(&_cbt,
+                      43,
+                      success,
+                      (void *)egg_token_type_plus);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    43,
+                    fail,
+                    (void *)egg_token_type_plus);
 
   return NULL;
 }
@@ -1618,6 +2738,11 @@ egg_token *comma(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    44,
+                    entry,
+                    (void *)egg_token_type_comma);
+
   if (input_eof())
     return NULL;
 
@@ -1627,18 +2752,34 @@ egg_token *comma(void)
 
   nt = egg_token_new(egg_token_type_comma);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      44,
+                      fail,
+                      (void *)egg_token_type_comma);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x2C)
   {
+    callback_by_index(&_cbt,
+                      44,
+                      success,
+                      (void *)egg_token_type_comma);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    44,
+                    fail,
+                    (void *)egg_token_type_comma);
 
   return NULL;
 }
@@ -1654,6 +2795,11 @@ egg_token *minus(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    45,
+                    entry,
+                    (void *)egg_token_type_minus);
+
   if (input_eof())
     return NULL;
 
@@ -1663,18 +2809,34 @@ egg_token *minus(void)
 
   nt = egg_token_new(egg_token_type_minus);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      45,
+                      fail,
+                      (void *)egg_token_type_minus);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x2D)
   {
+    callback_by_index(&_cbt,
+                      45,
+                      success,
+                      (void *)egg_token_type_minus);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    45,
+                    fail,
+                    (void *)egg_token_type_minus);
 
   return NULL;
 }
@@ -1690,6 +2852,11 @@ egg_token *period(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    46,
+                    entry,
+                    (void *)egg_token_type_period);
+
   if (input_eof())
     return NULL;
 
@@ -1699,18 +2866,34 @@ egg_token *period(void)
 
   nt = egg_token_new(egg_token_type_period);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      46,
+                      fail,
+                      (void *)egg_token_type_period);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x2E)
   {
+    callback_by_index(&_cbt,
+                      46,
+                      success,
+                      (void *)egg_token_type_period);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    46,
+                    fail,
+                    (void *)egg_token_type_period);
 
   return NULL;
 }
@@ -1726,6 +2909,11 @@ egg_token *slash(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    47,
+                    entry,
+                    (void *)egg_token_type_slash);
+
   if (input_eof())
     return NULL;
 
@@ -1735,18 +2923,34 @@ egg_token *slash(void)
 
   nt = egg_token_new(egg_token_type_slash);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      47,
+                      fail,
+                      (void *)egg_token_type_slash);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x2F)
   {
+    callback_by_index(&_cbt,
+                      47,
+                      success,
+                      (void *)egg_token_type_slash);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    47,
+                    fail,
+                    (void *)egg_token_type_slash);
 
   return NULL;
 }
@@ -1762,6 +2966,11 @@ egg_token *zero(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    48,
+                    entry,
+                    (void *)egg_token_type_zero);
+
   if (input_eof())
     return NULL;
 
@@ -1771,18 +2980,34 @@ egg_token *zero(void)
 
   nt = egg_token_new(egg_token_type_zero);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      48,
+                      fail,
+                      (void *)egg_token_type_zero);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x30)
   {
+    callback_by_index(&_cbt,
+                      48,
+                      success,
+                      (void *)egg_token_type_zero);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    48,
+                    fail,
+                    (void *)egg_token_type_zero);
 
   return NULL;
 }
@@ -1798,6 +3023,11 @@ egg_token *one(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    49,
+                    entry,
+                    (void *)egg_token_type_one);
+
   if (input_eof())
     return NULL;
 
@@ -1807,18 +3037,34 @@ egg_token *one(void)
 
   nt = egg_token_new(egg_token_type_one);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      49,
+                      fail,
+                      (void *)egg_token_type_one);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x31)
   {
+    callback_by_index(&_cbt,
+                      49,
+                      success,
+                      (void *)egg_token_type_one);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    49,
+                    fail,
+                    (void *)egg_token_type_one);
 
   return NULL;
 }
@@ -1834,6 +3080,11 @@ egg_token *two(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    50,
+                    entry,
+                    (void *)egg_token_type_two);
+
   if (input_eof())
     return NULL;
 
@@ -1843,18 +3094,34 @@ egg_token *two(void)
 
   nt = egg_token_new(egg_token_type_two);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      50,
+                      fail,
+                      (void *)egg_token_type_two);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x32)
   {
+    callback_by_index(&_cbt,
+                      50,
+                      success,
+                      (void *)egg_token_type_two);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    50,
+                    fail,
+                    (void *)egg_token_type_two);
 
   return NULL;
 }
@@ -1870,6 +3137,11 @@ egg_token *three(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    51,
+                    entry,
+                    (void *)egg_token_type_three);
+
   if (input_eof())
     return NULL;
 
@@ -1879,18 +3151,34 @@ egg_token *three(void)
 
   nt = egg_token_new(egg_token_type_three);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      51,
+                      fail,
+                      (void *)egg_token_type_three);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x33)
   {
+    callback_by_index(&_cbt,
+                      51,
+                      success,
+                      (void *)egg_token_type_three);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    51,
+                    fail,
+                    (void *)egg_token_type_three);
 
   return NULL;
 }
@@ -1906,6 +3194,11 @@ egg_token *four(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    52,
+                    entry,
+                    (void *)egg_token_type_four);
+
   if (input_eof())
     return NULL;
 
@@ -1915,18 +3208,34 @@ egg_token *four(void)
 
   nt = egg_token_new(egg_token_type_four);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      52,
+                      fail,
+                      (void *)egg_token_type_four);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x34)
   {
+    callback_by_index(&_cbt,
+                      52,
+                      success,
+                      (void *)egg_token_type_four);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    52,
+                    fail,
+                    (void *)egg_token_type_four);
 
   return NULL;
 }
@@ -1942,6 +3251,11 @@ egg_token *five(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    53,
+                    entry,
+                    (void *)egg_token_type_five);
+
   if (input_eof())
     return NULL;
 
@@ -1951,18 +3265,34 @@ egg_token *five(void)
 
   nt = egg_token_new(egg_token_type_five);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      53,
+                      fail,
+                      (void *)egg_token_type_five);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x35)
   {
+    callback_by_index(&_cbt,
+                      53,
+                      success,
+                      (void *)egg_token_type_five);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    53,
+                    fail,
+                    (void *)egg_token_type_five);
 
   return NULL;
 }
@@ -1978,6 +3308,11 @@ egg_token *six(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    54,
+                    entry,
+                    (void *)egg_token_type_six);
+
   if (input_eof())
     return NULL;
 
@@ -1987,18 +3322,34 @@ egg_token *six(void)
 
   nt = egg_token_new(egg_token_type_six);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      54,
+                      fail,
+                      (void *)egg_token_type_six);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x36)
   {
+    callback_by_index(&_cbt,
+                      54,
+                      success,
+                      (void *)egg_token_type_six);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    54,
+                    fail,
+                    (void *)egg_token_type_six);
 
   return NULL;
 }
@@ -2014,6 +3365,11 @@ egg_token *seven(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    55,
+                    entry,
+                    (void *)egg_token_type_seven);
+
   if (input_eof())
     return NULL;
 
@@ -2023,18 +3379,34 @@ egg_token *seven(void)
 
   nt = egg_token_new(egg_token_type_seven);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      55,
+                      fail,
+                      (void *)egg_token_type_seven);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x37)
   {
+    callback_by_index(&_cbt,
+                      55,
+                      success,
+                      (void *)egg_token_type_seven);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    55,
+                    fail,
+                    (void *)egg_token_type_seven);
 
   return NULL;
 }
@@ -2050,6 +3422,11 @@ egg_token *eight(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    56,
+                    entry,
+                    (void *)egg_token_type_eight);
+
   if (input_eof())
     return NULL;
 
@@ -2059,18 +3436,34 @@ egg_token *eight(void)
 
   nt = egg_token_new(egg_token_type_eight);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      56,
+                      fail,
+                      (void *)egg_token_type_eight);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x38)
   {
+    callback_by_index(&_cbt,
+                      56,
+                      success,
+                      (void *)egg_token_type_eight);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    56,
+                    fail,
+                    (void *)egg_token_type_eight);
 
   return NULL;
 }
@@ -2086,6 +3479,11 @@ egg_token *nine(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    57,
+                    entry,
+                    (void *)egg_token_type_nine);
+
   if (input_eof())
     return NULL;
 
@@ -2095,18 +3493,34 @@ egg_token *nine(void)
 
   nt = egg_token_new(egg_token_type_nine);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      57,
+                      fail,
+                      (void *)egg_token_type_nine);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x39)
   {
+    callback_by_index(&_cbt,
+                      57,
+                      success,
+                      (void *)egg_token_type_nine);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    57,
+                    fail,
+                    (void *)egg_token_type_nine);
 
   return NULL;
 }
@@ -2122,6 +3536,11 @@ egg_token *colon(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    58,
+                    entry,
+                    (void *)egg_token_type_colon);
+
   if (input_eof())
     return NULL;
 
@@ -2131,18 +3550,34 @@ egg_token *colon(void)
 
   nt = egg_token_new(egg_token_type_colon);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      58,
+                      fail,
+                      (void *)egg_token_type_colon);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x3A)
   {
+    callback_by_index(&_cbt,
+                      58,
+                      success,
+                      (void *)egg_token_type_colon);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    58,
+                    fail,
+                    (void *)egg_token_type_colon);
 
   return NULL;
 }
@@ -2158,6 +3593,11 @@ egg_token *semicolon(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    59,
+                    entry,
+                    (void *)egg_token_type_semicolon);
+
   if (input_eof())
     return NULL;
 
@@ -2167,18 +3607,34 @@ egg_token *semicolon(void)
 
   nt = egg_token_new(egg_token_type_semicolon);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      59,
+                      fail,
+                      (void *)egg_token_type_semicolon);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x3B)
   {
+    callback_by_index(&_cbt,
+                      59,
+                      success,
+                      (void *)egg_token_type_semicolon);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    59,
+                    fail,
+                    (void *)egg_token_type_semicolon);
 
   return NULL;
 }
@@ -2194,6 +3650,11 @@ egg_token *less_than(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    60,
+                    entry,
+                    (void *)egg_token_type_less_than);
+
   if (input_eof())
     return NULL;
 
@@ -2203,18 +3664,34 @@ egg_token *less_than(void)
 
   nt = egg_token_new(egg_token_type_less_than);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      60,
+                      fail,
+                      (void *)egg_token_type_less_than);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x3C)
   {
+    callback_by_index(&_cbt,
+                      60,
+                      success,
+                      (void *)egg_token_type_less_than);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    60,
+                    fail,
+                    (void *)egg_token_type_less_than);
 
   return NULL;
 }
@@ -2230,6 +3707,11 @@ egg_token *equal(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    61,
+                    entry,
+                    (void *)egg_token_type_equal);
+
   if (input_eof())
     return NULL;
 
@@ -2239,18 +3721,34 @@ egg_token *equal(void)
 
   nt = egg_token_new(egg_token_type_equal);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      61,
+                      fail,
+                      (void *)egg_token_type_equal);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x3D)
   {
+    callback_by_index(&_cbt,
+                      61,
+                      success,
+                      (void *)egg_token_type_equal);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    61,
+                    fail,
+                    (void *)egg_token_type_equal);
 
   return NULL;
 }
@@ -2266,6 +3764,11 @@ egg_token *greater_than(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    62,
+                    entry,
+                    (void *)egg_token_type_greater_than);
+
   if (input_eof())
     return NULL;
 
@@ -2275,18 +3778,34 @@ egg_token *greater_than(void)
 
   nt = egg_token_new(egg_token_type_greater_than);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      62,
+                      fail,
+                      (void *)egg_token_type_greater_than);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x3E)
   {
+    callback_by_index(&_cbt,
+                      62,
+                      success,
+                      (void *)egg_token_type_greater_than);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    62,
+                    fail,
+                    (void *)egg_token_type_greater_than);
 
   return NULL;
 }
@@ -2302,6 +3821,11 @@ egg_token *question_mark(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    63,
+                    entry,
+                    (void *)egg_token_type_question_mark);
+
   if (input_eof())
     return NULL;
 
@@ -2311,18 +3835,34 @@ egg_token *question_mark(void)
 
   nt = egg_token_new(egg_token_type_question_mark);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      63,
+                      fail,
+                      (void *)egg_token_type_question_mark);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x3F)
   {
+    callback_by_index(&_cbt,
+                      63,
+                      success,
+                      (void *)egg_token_type_question_mark);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    63,
+                    fail,
+                    (void *)egg_token_type_question_mark);
 
   return NULL;
 }
@@ -2338,6 +3878,11 @@ egg_token *at(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    64,
+                    entry,
+                    (void *)egg_token_type_at);
+
   if (input_eof())
     return NULL;
 
@@ -2347,18 +3892,34 @@ egg_token *at(void)
 
   nt = egg_token_new(egg_token_type_at);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      64,
+                      fail,
+                      (void *)egg_token_type_at);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x40)
   {
+    callback_by_index(&_cbt,
+                      64,
+                      success,
+                      (void *)egg_token_type_at);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    64,
+                    fail,
+                    (void *)egg_token_type_at);
 
   return NULL;
 }
@@ -2374,6 +3935,11 @@ egg_token *A(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    65,
+                    entry,
+                    (void *)egg_token_type_A);
+
   if (input_eof())
     return NULL;
 
@@ -2383,18 +3949,34 @@ egg_token *A(void)
 
   nt = egg_token_new(egg_token_type_A);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      65,
+                      fail,
+                      (void *)egg_token_type_A);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x41)
   {
+    callback_by_index(&_cbt,
+                      65,
+                      success,
+                      (void *)egg_token_type_A);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    65,
+                    fail,
+                    (void *)egg_token_type_A);
 
   return NULL;
 }
@@ -2410,6 +3992,11 @@ egg_token *B(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    66,
+                    entry,
+                    (void *)egg_token_type_B);
+
   if (input_eof())
     return NULL;
 
@@ -2419,18 +4006,34 @@ egg_token *B(void)
 
   nt = egg_token_new(egg_token_type_B);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      66,
+                      fail,
+                      (void *)egg_token_type_B);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x42)
   {
+    callback_by_index(&_cbt,
+                      66,
+                      success,
+                      (void *)egg_token_type_B);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    66,
+                    fail,
+                    (void *)egg_token_type_B);
 
   return NULL;
 }
@@ -2446,6 +4049,11 @@ egg_token *C(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    67,
+                    entry,
+                    (void *)egg_token_type_C);
+
   if (input_eof())
     return NULL;
 
@@ -2455,18 +4063,34 @@ egg_token *C(void)
 
   nt = egg_token_new(egg_token_type_C);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      67,
+                      fail,
+                      (void *)egg_token_type_C);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x43)
   {
+    callback_by_index(&_cbt,
+                      67,
+                      success,
+                      (void *)egg_token_type_C);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    67,
+                    fail,
+                    (void *)egg_token_type_C);
 
   return NULL;
 }
@@ -2482,6 +4106,11 @@ egg_token *D(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    68,
+                    entry,
+                    (void *)egg_token_type_D);
+
   if (input_eof())
     return NULL;
 
@@ -2491,18 +4120,34 @@ egg_token *D(void)
 
   nt = egg_token_new(egg_token_type_D);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      68,
+                      fail,
+                      (void *)egg_token_type_D);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x44)
   {
+    callback_by_index(&_cbt,
+                      68,
+                      success,
+                      (void *)egg_token_type_D);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    68,
+                    fail,
+                    (void *)egg_token_type_D);
 
   return NULL;
 }
@@ -2518,6 +4163,11 @@ egg_token *E(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    69,
+                    entry,
+                    (void *)egg_token_type_E);
+
   if (input_eof())
     return NULL;
 
@@ -2527,18 +4177,34 @@ egg_token *E(void)
 
   nt = egg_token_new(egg_token_type_E);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      69,
+                      fail,
+                      (void *)egg_token_type_E);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x45)
   {
+    callback_by_index(&_cbt,
+                      69,
+                      success,
+                      (void *)egg_token_type_E);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    69,
+                    fail,
+                    (void *)egg_token_type_E);
 
   return NULL;
 }
@@ -2554,6 +4220,11 @@ egg_token *F(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    70,
+                    entry,
+                    (void *)egg_token_type_F);
+
   if (input_eof())
     return NULL;
 
@@ -2563,18 +4234,34 @@ egg_token *F(void)
 
   nt = egg_token_new(egg_token_type_F);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      70,
+                      fail,
+                      (void *)egg_token_type_F);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x46)
   {
+    callback_by_index(&_cbt,
+                      70,
+                      success,
+                      (void *)egg_token_type_F);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    70,
+                    fail,
+                    (void *)egg_token_type_F);
 
   return NULL;
 }
@@ -2590,6 +4277,11 @@ egg_token *G(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    71,
+                    entry,
+                    (void *)egg_token_type_G);
+
   if (input_eof())
     return NULL;
 
@@ -2599,18 +4291,34 @@ egg_token *G(void)
 
   nt = egg_token_new(egg_token_type_G);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      71,
+                      fail,
+                      (void *)egg_token_type_G);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x47)
   {
+    callback_by_index(&_cbt,
+                      71,
+                      success,
+                      (void *)egg_token_type_G);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    71,
+                    fail,
+                    (void *)egg_token_type_G);
 
   return NULL;
 }
@@ -2626,6 +4334,11 @@ egg_token *H(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    72,
+                    entry,
+                    (void *)egg_token_type_H);
+
   if (input_eof())
     return NULL;
 
@@ -2635,18 +4348,34 @@ egg_token *H(void)
 
   nt = egg_token_new(egg_token_type_H);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      72,
+                      fail,
+                      (void *)egg_token_type_H);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x48)
   {
+    callback_by_index(&_cbt,
+                      72,
+                      success,
+                      (void *)egg_token_type_H);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    72,
+                    fail,
+                    (void *)egg_token_type_H);
 
   return NULL;
 }
@@ -2662,6 +4391,11 @@ egg_token *I(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    73,
+                    entry,
+                    (void *)egg_token_type_I);
+
   if (input_eof())
     return NULL;
 
@@ -2671,18 +4405,34 @@ egg_token *I(void)
 
   nt = egg_token_new(egg_token_type_I);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      73,
+                      fail,
+                      (void *)egg_token_type_I);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x49)
   {
+    callback_by_index(&_cbt,
+                      73,
+                      success,
+                      (void *)egg_token_type_I);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    73,
+                    fail,
+                    (void *)egg_token_type_I);
 
   return NULL;
 }
@@ -2698,6 +4448,11 @@ egg_token *J(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    74,
+                    entry,
+                    (void *)egg_token_type_J);
+
   if (input_eof())
     return NULL;
 
@@ -2707,18 +4462,34 @@ egg_token *J(void)
 
   nt = egg_token_new(egg_token_type_J);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      74,
+                      fail,
+                      (void *)egg_token_type_J);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x4A)
   {
+    callback_by_index(&_cbt,
+                      74,
+                      success,
+                      (void *)egg_token_type_J);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    74,
+                    fail,
+                    (void *)egg_token_type_J);
 
   return NULL;
 }
@@ -2734,6 +4505,11 @@ egg_token *K(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    75,
+                    entry,
+                    (void *)egg_token_type_K);
+
   if (input_eof())
     return NULL;
 
@@ -2743,18 +4519,34 @@ egg_token *K(void)
 
   nt = egg_token_new(egg_token_type_K);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      75,
+                      fail,
+                      (void *)egg_token_type_K);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x4B)
   {
+    callback_by_index(&_cbt,
+                      75,
+                      success,
+                      (void *)egg_token_type_K);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    75,
+                    fail,
+                    (void *)egg_token_type_K);
 
   return NULL;
 }
@@ -2770,6 +4562,11 @@ egg_token *L(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    76,
+                    entry,
+                    (void *)egg_token_type_L);
+
   if (input_eof())
     return NULL;
 
@@ -2779,18 +4576,34 @@ egg_token *L(void)
 
   nt = egg_token_new(egg_token_type_L);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      76,
+                      fail,
+                      (void *)egg_token_type_L);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x4C)
   {
+    callback_by_index(&_cbt,
+                      76,
+                      success,
+                      (void *)egg_token_type_L);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    76,
+                    fail,
+                    (void *)egg_token_type_L);
 
   return NULL;
 }
@@ -2806,6 +4619,11 @@ egg_token *M(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    77,
+                    entry,
+                    (void *)egg_token_type_M);
+
   if (input_eof())
     return NULL;
 
@@ -2815,18 +4633,34 @@ egg_token *M(void)
 
   nt = egg_token_new(egg_token_type_M);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      77,
+                      fail,
+                      (void *)egg_token_type_M);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x4D)
   {
+    callback_by_index(&_cbt,
+                      77,
+                      success,
+                      (void *)egg_token_type_M);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    77,
+                    fail,
+                    (void *)egg_token_type_M);
 
   return NULL;
 }
@@ -2842,6 +4676,11 @@ egg_token *N(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    78,
+                    entry,
+                    (void *)egg_token_type_N);
+
   if (input_eof())
     return NULL;
 
@@ -2851,18 +4690,34 @@ egg_token *N(void)
 
   nt = egg_token_new(egg_token_type_N);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      78,
+                      fail,
+                      (void *)egg_token_type_N);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x4E)
   {
+    callback_by_index(&_cbt,
+                      78,
+                      success,
+                      (void *)egg_token_type_N);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    78,
+                    fail,
+                    (void *)egg_token_type_N);
 
   return NULL;
 }
@@ -2878,6 +4733,11 @@ egg_token *O(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    79,
+                    entry,
+                    (void *)egg_token_type_O);
+
   if (input_eof())
     return NULL;
 
@@ -2887,18 +4747,34 @@ egg_token *O(void)
 
   nt = egg_token_new(egg_token_type_O);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      79,
+                      fail,
+                      (void *)egg_token_type_O);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x4F)
   {
+    callback_by_index(&_cbt,
+                      79,
+                      success,
+                      (void *)egg_token_type_O);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    79,
+                    fail,
+                    (void *)egg_token_type_O);
 
   return NULL;
 }
@@ -2914,6 +4790,11 @@ egg_token *P(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    80,
+                    entry,
+                    (void *)egg_token_type_P);
+
   if (input_eof())
     return NULL;
 
@@ -2923,18 +4804,34 @@ egg_token *P(void)
 
   nt = egg_token_new(egg_token_type_P);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      80,
+                      fail,
+                      (void *)egg_token_type_P);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x50)
   {
+    callback_by_index(&_cbt,
+                      80,
+                      success,
+                      (void *)egg_token_type_P);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    80,
+                    fail,
+                    (void *)egg_token_type_P);
 
   return NULL;
 }
@@ -2950,6 +4847,11 @@ egg_token *Q(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    81,
+                    entry,
+                    (void *)egg_token_type_Q);
+
   if (input_eof())
     return NULL;
 
@@ -2959,18 +4861,34 @@ egg_token *Q(void)
 
   nt = egg_token_new(egg_token_type_Q);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      81,
+                      fail,
+                      (void *)egg_token_type_Q);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x51)
   {
+    callback_by_index(&_cbt,
+                      81,
+                      success,
+                      (void *)egg_token_type_Q);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    81,
+                    fail,
+                    (void *)egg_token_type_Q);
 
   return NULL;
 }
@@ -2986,6 +4904,11 @@ egg_token *R(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    82,
+                    entry,
+                    (void *)egg_token_type_R);
+
   if (input_eof())
     return NULL;
 
@@ -2995,18 +4918,34 @@ egg_token *R(void)
 
   nt = egg_token_new(egg_token_type_R);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      82,
+                      fail,
+                      (void *)egg_token_type_R);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x52)
   {
+    callback_by_index(&_cbt,
+                      82,
+                      success,
+                      (void *)egg_token_type_R);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    82,
+                    fail,
+                    (void *)egg_token_type_R);
 
   return NULL;
 }
@@ -3022,6 +4961,11 @@ egg_token *S(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    83,
+                    entry,
+                    (void *)egg_token_type_S);
+
   if (input_eof())
     return NULL;
 
@@ -3031,18 +4975,34 @@ egg_token *S(void)
 
   nt = egg_token_new(egg_token_type_S);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      83,
+                      fail,
+                      (void *)egg_token_type_S);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x53)
   {
+    callback_by_index(&_cbt,
+                      83,
+                      success,
+                      (void *)egg_token_type_S);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    83,
+                    fail,
+                    (void *)egg_token_type_S);
 
   return NULL;
 }
@@ -3058,6 +5018,11 @@ egg_token *T(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    84,
+                    entry,
+                    (void *)egg_token_type_T);
+
   if (input_eof())
     return NULL;
 
@@ -3067,18 +5032,34 @@ egg_token *T(void)
 
   nt = egg_token_new(egg_token_type_T);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      84,
+                      fail,
+                      (void *)egg_token_type_T);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x54)
   {
+    callback_by_index(&_cbt,
+                      84,
+                      success,
+                      (void *)egg_token_type_T);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    84,
+                    fail,
+                    (void *)egg_token_type_T);
 
   return NULL;
 }
@@ -3094,6 +5075,11 @@ egg_token *U(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    85,
+                    entry,
+                    (void *)egg_token_type_U);
+
   if (input_eof())
     return NULL;
 
@@ -3103,18 +5089,34 @@ egg_token *U(void)
 
   nt = egg_token_new(egg_token_type_U);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      85,
+                      fail,
+                      (void *)egg_token_type_U);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x55)
   {
+    callback_by_index(&_cbt,
+                      85,
+                      success,
+                      (void *)egg_token_type_U);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    85,
+                    fail,
+                    (void *)egg_token_type_U);
 
   return NULL;
 }
@@ -3130,6 +5132,11 @@ egg_token *V(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    86,
+                    entry,
+                    (void *)egg_token_type_V);
+
   if (input_eof())
     return NULL;
 
@@ -3139,18 +5146,34 @@ egg_token *V(void)
 
   nt = egg_token_new(egg_token_type_V);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      86,
+                      fail,
+                      (void *)egg_token_type_V);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x56)
   {
+    callback_by_index(&_cbt,
+                      86,
+                      success,
+                      (void *)egg_token_type_V);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    86,
+                    fail,
+                    (void *)egg_token_type_V);
 
   return NULL;
 }
@@ -3166,6 +5189,11 @@ egg_token *W(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    87,
+                    entry,
+                    (void *)egg_token_type_W);
+
   if (input_eof())
     return NULL;
 
@@ -3175,18 +5203,34 @@ egg_token *W(void)
 
   nt = egg_token_new(egg_token_type_W);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      87,
+                      fail,
+                      (void *)egg_token_type_W);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x57)
   {
+    callback_by_index(&_cbt,
+                      87,
+                      success,
+                      (void *)egg_token_type_W);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    87,
+                    fail,
+                    (void *)egg_token_type_W);
 
   return NULL;
 }
@@ -3202,6 +5246,11 @@ egg_token *X(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    88,
+                    entry,
+                    (void *)egg_token_type_X);
+
   if (input_eof())
     return NULL;
 
@@ -3211,18 +5260,34 @@ egg_token *X(void)
 
   nt = egg_token_new(egg_token_type_X);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      88,
+                      fail,
+                      (void *)egg_token_type_X);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x58)
   {
+    callback_by_index(&_cbt,
+                      88,
+                      success,
+                      (void *)egg_token_type_X);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    88,
+                    fail,
+                    (void *)egg_token_type_X);
 
   return NULL;
 }
@@ -3238,6 +5303,11 @@ egg_token *Y(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    89,
+                    entry,
+                    (void *)egg_token_type_Y);
+
   if (input_eof())
     return NULL;
 
@@ -3247,18 +5317,34 @@ egg_token *Y(void)
 
   nt = egg_token_new(egg_token_type_Y);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      89,
+                      fail,
+                      (void *)egg_token_type_Y);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x59)
   {
+    callback_by_index(&_cbt,
+                      89,
+                      success,
+                      (void *)egg_token_type_Y);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    89,
+                    fail,
+                    (void *)egg_token_type_Y);
 
   return NULL;
 }
@@ -3274,6 +5360,11 @@ egg_token *Z(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    90,
+                    entry,
+                    (void *)egg_token_type_Z);
+
   if (input_eof())
     return NULL;
 
@@ -3283,18 +5374,34 @@ egg_token *Z(void)
 
   nt = egg_token_new(egg_token_type_Z);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      90,
+                      fail,
+                      (void *)egg_token_type_Z);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x5A)
   {
+    callback_by_index(&_cbt,
+                      90,
+                      success,
+                      (void *)egg_token_type_Z);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    90,
+                    fail,
+                    (void *)egg_token_type_Z);
 
   return NULL;
 }
@@ -3310,6 +5417,11 @@ egg_token *open_bracket(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    91,
+                    entry,
+                    (void *)egg_token_type_open_bracket);
+
   if (input_eof())
     return NULL;
 
@@ -3319,18 +5431,34 @@ egg_token *open_bracket(void)
 
   nt = egg_token_new(egg_token_type_open_bracket);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      91,
+                      fail,
+                      (void *)egg_token_type_open_bracket);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x5B)
   {
+    callback_by_index(&_cbt,
+                      91,
+                      success,
+                      (void *)egg_token_type_open_bracket);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    91,
+                    fail,
+                    (void *)egg_token_type_open_bracket);
 
   return NULL;
 }
@@ -3346,6 +5474,11 @@ egg_token *back_slash(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    92,
+                    entry,
+                    (void *)egg_token_type_back_slash);
+
   if (input_eof())
     return NULL;
 
@@ -3355,18 +5488,34 @@ egg_token *back_slash(void)
 
   nt = egg_token_new(egg_token_type_back_slash);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      92,
+                      fail,
+                      (void *)egg_token_type_back_slash);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x5C)
   {
+    callback_by_index(&_cbt,
+                      92,
+                      success,
+                      (void *)egg_token_type_back_slash);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    92,
+                    fail,
+                    (void *)egg_token_type_back_slash);
 
   return NULL;
 }
@@ -3382,6 +5531,11 @@ egg_token *close_bracket(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    93,
+                    entry,
+                    (void *)egg_token_type_close_bracket);
+
   if (input_eof())
     return NULL;
 
@@ -3391,18 +5545,34 @@ egg_token *close_bracket(void)
 
   nt = egg_token_new(egg_token_type_close_bracket);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      93,
+                      fail,
+                      (void *)egg_token_type_close_bracket);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x5D)
   {
+    callback_by_index(&_cbt,
+                      93,
+                      success,
+                      (void *)egg_token_type_close_bracket);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    93,
+                    fail,
+                    (void *)egg_token_type_close_bracket);
 
   return NULL;
 }
@@ -3418,6 +5588,11 @@ egg_token *carat(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    94,
+                    entry,
+                    (void *)egg_token_type_carat);
+
   if (input_eof())
     return NULL;
 
@@ -3427,18 +5602,34 @@ egg_token *carat(void)
 
   nt = egg_token_new(egg_token_type_carat);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      94,
+                      fail,
+                      (void *)egg_token_type_carat);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x5E)
   {
+    callback_by_index(&_cbt,
+                      94,
+                      success,
+                      (void *)egg_token_type_carat);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    94,
+                    fail,
+                    (void *)egg_token_type_carat);
 
   return NULL;
 }
@@ -3454,6 +5645,11 @@ egg_token *underscore(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    95,
+                    entry,
+                    (void *)egg_token_type_underscore);
+
   if (input_eof())
     return NULL;
 
@@ -3463,18 +5659,34 @@ egg_token *underscore(void)
 
   nt = egg_token_new(egg_token_type_underscore);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      95,
+                      fail,
+                      (void *)egg_token_type_underscore);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x5F)
   {
+    callback_by_index(&_cbt,
+                      95,
+                      success,
+                      (void *)egg_token_type_underscore);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    95,
+                    fail,
+                    (void *)egg_token_type_underscore);
 
   return NULL;
 }
@@ -3490,6 +5702,11 @@ egg_token *back_quote(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    96,
+                    entry,
+                    (void *)egg_token_type_back_quote);
+
   if (input_eof())
     return NULL;
 
@@ -3499,18 +5716,34 @@ egg_token *back_quote(void)
 
   nt = egg_token_new(egg_token_type_back_quote);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      96,
+                      fail,
+                      (void *)egg_token_type_back_quote);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x60)
   {
+    callback_by_index(&_cbt,
+                      96,
+                      success,
+                      (void *)egg_token_type_back_quote);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    96,
+                    fail,
+                    (void *)egg_token_type_back_quote);
 
   return NULL;
 }
@@ -3526,6 +5759,11 @@ egg_token *a(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    97,
+                    entry,
+                    (void *)egg_token_type_a);
+
   if (input_eof())
     return NULL;
 
@@ -3535,18 +5773,34 @@ egg_token *a(void)
 
   nt = egg_token_new(egg_token_type_a);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      97,
+                      fail,
+                      (void *)egg_token_type_a);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x61)
   {
+    callback_by_index(&_cbt,
+                      97,
+                      success,
+                      (void *)egg_token_type_a);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    97,
+                    fail,
+                    (void *)egg_token_type_a);
 
   return NULL;
 }
@@ -3562,6 +5816,11 @@ egg_token *b(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    98,
+                    entry,
+                    (void *)egg_token_type_b);
+
   if (input_eof())
     return NULL;
 
@@ -3571,18 +5830,34 @@ egg_token *b(void)
 
   nt = egg_token_new(egg_token_type_b);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      98,
+                      fail,
+                      (void *)egg_token_type_b);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x62)
   {
+    callback_by_index(&_cbt,
+                      98,
+                      success,
+                      (void *)egg_token_type_b);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    98,
+                    fail,
+                    (void *)egg_token_type_b);
 
   return NULL;
 }
@@ -3598,6 +5873,11 @@ egg_token *c(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    99,
+                    entry,
+                    (void *)egg_token_type_c);
+
   if (input_eof())
     return NULL;
 
@@ -3607,18 +5887,34 @@ egg_token *c(void)
 
   nt = egg_token_new(egg_token_type_c);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      99,
+                      fail,
+                      (void *)egg_token_type_c);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x63)
   {
+    callback_by_index(&_cbt,
+                      99,
+                      success,
+                      (void *)egg_token_type_c);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    99,
+                    fail,
+                    (void *)egg_token_type_c);
 
   return NULL;
 }
@@ -3634,6 +5930,11 @@ egg_token *d(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    100,
+                    entry,
+                    (void *)egg_token_type_d);
+
   if (input_eof())
     return NULL;
 
@@ -3643,18 +5944,34 @@ egg_token *d(void)
 
   nt = egg_token_new(egg_token_type_d);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      100,
+                      fail,
+                      (void *)egg_token_type_d);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x64)
   {
+    callback_by_index(&_cbt,
+                      100,
+                      success,
+                      (void *)egg_token_type_d);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    100,
+                    fail,
+                    (void *)egg_token_type_d);
 
   return NULL;
 }
@@ -3670,6 +5987,11 @@ egg_token *e(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    101,
+                    entry,
+                    (void *)egg_token_type_e);
+
   if (input_eof())
     return NULL;
 
@@ -3679,18 +6001,34 @@ egg_token *e(void)
 
   nt = egg_token_new(egg_token_type_e);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      101,
+                      fail,
+                      (void *)egg_token_type_e);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x65)
   {
+    callback_by_index(&_cbt,
+                      101,
+                      success,
+                      (void *)egg_token_type_e);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    101,
+                    fail,
+                    (void *)egg_token_type_e);
 
   return NULL;
 }
@@ -3706,6 +6044,11 @@ egg_token *f(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    102,
+                    entry,
+                    (void *)egg_token_type_f);
+
   if (input_eof())
     return NULL;
 
@@ -3715,18 +6058,34 @@ egg_token *f(void)
 
   nt = egg_token_new(egg_token_type_f);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      102,
+                      fail,
+                      (void *)egg_token_type_f);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x66)
   {
+    callback_by_index(&_cbt,
+                      102,
+                      success,
+                      (void *)egg_token_type_f);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    102,
+                    fail,
+                    (void *)egg_token_type_f);
 
   return NULL;
 }
@@ -3742,6 +6101,11 @@ egg_token *g(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    103,
+                    entry,
+                    (void *)egg_token_type_g);
+
   if (input_eof())
     return NULL;
 
@@ -3751,18 +6115,34 @@ egg_token *g(void)
 
   nt = egg_token_new(egg_token_type_g);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      103,
+                      fail,
+                      (void *)egg_token_type_g);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x67)
   {
+    callback_by_index(&_cbt,
+                      103,
+                      success,
+                      (void *)egg_token_type_g);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    103,
+                    fail,
+                    (void *)egg_token_type_g);
 
   return NULL;
 }
@@ -3778,6 +6158,11 @@ egg_token *h(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    104,
+                    entry,
+                    (void *)egg_token_type_h);
+
   if (input_eof())
     return NULL;
 
@@ -3787,18 +6172,34 @@ egg_token *h(void)
 
   nt = egg_token_new(egg_token_type_h);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      104,
+                      fail,
+                      (void *)egg_token_type_h);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x68)
   {
+    callback_by_index(&_cbt,
+                      104,
+                      success,
+                      (void *)egg_token_type_h);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    104,
+                    fail,
+                    (void *)egg_token_type_h);
 
   return NULL;
 }
@@ -3814,6 +6215,11 @@ egg_token *i(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    105,
+                    entry,
+                    (void *)egg_token_type_i);
+
   if (input_eof())
     return NULL;
 
@@ -3823,18 +6229,34 @@ egg_token *i(void)
 
   nt = egg_token_new(egg_token_type_i);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      105,
+                      fail,
+                      (void *)egg_token_type_i);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x69)
   {
+    callback_by_index(&_cbt,
+                      105,
+                      success,
+                      (void *)egg_token_type_i);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    105,
+                    fail,
+                    (void *)egg_token_type_i);
 
   return NULL;
 }
@@ -3850,6 +6272,11 @@ egg_token *j(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    106,
+                    entry,
+                    (void *)egg_token_type_j);
+
   if (input_eof())
     return NULL;
 
@@ -3859,18 +6286,34 @@ egg_token *j(void)
 
   nt = egg_token_new(egg_token_type_j);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      106,
+                      fail,
+                      (void *)egg_token_type_j);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x6A)
   {
+    callback_by_index(&_cbt,
+                      106,
+                      success,
+                      (void *)egg_token_type_j);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    106,
+                    fail,
+                    (void *)egg_token_type_j);
 
   return NULL;
 }
@@ -3886,6 +6329,11 @@ egg_token *k(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    107,
+                    entry,
+                    (void *)egg_token_type_k);
+
   if (input_eof())
     return NULL;
 
@@ -3895,18 +6343,34 @@ egg_token *k(void)
 
   nt = egg_token_new(egg_token_type_k);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      107,
+                      fail,
+                      (void *)egg_token_type_k);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x6B)
   {
+    callback_by_index(&_cbt,
+                      107,
+                      success,
+                      (void *)egg_token_type_k);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    107,
+                    fail,
+                    (void *)egg_token_type_k);
 
   return NULL;
 }
@@ -3922,6 +6386,11 @@ egg_token *l(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    108,
+                    entry,
+                    (void *)egg_token_type_l);
+
   if (input_eof())
     return NULL;
 
@@ -3931,18 +6400,34 @@ egg_token *l(void)
 
   nt = egg_token_new(egg_token_type_l);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      108,
+                      fail,
+                      (void *)egg_token_type_l);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x6C)
   {
+    callback_by_index(&_cbt,
+                      108,
+                      success,
+                      (void *)egg_token_type_l);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    108,
+                    fail,
+                    (void *)egg_token_type_l);
 
   return NULL;
 }
@@ -3958,6 +6443,11 @@ egg_token *m(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    109,
+                    entry,
+                    (void *)egg_token_type_m);
+
   if (input_eof())
     return NULL;
 
@@ -3967,18 +6457,34 @@ egg_token *m(void)
 
   nt = egg_token_new(egg_token_type_m);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      109,
+                      fail,
+                      (void *)egg_token_type_m);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x6D)
   {
+    callback_by_index(&_cbt,
+                      109,
+                      success,
+                      (void *)egg_token_type_m);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    109,
+                    fail,
+                    (void *)egg_token_type_m);
 
   return NULL;
 }
@@ -3994,6 +6500,11 @@ egg_token *n(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    110,
+                    entry,
+                    (void *)egg_token_type_n);
+
   if (input_eof())
     return NULL;
 
@@ -4003,18 +6514,34 @@ egg_token *n(void)
 
   nt = egg_token_new(egg_token_type_n);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      110,
+                      fail,
+                      (void *)egg_token_type_n);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x6E)
   {
+    callback_by_index(&_cbt,
+                      110,
+                      success,
+                      (void *)egg_token_type_n);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    110,
+                    fail,
+                    (void *)egg_token_type_n);
 
   return NULL;
 }
@@ -4030,6 +6557,11 @@ egg_token *o(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    111,
+                    entry,
+                    (void *)egg_token_type_o);
+
   if (input_eof())
     return NULL;
 
@@ -4039,18 +6571,34 @@ egg_token *o(void)
 
   nt = egg_token_new(egg_token_type_o);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      111,
+                      fail,
+                      (void *)egg_token_type_o);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x6F)
   {
+    callback_by_index(&_cbt,
+                      111,
+                      success,
+                      (void *)egg_token_type_o);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    111,
+                    fail,
+                    (void *)egg_token_type_o);
 
   return NULL;
 }
@@ -4066,6 +6614,11 @@ egg_token *p(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    112,
+                    entry,
+                    (void *)egg_token_type_p);
+
   if (input_eof())
     return NULL;
 
@@ -4075,18 +6628,34 @@ egg_token *p(void)
 
   nt = egg_token_new(egg_token_type_p);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      112,
+                      fail,
+                      (void *)egg_token_type_p);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x70)
   {
+    callback_by_index(&_cbt,
+                      112,
+                      success,
+                      (void *)egg_token_type_p);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    112,
+                    fail,
+                    (void *)egg_token_type_p);
 
   return NULL;
 }
@@ -4102,6 +6671,11 @@ egg_token *q(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    113,
+                    entry,
+                    (void *)egg_token_type_q);
+
   if (input_eof())
     return NULL;
 
@@ -4111,18 +6685,34 @@ egg_token *q(void)
 
   nt = egg_token_new(egg_token_type_q);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      113,
+                      fail,
+                      (void *)egg_token_type_q);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x71)
   {
+    callback_by_index(&_cbt,
+                      113,
+                      success,
+                      (void *)egg_token_type_q);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    113,
+                    fail,
+                    (void *)egg_token_type_q);
 
   return NULL;
 }
@@ -4138,6 +6728,11 @@ egg_token *r(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    114,
+                    entry,
+                    (void *)egg_token_type_r);
+
   if (input_eof())
     return NULL;
 
@@ -4147,18 +6742,34 @@ egg_token *r(void)
 
   nt = egg_token_new(egg_token_type_r);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      114,
+                      fail,
+                      (void *)egg_token_type_r);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x72)
   {
+    callback_by_index(&_cbt,
+                      114,
+                      success,
+                      (void *)egg_token_type_r);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    114,
+                    fail,
+                    (void *)egg_token_type_r);
 
   return NULL;
 }
@@ -4174,6 +6785,11 @@ egg_token *s(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    115,
+                    entry,
+                    (void *)egg_token_type_s);
+
   if (input_eof())
     return NULL;
 
@@ -4183,18 +6799,34 @@ egg_token *s(void)
 
   nt = egg_token_new(egg_token_type_s);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      115,
+                      fail,
+                      (void *)egg_token_type_s);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x73)
   {
+    callback_by_index(&_cbt,
+                      115,
+                      success,
+                      (void *)egg_token_type_s);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    115,
+                    fail,
+                    (void *)egg_token_type_s);
 
   return NULL;
 }
@@ -4210,6 +6842,11 @@ egg_token *t(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    116,
+                    entry,
+                    (void *)egg_token_type_t);
+
   if (input_eof())
     return NULL;
 
@@ -4219,18 +6856,34 @@ egg_token *t(void)
 
   nt = egg_token_new(egg_token_type_t);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      116,
+                      fail,
+                      (void *)egg_token_type_t);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x74)
   {
+    callback_by_index(&_cbt,
+                      116,
+                      success,
+                      (void *)egg_token_type_t);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    116,
+                    fail,
+                    (void *)egg_token_type_t);
 
   return NULL;
 }
@@ -4246,6 +6899,11 @@ egg_token *u(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    117,
+                    entry,
+                    (void *)egg_token_type_u);
+
   if (input_eof())
     return NULL;
 
@@ -4255,18 +6913,34 @@ egg_token *u(void)
 
   nt = egg_token_new(egg_token_type_u);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      117,
+                      fail,
+                      (void *)egg_token_type_u);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x75)
   {
+    callback_by_index(&_cbt,
+                      117,
+                      success,
+                      (void *)egg_token_type_u);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    117,
+                    fail,
+                    (void *)egg_token_type_u);
 
   return NULL;
 }
@@ -4282,6 +6956,11 @@ egg_token *v(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    118,
+                    entry,
+                    (void *)egg_token_type_v);
+
   if (input_eof())
     return NULL;
 
@@ -4291,18 +6970,34 @@ egg_token *v(void)
 
   nt = egg_token_new(egg_token_type_v);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      118,
+                      fail,
+                      (void *)egg_token_type_v);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x76)
   {
+    callback_by_index(&_cbt,
+                      118,
+                      success,
+                      (void *)egg_token_type_v);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    118,
+                    fail,
+                    (void *)egg_token_type_v);
 
   return NULL;
 }
@@ -4318,6 +7013,11 @@ egg_token *w(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    119,
+                    entry,
+                    (void *)egg_token_type_w);
+
   if (input_eof())
     return NULL;
 
@@ -4327,18 +7027,34 @@ egg_token *w(void)
 
   nt = egg_token_new(egg_token_type_w);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      119,
+                      fail,
+                      (void *)egg_token_type_w);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x77)
   {
+    callback_by_index(&_cbt,
+                      119,
+                      success,
+                      (void *)egg_token_type_w);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    119,
+                    fail,
+                    (void *)egg_token_type_w);
 
   return NULL;
 }
@@ -4354,6 +7070,11 @@ egg_token *x(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    120,
+                    entry,
+                    (void *)egg_token_type_x);
+
   if (input_eof())
     return NULL;
 
@@ -4363,18 +7084,34 @@ egg_token *x(void)
 
   nt = egg_token_new(egg_token_type_x);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      120,
+                      fail,
+                      (void *)egg_token_type_x);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x78)
   {
+    callback_by_index(&_cbt,
+                      120,
+                      success,
+                      (void *)egg_token_type_x);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    120,
+                    fail,
+                    (void *)egg_token_type_x);
 
   return NULL;
 }
@@ -4390,6 +7127,11 @@ egg_token *y(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    121,
+                    entry,
+                    (void *)egg_token_type_y);
+
   if (input_eof())
     return NULL;
 
@@ -4399,18 +7141,34 @@ egg_token *y(void)
 
   nt = egg_token_new(egg_token_type_y);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      121,
+                      fail,
+                      (void *)egg_token_type_y);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x79)
   {
+    callback_by_index(&_cbt,
+                      121,
+                      success,
+                      (void *)egg_token_type_y);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    121,
+                    fail,
+                    (void *)egg_token_type_y);
 
   return NULL;
 }
@@ -4426,6 +7184,11 @@ egg_token *z(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    122,
+                    entry,
+                    (void *)egg_token_type_z);
+
   if (input_eof())
     return NULL;
 
@@ -4435,18 +7198,34 @@ egg_token *z(void)
 
   nt = egg_token_new(egg_token_type_z);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      122,
+                      fail,
+                      (void *)egg_token_type_z);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x7A)
   {
+    callback_by_index(&_cbt,
+                      122,
+                      success,
+                      (void *)egg_token_type_z);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    122,
+                    fail,
+                    (void *)egg_token_type_z);
 
   return NULL;
 }
@@ -4462,6 +7241,11 @@ egg_token *open_brace(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    123,
+                    entry,
+                    (void *)egg_token_type_open_brace);
+
   if (input_eof())
     return NULL;
 
@@ -4471,18 +7255,34 @@ egg_token *open_brace(void)
 
   nt = egg_token_new(egg_token_type_open_brace);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      123,
+                      fail,
+                      (void *)egg_token_type_open_brace);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x7B)
   {
+    callback_by_index(&_cbt,
+                      123,
+                      success,
+                      (void *)egg_token_type_open_brace);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    123,
+                    fail,
+                    (void *)egg_token_type_open_brace);
 
   return NULL;
 }
@@ -4498,6 +7298,11 @@ egg_token *bar(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    124,
+                    entry,
+                    (void *)egg_token_type_bar);
+
   if (input_eof())
     return NULL;
 
@@ -4507,18 +7312,34 @@ egg_token *bar(void)
 
   nt = egg_token_new(egg_token_type_bar);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      124,
+                      fail,
+                      (void *)egg_token_type_bar);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x7C)
   {
+    callback_by_index(&_cbt,
+                      124,
+                      success,
+                      (void *)egg_token_type_bar);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    124,
+                    fail,
+                    (void *)egg_token_type_bar);
 
   return NULL;
 }
@@ -4534,6 +7355,11 @@ egg_token *close_brace(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    125,
+                    entry,
+                    (void *)egg_token_type_close_brace);
+
   if (input_eof())
     return NULL;
 
@@ -4543,18 +7369,34 @@ egg_token *close_brace(void)
 
   nt = egg_token_new(egg_token_type_close_brace);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      125,
+                      fail,
+                      (void *)egg_token_type_close_brace);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x7D)
   {
+    callback_by_index(&_cbt,
+                      125,
+                      success,
+                      (void *)egg_token_type_close_brace);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    125,
+                    fail,
+                    (void *)egg_token_type_close_brace);
 
   return NULL;
 }
@@ -4570,6 +7412,11 @@ egg_token *tilde(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    126,
+                    entry,
+                    (void *)egg_token_type_tilde);
+
   if (input_eof())
     return NULL;
 
@@ -4579,18 +7426,34 @@ egg_token *tilde(void)
 
   nt = egg_token_new(egg_token_type_tilde);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      126,
+                      fail,
+                      (void *)egg_token_type_tilde);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x7E)
   {
+    callback_by_index(&_cbt,
+                      126,
+                      success,
+                      (void *)egg_token_type_tilde);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    126,
+                    fail,
+                    (void *)egg_token_type_tilde);
 
   return NULL;
 }
@@ -4606,6 +7469,11 @@ egg_token *del(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    127,
+                    entry,
+                    (void *)egg_token_type_del);
+
   if (input_eof())
     return NULL;
 
@@ -4615,18 +7483,34 @@ egg_token *del(void)
 
   nt = egg_token_new(egg_token_type_del);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      127,
+                      fail,
+                      (void *)egg_token_type_del);
     return NULL;
+  }
 
   t1 = nt;
 
   dir = egg_token_below;
   if ((input_byte()) == 0x7F)
   {
+    callback_by_index(&_cbt,
+                      127,
+                      success,
+                      (void *)egg_token_type_del);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    127,
+                    fail,
+                    (void *)egg_token_type_del);
 
   return NULL;
 }
@@ -4645,6 +7529,11 @@ egg_token *control_character(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    128,
+                    entry,
+                    (void *)egg_token_type_control_character);
+
   if (input_eof())
     return NULL;
 
@@ -4654,7 +7543,13 @@ egg_token *control_character(void)
 
   nt = egg_token_new(egg_token_type_control_character);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      128,
+                      fail,
+                      (void *)egg_token_type_control_character);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -4663,6 +7558,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4671,6 +7571,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4679,6 +7584,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4687,6 +7597,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4695,6 +7610,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4703,6 +7623,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4711,6 +7636,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4719,6 +7649,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4727,6 +7662,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4735,6 +7675,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4743,6 +7688,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4751,6 +7701,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4759,6 +7714,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4767,6 +7727,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4775,6 +7740,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4783,6 +7753,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4791,6 +7766,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4799,6 +7779,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4807,6 +7792,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4815,6 +7805,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4823,6 +7818,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4831,6 +7831,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4839,6 +7844,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4847,6 +7857,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4855,6 +7870,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4863,6 +7883,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4871,6 +7896,11 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
@@ -4879,11 +7909,21 @@ egg_token *control_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      128,
+                      success,
+                      (void *)egg_token_type_control_character);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    128,
+                    fail,
+                    (void *)egg_token_type_control_character);
 
   return NULL;
 }
@@ -4901,6 +7941,11 @@ egg_token *upper_case_letter(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    129,
+                    entry,
+                    (void *)egg_token_type_upper_case_letter);
+
   if (input_eof())
     return NULL;
 
@@ -4910,7 +7955,13 @@ egg_token *upper_case_letter(void)
 
   nt = egg_token_new(egg_token_type_upper_case_letter);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      129,
+                      fail,
+                      (void *)egg_token_type_upper_case_letter);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -4919,6 +7970,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -4927,6 +7983,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -4935,6 +7996,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -4943,6 +8009,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -4951,6 +8022,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -4959,6 +8035,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -4967,6 +8048,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -4975,6 +8061,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -4983,6 +8074,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -4991,6 +8087,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -4999,6 +8100,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -5007,6 +8113,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -5015,6 +8126,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -5023,6 +8139,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -5031,6 +8152,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -5039,6 +8165,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -5047,6 +8178,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -5055,6 +8191,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -5063,6 +8204,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -5071,6 +8217,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -5079,6 +8230,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -5087,6 +8243,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -5095,6 +8256,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -5103,6 +8269,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -5111,6 +8282,11 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
@@ -5119,11 +8295,21 @@ egg_token *upper_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      129,
+                      success,
+                      (void *)egg_token_type_upper_case_letter);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    129,
+                    fail,
+                    (void *)egg_token_type_upper_case_letter);
 
   return NULL;
 }
@@ -5141,6 +8327,11 @@ egg_token *lower_case_letter(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    130,
+                    entry,
+                    (void *)egg_token_type_lower_case_letter);
+
   if (input_eof())
     return NULL;
 
@@ -5150,7 +8341,13 @@ egg_token *lower_case_letter(void)
 
   nt = egg_token_new(egg_token_type_lower_case_letter);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      130,
+                      fail,
+                      (void *)egg_token_type_lower_case_letter);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -5159,6 +8356,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5167,6 +8369,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5175,6 +8382,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5183,6 +8395,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5191,6 +8408,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5199,6 +8421,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5207,6 +8434,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5215,6 +8447,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5223,6 +8460,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5231,6 +8473,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5239,6 +8486,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5247,6 +8499,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5255,6 +8512,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5263,6 +8525,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5271,6 +8538,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5279,6 +8551,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5287,6 +8564,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5295,6 +8577,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5303,6 +8590,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5311,6 +8603,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5319,6 +8616,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5327,6 +8629,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5335,6 +8642,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5343,6 +8655,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5351,6 +8668,11 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
@@ -5359,11 +8681,21 @@ egg_token *lower_case_letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      130,
+                      success,
+                      (void *)egg_token_type_lower_case_letter);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    130,
+                    fail,
+                    (void *)egg_token_type_lower_case_letter);
 
   return NULL;
 }
@@ -5379,6 +8711,11 @@ egg_token *letter(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    131,
+                    entry,
+                    (void *)egg_token_type_letter);
+
   if (input_eof())
     return NULL;
 
@@ -5388,7 +8725,13 @@ egg_token *letter(void)
 
   nt = egg_token_new(egg_token_type_letter);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      131,
+                      fail,
+                      (void *)egg_token_type_letter);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -5397,6 +8740,11 @@ egg_token *letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      131,
+                      success,
+                      (void *)egg_token_type_letter);
+
     return nt;
   }
 
@@ -5405,11 +8753,21 @@ egg_token *letter(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      131,
+                      success,
+                      (void *)egg_token_type_letter);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    131,
+                    fail,
+                    (void *)egg_token_type_letter);
 
   return NULL;
 }
@@ -5425,6 +8783,11 @@ egg_token *binary_digit(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    132,
+                    entry,
+                    (void *)egg_token_type_binary_digit);
+
   if (input_eof())
     return NULL;
 
@@ -5434,7 +8797,13 @@ egg_token *binary_digit(void)
 
   nt = egg_token_new(egg_token_type_binary_digit);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      132,
+                      fail,
+                      (void *)egg_token_type_binary_digit);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -5443,6 +8812,11 @@ egg_token *binary_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      132,
+                      success,
+                      (void *)egg_token_type_binary_digit);
+
     return nt;
   }
 
@@ -5451,11 +8825,21 @@ egg_token *binary_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      132,
+                      success,
+                      (void *)egg_token_type_binary_digit);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    132,
+                    fail,
+                    (void *)egg_token_type_binary_digit);
 
   return NULL;
 }
@@ -5471,6 +8855,11 @@ egg_token *octal_digit(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    133,
+                    entry,
+                    (void *)egg_token_type_octal_digit);
+
   if (input_eof())
     return NULL;
 
@@ -5480,7 +8869,13 @@ egg_token *octal_digit(void)
 
   nt = egg_token_new(egg_token_type_octal_digit);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      133,
+                      fail,
+                      (void *)egg_token_type_octal_digit);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -5489,6 +8884,11 @@ egg_token *octal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      133,
+                      success,
+                      (void *)egg_token_type_octal_digit);
+
     return nt;
   }
 
@@ -5497,6 +8897,11 @@ egg_token *octal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      133,
+                      success,
+                      (void *)egg_token_type_octal_digit);
+
     return nt;
   }
 
@@ -5505,6 +8910,11 @@ egg_token *octal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      133,
+                      success,
+                      (void *)egg_token_type_octal_digit);
+
     return nt;
   }
 
@@ -5513,6 +8923,11 @@ egg_token *octal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      133,
+                      success,
+                      (void *)egg_token_type_octal_digit);
+
     return nt;
   }
 
@@ -5521,6 +8936,11 @@ egg_token *octal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      133,
+                      success,
+                      (void *)egg_token_type_octal_digit);
+
     return nt;
   }
 
@@ -5529,6 +8949,11 @@ egg_token *octal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      133,
+                      success,
+                      (void *)egg_token_type_octal_digit);
+
     return nt;
   }
 
@@ -5537,6 +8962,11 @@ egg_token *octal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      133,
+                      success,
+                      (void *)egg_token_type_octal_digit);
+
     return nt;
   }
 
@@ -5545,11 +8975,21 @@ egg_token *octal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      133,
+                      success,
+                      (void *)egg_token_type_octal_digit);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    133,
+                    fail,
+                    (void *)egg_token_type_octal_digit);
 
   return NULL;
 }
@@ -5566,6 +9006,11 @@ egg_token *decimal_digit(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    134,
+                    entry,
+                    (void *)egg_token_type_decimal_digit);
+
   if (input_eof())
     return NULL;
 
@@ -5575,7 +9020,13 @@ egg_token *decimal_digit(void)
 
   nt = egg_token_new(egg_token_type_decimal_digit);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      134,
+                      fail,
+                      (void *)egg_token_type_decimal_digit);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -5584,6 +9035,11 @@ egg_token *decimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      134,
+                      success,
+                      (void *)egg_token_type_decimal_digit);
+
     return nt;
   }
 
@@ -5592,6 +9048,11 @@ egg_token *decimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      134,
+                      success,
+                      (void *)egg_token_type_decimal_digit);
+
     return nt;
   }
 
@@ -5600,6 +9061,11 @@ egg_token *decimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      134,
+                      success,
+                      (void *)egg_token_type_decimal_digit);
+
     return nt;
   }
 
@@ -5608,6 +9074,11 @@ egg_token *decimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      134,
+                      success,
+                      (void *)egg_token_type_decimal_digit);
+
     return nt;
   }
 
@@ -5616,6 +9087,11 @@ egg_token *decimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      134,
+                      success,
+                      (void *)egg_token_type_decimal_digit);
+
     return nt;
   }
 
@@ -5624,6 +9100,11 @@ egg_token *decimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      134,
+                      success,
+                      (void *)egg_token_type_decimal_digit);
+
     return nt;
   }
 
@@ -5632,6 +9113,11 @@ egg_token *decimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      134,
+                      success,
+                      (void *)egg_token_type_decimal_digit);
+
     return nt;
   }
 
@@ -5640,6 +9126,11 @@ egg_token *decimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      134,
+                      success,
+                      (void *)egg_token_type_decimal_digit);
+
     return nt;
   }
 
@@ -5648,6 +9139,11 @@ egg_token *decimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      134,
+                      success,
+                      (void *)egg_token_type_decimal_digit);
+
     return nt;
   }
 
@@ -5656,11 +9152,21 @@ egg_token *decimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      134,
+                      success,
+                      (void *)egg_token_type_decimal_digit);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    134,
+                    fail,
+                    (void *)egg_token_type_decimal_digit);
 
   return NULL;
 }
@@ -5679,6 +9185,11 @@ egg_token *hexadecimal_digit(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    135,
+                    entry,
+                    (void *)egg_token_type_hexadecimal_digit);
+
   if (input_eof())
     return NULL;
 
@@ -5688,7 +9199,13 @@ egg_token *hexadecimal_digit(void)
 
   nt = egg_token_new(egg_token_type_hexadecimal_digit);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      135,
+                      fail,
+                      (void *)egg_token_type_hexadecimal_digit);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -5697,6 +9214,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5705,6 +9227,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5713,6 +9240,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5721,6 +9253,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5729,6 +9266,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5737,6 +9279,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5745,6 +9292,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5753,6 +9305,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5761,6 +9318,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5769,6 +9331,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5777,6 +9344,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5785,6 +9357,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5793,6 +9370,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5801,6 +9383,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5809,6 +9396,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5817,6 +9409,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5825,6 +9422,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5833,6 +9435,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5841,6 +9448,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5849,6 +9461,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5857,6 +9474,11 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
@@ -5865,11 +9487,21 @@ egg_token *hexadecimal_digit(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      135,
+                      success,
+                      (void *)egg_token_type_hexadecimal_digit);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    135,
+                    fail,
+                    (void *)egg_token_type_hexadecimal_digit);
 
   return NULL;
 }
@@ -5885,6 +9517,11 @@ egg_token *white_space(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    136,
+                    entry,
+                    (void *)egg_token_type_white_space);
+
   if (input_eof())
     return NULL;
 
@@ -5894,7 +9531,13 @@ egg_token *white_space(void)
 
   nt = egg_token_new(egg_token_type_white_space);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      136,
+                      fail,
+                      (void *)egg_token_type_white_space);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -5903,6 +9546,11 @@ egg_token *white_space(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      136,
+                      success,
+                      (void *)egg_token_type_white_space);
+
     return nt;
   }
 
@@ -5911,6 +9559,11 @@ egg_token *white_space(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      136,
+                      success,
+                      (void *)egg_token_type_white_space);
+
     return nt;
   }
 
@@ -5919,6 +9572,11 @@ egg_token *white_space(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      136,
+                      success,
+                      (void *)egg_token_type_white_space);
+
     return nt;
   }
 
@@ -5927,6 +9585,11 @@ egg_token *white_space(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      136,
+                      success,
+                      (void *)egg_token_type_white_space);
+
     return nt;
   }
 
@@ -5935,6 +9598,11 @@ egg_token *white_space(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      136,
+                      success,
+                      (void *)egg_token_type_white_space);
+
     return nt;
   }
 
@@ -5943,11 +9611,21 @@ egg_token *white_space(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      136,
+                      success,
+                      (void *)egg_token_type_white_space);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    136,
+                    fail,
+                    (void *)egg_token_type_white_space);
 
   return NULL;
 }
@@ -5969,6 +9647,11 @@ egg_token *common_character(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    137,
+                    entry,
+                    (void *)egg_token_type_common_character);
+
   if (input_eof())
     return NULL;
 
@@ -5978,7 +9661,13 @@ egg_token *common_character(void)
 
   nt = egg_token_new(egg_token_type_common_character);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      137,
+                      fail,
+                      (void *)egg_token_type_common_character);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -5987,6 +9676,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -5995,6 +9689,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6003,6 +9702,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6011,6 +9715,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6019,6 +9728,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6027,6 +9741,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6035,6 +9754,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6043,6 +9767,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6051,6 +9780,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6059,6 +9793,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6067,6 +9806,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6075,6 +9819,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6083,6 +9832,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6091,6 +9845,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6099,6 +9858,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6107,6 +9871,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6115,6 +9884,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6123,6 +9897,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6131,6 +9910,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6139,6 +9923,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6147,6 +9936,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6155,6 +9949,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6163,6 +9962,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6171,6 +9975,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6179,6 +9988,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6187,6 +10001,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6195,6 +10014,11 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
@@ -6203,11 +10027,21 @@ egg_token *common_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      137,
+                      success,
+                      (void *)egg_token_type_common_character);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    137,
+                    fail,
+                    (void *)egg_token_type_common_character);
 
   return NULL;
 }
@@ -6227,6 +10061,11 @@ egg_token *literal_character(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    138,
+                    entry,
+                    (void *)egg_token_type_literal_character);
+
   if (input_eof())
     return NULL;
 
@@ -6236,7 +10075,13 @@ egg_token *literal_character(void)
 
   nt = egg_token_new(egg_token_type_literal_character);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      138,
+                      fail,
+                      (void *)egg_token_type_literal_character);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -6245,6 +10090,11 @@ egg_token *literal_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      138,
+                      success,
+                      (void *)egg_token_type_literal_character);
+
     return nt;
   }
 
@@ -6253,6 +10103,11 @@ egg_token *literal_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      138,
+                      success,
+                      (void *)egg_token_type_literal_character);
+
     return nt;
   }
 
@@ -6261,6 +10116,11 @@ egg_token *literal_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      138,
+                      success,
+                      (void *)egg_token_type_literal_character);
+
     return nt;
   }
 
@@ -6269,6 +10129,11 @@ egg_token *literal_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      138,
+                      success,
+                      (void *)egg_token_type_literal_character);
+
     return nt;
   }
 
@@ -6277,11 +10142,21 @@ egg_token *literal_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      138,
+                      success,
+                      (void *)egg_token_type_literal_character);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    138,
+                    fail,
+                    (void *)egg_token_type_literal_character);
 
   return NULL;
 }
@@ -6301,6 +10176,11 @@ egg_token *comment_basic_character(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    139,
+                    entry,
+                    (void *)egg_token_type_comment_basic_character);
+
   if (input_eof())
     return NULL;
 
@@ -6310,7 +10190,13 @@ egg_token *comment_basic_character(void)
 
   nt = egg_token_new(egg_token_type_comment_basic_character);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      139,
+                      fail,
+                      (void *)egg_token_type_comment_basic_character);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -6319,6 +10205,11 @@ egg_token *comment_basic_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      139,
+                      success,
+                      (void *)egg_token_type_comment_basic_character);
+
     return nt;
   }
 
@@ -6327,6 +10218,11 @@ egg_token *comment_basic_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      139,
+                      success,
+                      (void *)egg_token_type_comment_basic_character);
+
     return nt;
   }
 
@@ -6335,6 +10231,11 @@ egg_token *comment_basic_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      139,
+                      success,
+                      (void *)egg_token_type_comment_basic_character);
+
     return nt;
   }
 
@@ -6343,6 +10244,11 @@ egg_token *comment_basic_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      139,
+                      success,
+                      (void *)egg_token_type_comment_basic_character);
+
     return nt;
   }
 
@@ -6351,11 +10257,21 @@ egg_token *comment_basic_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      139,
+                      success,
+                      (void *)egg_token_type_comment_basic_character);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    139,
+                    fail,
+                    (void *)egg_token_type_comment_basic_character);
 
   return NULL;
 }
@@ -6372,6 +10288,11 @@ egg_token *non_comment_start_character(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    140,
+                    entry,
+                    (void *)egg_token_type_non_comment_start_character);
+
   if (input_eof())
     return NULL;
 
@@ -6381,7 +10302,13 @@ egg_token *non_comment_start_character(void)
 
   nt = egg_token_new(egg_token_type_non_comment_start_character);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      140,
+                      fail,
+                      (void *)egg_token_type_non_comment_start_character);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -6390,6 +10317,11 @@ egg_token *non_comment_start_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      140,
+                      success,
+                      (void *)egg_token_type_non_comment_start_character);
+
     return nt;
   }
 
@@ -6398,11 +10330,21 @@ egg_token *non_comment_start_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      140,
+                      success,
+                      (void *)egg_token_type_non_comment_start_character);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    140,
+                    fail,
+                    (void *)egg_token_type_non_comment_start_character);
 
   return NULL;
 }
@@ -6419,6 +10361,11 @@ egg_token *non_comment_end_character(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    141,
+                    entry,
+                    (void *)egg_token_type_non_comment_end_character);
+
   if (input_eof())
     return NULL;
 
@@ -6428,7 +10375,13 @@ egg_token *non_comment_end_character(void)
 
   nt = egg_token_new(egg_token_type_non_comment_end_character);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      141,
+                      fail,
+                      (void *)egg_token_type_non_comment_end_character);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -6437,6 +10390,11 @@ egg_token *non_comment_end_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      141,
+                      success,
+                      (void *)egg_token_type_non_comment_end_character);
+
     return nt;
   }
 
@@ -6445,11 +10403,21 @@ egg_token *non_comment_end_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      141,
+                      success,
+                      (void *)egg_token_type_non_comment_end_character);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    141,
+                    fail,
+                    (void *)egg_token_type_non_comment_end_character);
 
   return NULL;
 }
@@ -6466,6 +10434,11 @@ egg_token *non_comment_start_sequence(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    142,
+                    entry,
+                    (void *)egg_token_type_non_comment_start_sequence);
+
   if (input_eof())
     return NULL;
 
@@ -6475,7 +10448,13 @@ egg_token *non_comment_start_sequence(void)
 
   nt = egg_token_new(egg_token_type_non_comment_start_sequence);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      142,
+                      fail,
+                      (void *)egg_token_type_non_comment_start_sequence);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -6488,12 +10467,22 @@ egg_token *non_comment_start_sequence(void)
     {
       dir = egg_token_after;
       t1 = t2;
+      callback_by_index(&_cbt,
+                        142,
+                        success,
+                        (void *)egg_token_type_non_comment_start_sequence);
+
       return nt;
     }
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    142,
+                    fail,
+                    (void *)egg_token_type_non_comment_start_sequence);
 
   return NULL;
 }
@@ -6510,6 +10499,11 @@ egg_token *non_comment_end_sequence(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    143,
+                    entry,
+                    (void *)egg_token_type_non_comment_end_sequence);
+
   if (input_eof())
     return NULL;
 
@@ -6519,7 +10513,13 @@ egg_token *non_comment_end_sequence(void)
 
   nt = egg_token_new(egg_token_type_non_comment_end_sequence);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      143,
+                      fail,
+                      (void *)egg_token_type_non_comment_end_sequence);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -6532,12 +10532,22 @@ egg_token *non_comment_end_sequence(void)
     {
       dir = egg_token_after;
       t1 = t2;
+      callback_by_index(&_cbt,
+                        143,
+                        success,
+                        (void *)egg_token_type_non_comment_end_sequence);
+
       return nt;
     }
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    143,
+                    fail,
+                    (void *)egg_token_type_non_comment_end_sequence);
 
   return NULL;
 }
@@ -6556,6 +10566,11 @@ egg_token *comment_character(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    144,
+                    entry,
+                    (void *)egg_token_type_comment_character);
+
   if (input_eof())
     return NULL;
 
@@ -6565,7 +10580,13 @@ egg_token *comment_character(void)
 
   nt = egg_token_new(egg_token_type_comment_character);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      144,
+                      fail,
+                      (void *)egg_token_type_comment_character);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -6574,6 +10595,11 @@ egg_token *comment_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      144,
+                      success,
+                      (void *)egg_token_type_comment_character);
+
     return nt;
   }
 
@@ -6582,6 +10608,11 @@ egg_token *comment_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      144,
+                      success,
+                      (void *)egg_token_type_comment_character);
+
     return nt;
   }
 
@@ -6590,6 +10621,11 @@ egg_token *comment_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      144,
+                      success,
+                      (void *)egg_token_type_comment_character);
+
     return nt;
   }
 
@@ -6598,11 +10634,21 @@ egg_token *comment_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      144,
+                      success,
+                      (void *)egg_token_type_comment_character);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    144,
+                    fail,
+                    (void *)egg_token_type_comment_character);
 
   return NULL;
 }
@@ -6618,6 +10664,11 @@ egg_token *single_quoted_character(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    145,
+                    entry,
+                    (void *)egg_token_type_single_quoted_character);
+
   if (input_eof())
     return NULL;
 
@@ -6627,7 +10678,13 @@ egg_token *single_quoted_character(void)
 
   nt = egg_token_new(egg_token_type_single_quoted_character);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      145,
+                      fail,
+                      (void *)egg_token_type_single_quoted_character);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -6636,6 +10693,11 @@ egg_token *single_quoted_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      145,
+                      success,
+                      (void *)egg_token_type_single_quoted_character);
+
     return nt;
   }
 
@@ -6644,11 +10706,21 @@ egg_token *single_quoted_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      145,
+                      success,
+                      (void *)egg_token_type_single_quoted_character);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    145,
+                    fail,
+                    (void *)egg_token_type_single_quoted_character);
 
   return NULL;
 }
@@ -6664,6 +10736,11 @@ egg_token *quoted_character(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    146,
+                    entry,
+                    (void *)egg_token_type_quoted_character);
+
   if (input_eof())
     return NULL;
 
@@ -6673,7 +10750,13 @@ egg_token *quoted_character(void)
 
   nt = egg_token_new(egg_token_type_quoted_character);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      146,
+                      fail,
+                      (void *)egg_token_type_quoted_character);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -6682,6 +10765,11 @@ egg_token *quoted_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      146,
+                      success,
+                      (void *)egg_token_type_quoted_character);
+
     return nt;
   }
 
@@ -6690,11 +10778,21 @@ egg_token *quoted_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      146,
+                      success,
+                      (void *)egg_token_type_quoted_character);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    146,
+                    fail,
+                    (void *)egg_token_type_quoted_character);
 
   return NULL;
 }
@@ -6710,6 +10808,11 @@ egg_token *phrase_conjugator(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    147,
+                    entry,
+                    (void *)egg_token_type_phrase_conjugator);
+
   if (input_eof())
     return NULL;
 
@@ -6719,7 +10822,13 @@ egg_token *phrase_conjugator(void)
 
   nt = egg_token_new(egg_token_type_phrase_conjugator);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      147,
+                      fail,
+                      (void *)egg_token_type_phrase_conjugator);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -6728,6 +10837,11 @@ egg_token *phrase_conjugator(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      147,
+                      success,
+                      (void *)egg_token_type_phrase_conjugator);
+
     return nt;
   }
 
@@ -6736,11 +10850,21 @@ egg_token *phrase_conjugator(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      147,
+                      success,
+                      (void *)egg_token_type_phrase_conjugator);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    147,
+                    fail,
+                    (void *)egg_token_type_phrase_conjugator);
 
   return NULL;
 }
@@ -6756,6 +10880,11 @@ egg_token *phrase_name_character(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    148,
+                    entry,
+                    (void *)egg_token_type_phrase_name_character);
+
   if (input_eof())
     return NULL;
 
@@ -6765,7 +10894,13 @@ egg_token *phrase_name_character(void)
 
   nt = egg_token_new(egg_token_type_phrase_name_character);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      148,
+                      fail,
+                      (void *)egg_token_type_phrase_name_character);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -6774,6 +10909,11 @@ egg_token *phrase_name_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      148,
+                      success,
+                      (void *)egg_token_type_phrase_name_character);
+
     return nt;
   }
 
@@ -6782,6 +10922,11 @@ egg_token *phrase_name_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      148,
+                      success,
+                      (void *)egg_token_type_phrase_name_character);
+
     return nt;
   }
 
@@ -6790,11 +10935,21 @@ egg_token *phrase_name_character(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      148,
+                      success,
+                      (void *)egg_token_type_phrase_name_character);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    148,
+                    fail,
+                    (void *)egg_token_type_phrase_name_character);
 
   return NULL;
 }
@@ -6810,6 +10965,11 @@ egg_token *binary_indicator(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    149,
+                    entry,
+                    (void *)egg_token_type_binary_indicator);
+
   if (input_eof())
     return NULL;
 
@@ -6819,7 +10979,13 @@ egg_token *binary_indicator(void)
 
   nt = egg_token_new(egg_token_type_binary_indicator);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      149,
+                      fail,
+                      (void *)egg_token_type_binary_indicator);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -6828,6 +10994,11 @@ egg_token *binary_indicator(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      149,
+                      success,
+                      (void *)egg_token_type_binary_indicator);
+
     return nt;
   }
 
@@ -6836,11 +11007,21 @@ egg_token *binary_indicator(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      149,
+                      success,
+                      (void *)egg_token_type_binary_indicator);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    149,
+                    fail,
+                    (void *)egg_token_type_binary_indicator);
 
   return NULL;
 }
@@ -6856,6 +11037,11 @@ egg_token *octal_indicator(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    150,
+                    entry,
+                    (void *)egg_token_type_octal_indicator);
+
   if (input_eof())
     return NULL;
 
@@ -6865,7 +11051,13 @@ egg_token *octal_indicator(void)
 
   nt = egg_token_new(egg_token_type_octal_indicator);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      150,
+                      fail,
+                      (void *)egg_token_type_octal_indicator);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -6874,6 +11066,11 @@ egg_token *octal_indicator(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      150,
+                      success,
+                      (void *)egg_token_type_octal_indicator);
+
     return nt;
   }
 
@@ -6882,11 +11079,21 @@ egg_token *octal_indicator(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      150,
+                      success,
+                      (void *)egg_token_type_octal_indicator);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    150,
+                    fail,
+                    (void *)egg_token_type_octal_indicator);
 
   return NULL;
 }
@@ -6902,6 +11109,11 @@ egg_token *hexadecimal_indicator(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    151,
+                    entry,
+                    (void *)egg_token_type_hexadecimal_indicator);
+
   if (input_eof())
     return NULL;
 
@@ -6911,7 +11123,13 @@ egg_token *hexadecimal_indicator(void)
 
   nt = egg_token_new(egg_token_type_hexadecimal_indicator);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      151,
+                      fail,
+                      (void *)egg_token_type_hexadecimal_indicator);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -6920,6 +11138,11 @@ egg_token *hexadecimal_indicator(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      151,
+                      success,
+                      (void *)egg_token_type_hexadecimal_indicator);
+
     return nt;
   }
 
@@ -6928,11 +11151,21 @@ egg_token *hexadecimal_indicator(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      151,
+                      success,
+                      (void *)egg_token_type_hexadecimal_indicator);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    151,
+                    fail,
+                    (void *)egg_token_type_hexadecimal_indicator);
 
   return NULL;
 }
@@ -6948,6 +11181,11 @@ egg_token *comment_start_symbol(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    152,
+                    entry,
+                    (void *)egg_token_type_comment_start_symbol);
+
   if (input_eof())
     return NULL;
 
@@ -6957,7 +11195,13 @@ egg_token *comment_start_symbol(void)
 
   nt = egg_token_new(egg_token_type_comment_start_symbol);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      152,
+                      fail,
+                      (void *)egg_token_type_comment_start_symbol);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -6970,12 +11214,22 @@ egg_token *comment_start_symbol(void)
     {
       dir = egg_token_after;
       t1 = t2;
+      callback_by_index(&_cbt,
+                        152,
+                        success,
+                        (void *)egg_token_type_comment_start_symbol);
+
       return nt;
     }
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    152,
+                    fail,
+                    (void *)egg_token_type_comment_start_symbol);
 
   return NULL;
 }
@@ -6991,6 +11245,11 @@ egg_token *comment_end_symbol(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    153,
+                    entry,
+                    (void *)egg_token_type_comment_end_symbol);
+
   if (input_eof())
     return NULL;
 
@@ -7000,7 +11259,13 @@ egg_token *comment_end_symbol(void)
 
   nt = egg_token_new(egg_token_type_comment_end_symbol);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      153,
+                      fail,
+                      (void *)egg_token_type_comment_end_symbol);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -7013,12 +11278,22 @@ egg_token *comment_end_symbol(void)
     {
       dir = egg_token_after;
       t1 = t2;
+      callback_by_index(&_cbt,
+                        153,
+                        success,
+                        (void *)egg_token_type_comment_end_symbol);
+
       return nt;
     }
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    153,
+                    fail,
+                    (void *)egg_token_type_comment_end_symbol);
 
   return NULL;
 }
@@ -7034,6 +11309,11 @@ egg_token *alternation_symbol(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    154,
+                    entry,
+                    (void *)egg_token_type_alternation_symbol);
+
   if (input_eof())
     return NULL;
 
@@ -7043,7 +11323,13 @@ egg_token *alternation_symbol(void)
 
   nt = egg_token_new(egg_token_type_alternation_symbol);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      154,
+                      fail,
+                      (void *)egg_token_type_alternation_symbol);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -7052,11 +11338,21 @@ egg_token *alternation_symbol(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      154,
+                      success,
+                      (void *)egg_token_type_alternation_symbol);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    154,
+                    fail,
+                    (void *)egg_token_type_alternation_symbol);
 
   return NULL;
 }
@@ -7072,6 +11368,11 @@ egg_token *concatenation_symbol(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    155,
+                    entry,
+                    (void *)egg_token_type_concatenation_symbol);
+
   if (input_eof())
     return NULL;
 
@@ -7081,7 +11382,13 @@ egg_token *concatenation_symbol(void)
 
   nt = egg_token_new(egg_token_type_concatenation_symbol);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      155,
+                      fail,
+                      (void *)egg_token_type_concatenation_symbol);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -7090,11 +11397,21 @@ egg_token *concatenation_symbol(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      155,
+                      success,
+                      (void *)egg_token_type_concatenation_symbol);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    155,
+                    fail,
+                    (void *)egg_token_type_concatenation_symbol);
 
   return NULL;
 }
@@ -7110,6 +11427,11 @@ egg_token *phrase_terminator_symbol(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    156,
+                    entry,
+                    (void *)egg_token_type_phrase_terminator_symbol);
+
   if (input_eof())
     return NULL;
 
@@ -7119,7 +11441,13 @@ egg_token *phrase_terminator_symbol(void)
 
   nt = egg_token_new(egg_token_type_phrase_terminator_symbol);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      156,
+                      fail,
+                      (void *)egg_token_type_phrase_terminator_symbol);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -7128,11 +11456,21 @@ egg_token *phrase_terminator_symbol(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      156,
+                      success,
+                      (void *)egg_token_type_phrase_terminator_symbol);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    156,
+                    fail,
+                    (void *)egg_token_type_phrase_terminator_symbol);
 
   return NULL;
 }
@@ -7150,6 +11488,11 @@ egg_token *binary_integer(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    157,
+                    entry,
+                    (void *)egg_token_type_binary_integer);
+
   if (input_eof())
     return NULL;
 
@@ -7159,7 +11502,13 @@ egg_token *binary_integer(void)
 
   nt = egg_token_new(egg_token_type_binary_integer);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      157,
+                      fail,
+                      (void *)egg_token_type_binary_integer);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -7186,6 +11535,11 @@ egg_token *binary_integer(void)
       }
       if ((count >= 1))
       {
+        callback_by_index(&_cbt,
+                          157,
+                          success,
+                          (void *)egg_token_type_binary_integer);
+
         return nt;
       }
     }
@@ -7193,6 +11547,11 @@ egg_token *binary_integer(void)
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    157,
+                    fail,
+                    (void *)egg_token_type_binary_integer);
 
   return NULL;
 }
@@ -7210,6 +11569,11 @@ egg_token *octal_integer(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    158,
+                    entry,
+                    (void *)egg_token_type_octal_integer);
+
   if (input_eof())
     return NULL;
 
@@ -7219,7 +11583,13 @@ egg_token *octal_integer(void)
 
   nt = egg_token_new(egg_token_type_octal_integer);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      158,
+                      fail,
+                      (void *)egg_token_type_octal_integer);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -7246,6 +11616,11 @@ egg_token *octal_integer(void)
       }
       if ((count >= 1))
       {
+        callback_by_index(&_cbt,
+                          158,
+                          success,
+                          (void *)egg_token_type_octal_integer);
+
         return nt;
       }
     }
@@ -7253,6 +11628,11 @@ egg_token *octal_integer(void)
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    158,
+                    fail,
+                    (void *)egg_token_type_octal_integer);
 
   return NULL;
 }
@@ -7270,6 +11650,11 @@ egg_token *hexadecimal_integer(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    159,
+                    entry,
+                    (void *)egg_token_type_hexadecimal_integer);
+
   if (input_eof())
     return NULL;
 
@@ -7279,7 +11664,13 @@ egg_token *hexadecimal_integer(void)
 
   nt = egg_token_new(egg_token_type_hexadecimal_integer);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      159,
+                      fail,
+                      (void *)egg_token_type_hexadecimal_integer);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -7306,6 +11697,11 @@ egg_token *hexadecimal_integer(void)
       }
       if ((count >= 1))
       {
+        callback_by_index(&_cbt,
+                          159,
+                          success,
+                          (void *)egg_token_type_hexadecimal_integer);
+
         return nt;
       }
     }
@@ -7313,6 +11709,11 @@ egg_token *hexadecimal_integer(void)
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    159,
+                    fail,
+                    (void *)egg_token_type_hexadecimal_integer);
 
   return NULL;
 }
@@ -7328,6 +11729,11 @@ egg_token *decimal_integer(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    160,
+                    entry,
+                    (void *)egg_token_type_decimal_integer);
+
   if (input_eof())
     return NULL;
 
@@ -7337,7 +11743,13 @@ egg_token *decimal_integer(void)
 
   nt = egg_token_new(egg_token_type_decimal_integer);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      160,
+                      fail,
+                      (void *)egg_token_type_decimal_integer);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -7356,11 +11768,21 @@ egg_token *decimal_integer(void)
   }
   if ((count >= 1))
   {
+    callback_by_index(&_cbt,
+                      160,
+                      success,
+                      (void *)egg_token_type_decimal_integer);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    160,
+                    fail,
+                    (void *)egg_token_type_decimal_integer);
 
   return NULL;
 }
@@ -7379,6 +11801,11 @@ egg_token *integer(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    161,
+                    entry,
+                    (void *)egg_token_type_integer);
+
   if (input_eof())
     return NULL;
 
@@ -7388,7 +11815,13 @@ egg_token *integer(void)
 
   nt = egg_token_new(egg_token_type_integer);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      161,
+                      fail,
+                      (void *)egg_token_type_integer);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -7397,6 +11830,11 @@ egg_token *integer(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      161,
+                      success,
+                      (void *)egg_token_type_integer);
+
     return nt;
   }
 
@@ -7405,6 +11843,11 @@ egg_token *integer(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      161,
+                      success,
+                      (void *)egg_token_type_integer);
+
     return nt;
   }
 
@@ -7413,6 +11856,11 @@ egg_token *integer(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      161,
+                      success,
+                      (void *)egg_token_type_integer);
+
     return nt;
   }
 
@@ -7421,11 +11869,21 @@ egg_token *integer(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      161,
+                      success,
+                      (void *)egg_token_type_integer);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    161,
+                    fail,
+                    (void *)egg_token_type_integer);
 
   return NULL;
 }
@@ -7443,6 +11901,11 @@ egg_token *single_quoted_literal(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    162,
+                    entry,
+                    (void *)egg_token_type_single_quoted_literal);
+
   if (input_eof())
     return NULL;
 
@@ -7452,7 +11915,13 @@ egg_token *single_quoted_literal(void)
 
   nt = egg_token_new(egg_token_type_single_quoted_literal);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      162,
+                      fail,
+                      (void *)egg_token_type_single_quoted_literal);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -7479,6 +11948,11 @@ egg_token *single_quoted_literal(void)
       {
         dir = egg_token_after;
         t1 = t2;
+        callback_by_index(&_cbt,
+                          162,
+                          success,
+                          (void *)egg_token_type_single_quoted_literal);
+
         return nt;
       }
     }
@@ -7486,6 +11960,11 @@ egg_token *single_quoted_literal(void)
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    162,
+                    fail,
+                    (void *)egg_token_type_single_quoted_literal);
 
   return NULL;
 }
@@ -7501,6 +11980,11 @@ egg_token *quoted_literal(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    163,
+                    entry,
+                    (void *)egg_token_type_quoted_literal);
+
   if (input_eof())
     return NULL;
 
@@ -7510,7 +11994,13 @@ egg_token *quoted_literal(void)
 
   nt = egg_token_new(egg_token_type_quoted_literal);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      163,
+                      fail,
+                      (void *)egg_token_type_quoted_literal);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -7537,6 +12027,11 @@ egg_token *quoted_literal(void)
       {
         dir = egg_token_after;
         t1 = t2;
+        callback_by_index(&_cbt,
+                          163,
+                          success,
+                          (void *)egg_token_type_quoted_literal);
+
         return nt;
       }
     }
@@ -7544,6 +12039,11 @@ egg_token *quoted_literal(void)
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    163,
+                    fail,
+                    (void *)egg_token_type_quoted_literal);
 
   return NULL;
 }
@@ -7559,6 +12059,11 @@ egg_token *absolute_literal(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    164,
+                    entry,
+                    (void *)egg_token_type_absolute_literal);
+
   if (input_eof())
     return NULL;
 
@@ -7568,7 +12073,13 @@ egg_token *absolute_literal(void)
 
   nt = egg_token_new(egg_token_type_absolute_literal);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      164,
+                      fail,
+                      (void *)egg_token_type_absolute_literal);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -7613,6 +12124,11 @@ egg_token *absolute_literal(void)
           {
             dir = egg_token_after;
             t1 = t2;
+            callback_by_index(&_cbt,
+                              164,
+                              success,
+                              (void *)egg_token_type_absolute_literal);
+
             return nt;
           }
         }
@@ -7622,6 +12138,11 @@ egg_token *absolute_literal(void)
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    164,
+                    fail,
+                    (void *)egg_token_type_absolute_literal);
 
   return NULL;
 }
@@ -7637,6 +12158,11 @@ egg_token *literal(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    165,
+                    entry,
+                    (void *)egg_token_type_literal);
+
   if (input_eof())
     return NULL;
 
@@ -7646,7 +12172,13 @@ egg_token *literal(void)
 
   nt = egg_token_new(egg_token_type_literal);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      165,
+                      fail,
+                      (void *)egg_token_type_literal);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -7655,6 +12187,11 @@ egg_token *literal(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      165,
+                      success,
+                      (void *)egg_token_type_literal);
+
     return nt;
   }
 
@@ -7663,6 +12200,11 @@ egg_token *literal(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      165,
+                      success,
+                      (void *)egg_token_type_literal);
+
     return nt;
   }
 
@@ -7671,11 +12213,21 @@ egg_token *literal(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      165,
+                      success,
+                      (void *)egg_token_type_literal);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    165,
+                    fail,
+                    (void *)egg_token_type_literal);
 
   return NULL;
 }
@@ -7691,6 +12243,11 @@ egg_token *comment_item(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    166,
+                    entry,
+                    (void *)egg_token_type_comment_item);
+
   if (input_eof())
     return NULL;
 
@@ -7700,7 +12257,13 @@ egg_token *comment_item(void)
 
   nt = egg_token_new(egg_token_type_comment_item);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      166,
+                      fail,
+                      (void *)egg_token_type_comment_item);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -7709,6 +12272,11 @@ egg_token *comment_item(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      166,
+                      success,
+                      (void *)egg_token_type_comment_item);
+
     return nt;
   }
 
@@ -7717,11 +12285,21 @@ egg_token *comment_item(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      166,
+                      success,
+                      (void *)egg_token_type_comment_item);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    166,
+                    fail,
+                    (void *)egg_token_type_comment_item);
 
   return NULL;
 }
@@ -7739,6 +12317,11 @@ egg_token *comment(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    167,
+                    entry,
+                    (void *)egg_token_type_comment);
+
   if (input_eof())
     return NULL;
 
@@ -7748,7 +12331,13 @@ egg_token *comment(void)
 
   nt = egg_token_new(egg_token_type_comment);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      167,
+                      fail,
+                      (void *)egg_token_type_comment);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -7775,6 +12364,11 @@ egg_token *comment(void)
       {
         dir = egg_token_after;
         t1 = t2;
+        callback_by_index(&_cbt,
+                          167,
+                          success,
+                          (void *)egg_token_type_comment);
+
         return nt;
       }
     }
@@ -7782,6 +12376,11 @@ egg_token *comment(void)
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    167,
+                    fail,
+                    (void *)egg_token_type_comment);
 
   return NULL;
 }
@@ -7797,6 +12396,11 @@ egg_token *illumination(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    168,
+                    entry,
+                    (void *)egg_token_type_illumination);
+
   if (input_eof())
     return NULL;
 
@@ -7806,7 +12410,13 @@ egg_token *illumination(void)
 
   nt = egg_token_new(egg_token_type_illumination);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      168,
+                      fail,
+                      (void *)egg_token_type_illumination);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -7815,6 +12425,11 @@ egg_token *illumination(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      168,
+                      success,
+                      (void *)egg_token_type_illumination);
+
     return nt;
   }
 
@@ -7823,11 +12438,21 @@ egg_token *illumination(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      168,
+                      success,
+                      (void *)egg_token_type_illumination);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    168,
+                    fail,
+                    (void *)egg_token_type_illumination);
 
   return NULL;
 }
@@ -7843,6 +12468,11 @@ egg_token *non_grammar_item(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    169,
+                    entry,
+                    (void *)egg_token_type_non_grammar_item);
+
   if (input_eof())
     return NULL;
 
@@ -7852,7 +12482,13 @@ egg_token *non_grammar_item(void)
 
   nt = egg_token_new(egg_token_type_non_grammar_item);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      169,
+                      fail,
+                      (void *)egg_token_type_non_grammar_item);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -7861,6 +12497,11 @@ egg_token *non_grammar_item(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      169,
+                      success,
+                      (void *)egg_token_type_non_grammar_item);
+
     return nt;
   }
 
@@ -7869,11 +12510,21 @@ egg_token *non_grammar_item(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      169,
+                      success,
+                      (void *)egg_token_type_non_grammar_item);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    169,
+                    fail,
+                    (void *)egg_token_type_non_grammar_item);
 
   return NULL;
 }
@@ -7889,6 +12540,11 @@ egg_token *non_grammar_element(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    170,
+                    entry,
+                    (void *)egg_token_type_non_grammar_element);
+
   if (input_eof())
     return NULL;
 
@@ -7898,7 +12554,13 @@ egg_token *non_grammar_element(void)
 
   nt = egg_token_new(egg_token_type_non_grammar_element);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      170,
+                      fail,
+                      (void *)egg_token_type_non_grammar_element);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -7917,11 +12579,21 @@ egg_token *non_grammar_element(void)
   }
   if ((count >= 1))
   {
+    callback_by_index(&_cbt,
+                      170,
+                      success,
+                      (void *)egg_token_type_non_grammar_element);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    170,
+                    fail,
+                    (void *)egg_token_type_non_grammar_element);
 
   return NULL;
 }
@@ -7937,6 +12609,11 @@ egg_token *phrase_name(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    171,
+                    entry,
+                    (void *)egg_token_type_phrase_name);
+
   if (input_eof())
     return NULL;
 
@@ -7946,7 +12623,13 @@ egg_token *phrase_name(void)
 
   nt = egg_token_new(egg_token_type_phrase_name);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      171,
+                      fail,
+                      (void *)egg_token_type_phrase_name);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -7969,12 +12652,22 @@ egg_token *phrase_name(void)
     }
     if ((count >= 0))
     {
+      callback_by_index(&_cbt,
+                        171,
+                        success,
+                        (void *)egg_token_type_phrase_name);
+
       return nt;
     }
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    171,
+                    fail,
+                    (void *)egg_token_type_phrase_name);
 
   return NULL;
 }
@@ -7990,6 +12683,11 @@ egg_token *quantifier_item(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    172,
+                    entry,
+                    (void *)egg_token_type_quantifier_item);
+
   if (input_eof())
     return NULL;
 
@@ -7999,7 +12697,13 @@ egg_token *quantifier_item(void)
 
   nt = egg_token_new(egg_token_type_quantifier_item);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      172,
+                      fail,
+                      (void *)egg_token_type_quantifier_item);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -8008,6 +12712,11 @@ egg_token *quantifier_item(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      172,
+                      success,
+                      (void *)egg_token_type_quantifier_item);
+
     return nt;
   }
 
@@ -8016,11 +12725,21 @@ egg_token *quantifier_item(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      172,
+                      success,
+                      (void *)egg_token_type_quantifier_item);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    172,
+                    fail,
+                    (void *)egg_token_type_quantifier_item);
 
   return NULL;
 }
@@ -8036,6 +12755,11 @@ egg_token *quantifier_option(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    173,
+                    entry,
+                    (void *)egg_token_type_quantifier_option);
+
   if (input_eof())
     return NULL;
 
@@ -8045,7 +12769,13 @@ egg_token *quantifier_option(void)
 
   nt = egg_token_new(egg_token_type_quantifier_option);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      173,
+                      fail,
+                      (void *)egg_token_type_quantifier_option);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -8058,12 +12788,22 @@ egg_token *quantifier_option(void)
     {
       dir = egg_token_after;
       t1 = t2;
+      callback_by_index(&_cbt,
+                        173,
+                        success,
+                        (void *)egg_token_type_quantifier_option);
+
       return nt;
     }
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    173,
+                    fail,
+                    (void *)egg_token_type_quantifier_option);
 
   return NULL;
 }
@@ -8082,6 +12822,11 @@ egg_token *quantifier(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    174,
+                    entry,
+                    (void *)egg_token_type_quantifier);
+
   if (input_eof())
     return NULL;
 
@@ -8091,7 +12836,13 @@ egg_token *quantifier(void)
 
   nt = egg_token_new(egg_token_type_quantifier);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      174,
+                      fail,
+                      (void *)egg_token_type_quantifier);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -8122,6 +12873,11 @@ egg_token *quantifier(void)
         {
           dir = egg_token_after;
           t1 = t2;
+          callback_by_index(&_cbt,
+                            174,
+                            success,
+                            (void *)egg_token_type_quantifier);
+
           return nt;
         }
       }
@@ -8130,6 +12886,11 @@ egg_token *quantifier(void)
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    174,
+                    fail,
+                    (void *)egg_token_type_quantifier);
 
   return NULL;
 }
@@ -8145,6 +12906,11 @@ egg_token *atom(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    175,
+                    entry,
+                    (void *)egg_token_type_atom);
+
   if (input_eof())
     return NULL;
 
@@ -8154,7 +12920,13 @@ egg_token *atom(void)
 
   nt = egg_token_new(egg_token_type_atom);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      175,
+                      fail,
+                      (void *)egg_token_type_atom);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -8163,6 +12935,11 @@ egg_token *atom(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      175,
+                      success,
+                      (void *)egg_token_type_atom);
+
     return nt;
   }
 
@@ -8171,11 +12948,21 @@ egg_token *atom(void)
   {
     dir = egg_token_after;
     t1 = t2;
+    callback_by_index(&_cbt,
+                      175,
+                      success,
+                      (void *)egg_token_type_atom);
+
     return nt;
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    175,
+                    fail,
+                    (void *)egg_token_type_atom);
 
   return NULL;
 }
@@ -8191,6 +12978,11 @@ egg_token *item(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    176,
+                    entry,
+                    (void *)egg_token_type_item);
+
   if (input_eof())
     return NULL;
 
@@ -8200,7 +12992,13 @@ egg_token *item(void)
 
   nt = egg_token_new(egg_token_type_item);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      176,
+                      fail,
+                      (void *)egg_token_type_item);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -8223,12 +13021,22 @@ egg_token *item(void)
     }
     if ((count >= 0) && (count <= 1))
     {
+      callback_by_index(&_cbt,
+                        176,
+                        success,
+                        (void *)egg_token_type_item);
+
       return nt;
     }
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    176,
+                    fail,
+                    (void *)egg_token_type_item);
 
   return NULL;
 }
@@ -8247,6 +13055,11 @@ egg_token *sequence_continuation(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    177,
+                    entry,
+                    (void *)egg_token_type_sequence_continuation);
+
   if (input_eof())
     return NULL;
 
@@ -8256,7 +13069,13 @@ egg_token *sequence_continuation(void)
 
   nt = egg_token_new(egg_token_type_sequence_continuation);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      177,
+                      fail,
+                      (void *)egg_token_type_sequence_continuation);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -8297,6 +13116,11 @@ egg_token *sequence_continuation(void)
         {
           dir = egg_token_after;
           t1 = t2;
+          callback_by_index(&_cbt,
+                            177,
+                            success,
+                            (void *)egg_token_type_sequence_continuation);
+
           return nt;
         }
       }
@@ -8305,6 +13129,11 @@ egg_token *sequence_continuation(void)
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    177,
+                    fail,
+                    (void *)egg_token_type_sequence_continuation);
 
   return NULL;
 }
@@ -8320,6 +13149,11 @@ egg_token *sequence(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    178,
+                    entry,
+                    (void *)egg_token_type_sequence);
+
   if (input_eof())
     return NULL;
 
@@ -8329,7 +13163,13 @@ egg_token *sequence(void)
 
   nt = egg_token_new(egg_token_type_sequence);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      178,
+                      fail,
+                      (void *)egg_token_type_sequence);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -8352,12 +13192,22 @@ egg_token *sequence(void)
     }
     if ((count >= 0))
     {
+      callback_by_index(&_cbt,
+                        178,
+                        success,
+                        (void *)egg_token_type_sequence);
+
       return nt;
     }
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    178,
+                    fail,
+                    (void *)egg_token_type_sequence);
 
   return NULL;
 }
@@ -8376,6 +13226,11 @@ egg_token *definition_continuation(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    179,
+                    entry,
+                    (void *)egg_token_type_definition_continuation);
+
   if (input_eof())
     return NULL;
 
@@ -8385,7 +13240,13 @@ egg_token *definition_continuation(void)
 
   nt = egg_token_new(egg_token_type_definition_continuation);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      179,
+                      fail,
+                      (void *)egg_token_type_definition_continuation);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -8426,6 +13287,11 @@ egg_token *definition_continuation(void)
         {
           dir = egg_token_after;
           t1 = t2;
+          callback_by_index(&_cbt,
+                            179,
+                            success,
+                            (void *)egg_token_type_definition_continuation);
+
           return nt;
         }
       }
@@ -8434,6 +13300,11 @@ egg_token *definition_continuation(void)
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    179,
+                    fail,
+                    (void *)egg_token_type_definition_continuation);
 
   return NULL;
 }
@@ -8449,6 +13320,11 @@ egg_token *definition(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    180,
+                    entry,
+                    (void *)egg_token_type_definition);
+
   if (input_eof())
     return NULL;
 
@@ -8458,7 +13334,13 @@ egg_token *definition(void)
 
   nt = egg_token_new(egg_token_type_definition);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      180,
+                      fail,
+                      (void *)egg_token_type_definition);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -8481,12 +13363,22 @@ egg_token *definition(void)
     }
     if ((count >= 0))
     {
+      callback_by_index(&_cbt,
+                        180,
+                        success,
+                        (void *)egg_token_type_definition);
+
       return nt;
     }
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    180,
+                    fail,
+                    (void *)egg_token_type_definition);
 
   return NULL;
 }
@@ -8508,6 +13400,11 @@ egg_token *phrase(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    181,
+                    entry,
+                    (void *)egg_token_type_phrase);
+
   if (input_eof())
     return NULL;
 
@@ -8517,7 +13414,13 @@ egg_token *phrase(void)
 
   nt = egg_token_new(egg_token_type_phrase);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      181,
+                      fail,
+                      (void *)egg_token_type_phrase);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -8580,6 +13483,11 @@ egg_token *phrase(void)
               {
                 dir = egg_token_after;
                 t1 = t2;
+                callback_by_index(&_cbt,
+                                  181,
+                                  success,
+                                  (void *)egg_token_type_phrase);
+
                 return nt;
               }
             }
@@ -8591,6 +13499,11 @@ egg_token *phrase(void)
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    181,
+                    fail,
+                    (void *)egg_token_type_phrase);
 
   return NULL;
 }
@@ -8606,6 +13519,11 @@ egg_token *grammar_element(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    182,
+                    entry,
+                    (void *)egg_token_type_grammar_element);
+
   if (input_eof())
     return NULL;
 
@@ -8615,7 +13533,13 @@ egg_token *grammar_element(void)
 
   nt = egg_token_new(egg_token_type_grammar_element);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      182,
+                      fail,
+                      (void *)egg_token_type_grammar_element);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -8638,12 +13562,22 @@ egg_token *grammar_element(void)
     {
       dir = egg_token_after;
       t1 = t2;
+      callback_by_index(&_cbt,
+                        182,
+                        success,
+                        (void *)egg_token_type_grammar_element);
+
       return nt;
     }
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    182,
+                    fail,
+                    (void *)egg_token_type_grammar_element);
 
   return NULL;
 }
@@ -8659,6 +13593,11 @@ egg_token *grammar(void)
   int count;
   egg_token_direction dir;
 
+  callback_by_index(&_cbt,
+                    183,
+                    entry,
+                    (void *)egg_token_type_grammar);
+
   if (input_eof())
     return NULL;
 
@@ -8668,7 +13607,13 @@ egg_token *grammar(void)
 
   nt = egg_token_new(egg_token_type_grammar);
   if (!nt)
+  {
+    callback_by_index(&_cbt,
+                      183,
+                      fail,
+                      (void *)egg_token_type_grammar);
     return NULL;
+  }
 
   t1 = nt;
 
@@ -8701,12 +13646,22 @@ egg_token *grammar(void)
     }
     if ((count >= 0) && (count <= 1))
     {
+      callback_by_index(&_cbt,
+                        183,
+                        success,
+                        (void *)egg_token_type_grammar);
+
       return nt;
     }
   }
 
   egg_token_delete(nt);
   input_set_position(pos);
+
+  callback_by_index(&_cbt,
+                    183,
+                    fail,
+                    (void *)egg_token_type_grammar);
 
   return NULL;
 }

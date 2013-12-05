@@ -19,6 +19,10 @@
 #ifndef EGG_PARSER_H
 #define EGG_PARSER_H
 
+#include "callback.h"
+
+callback_table *egg_get_callback_table(void);
+
 egg_token *nul(void);
 egg_token *soh(void);
 egg_token *stx(void);

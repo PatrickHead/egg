@@ -37,5 +37,7 @@ phrase_map_item *phrase_map_list_find_item_by_name(phrase_map_item *list,
 phrase_map_item *phrase_map_list_append_item_by_name(phrase_map_item **list,
                                                      char *name,
                                                      boolean dups_allowed);
+int phrase_map_list_get_item_index(phrase_map_item *list, char *name);
+int phrase_map_list_count_items(phrase_map_item *list);
 
 #endif // MAP_H

@@ -52,8 +52,10 @@ DONE            A)  Add input line/char position tracking.
 DONE            B)  Integrate tracking into token support.
 
 CANCEL          C)  Generic Error handling capability.
+                    NOTE:  Canceled, as this is specific to each parser and
+                           token level in each parser.
 
-WIP             D)  Support for user registered callbacks for each phrase
+DONE            D)  Support for user registered callbacks for each phrase
                     parsing function.
                         i)  Registerable callback at function entry.
                        ii)  Registerable callback at successful function exit.
@@ -61,7 +63,7 @@ WIP             D)  Support for user registered callbacks for each phrase
 
           2)  Documentation:
 
-                A)  In source annotations.
+                A)  In-source annotations.
 
                 B)  Reference documentation (auto generated from code.)
 

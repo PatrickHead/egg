@@ -1,6 +1,13 @@
-/*
-    input.c
-    Copyright (C) 2013  Patrick Head
+/*!
+    \file input.c
+
+    \brief Source code for parser input source.
+
+    \version 2013120701
+
+    \author Patrick Head
+
+    \copyright Copyright (C) 2013  Patrick Head
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -35,23 +42,62 @@ typedef enum
   source_type_buffer
 } source_type;
 
-static struct _source
+static struct
 {
-  source_type type;
-  FILE *file;
-  unsigned char *buffer;
-  long  position;
-  long  size;
-  boolean eof;
+  source_type type;       //!< Input source type
+  FILE *file;             //!< Transient file pointer for source_type_file
+  unsigned char *buffer;  //!< Input buffer, either dynamic or user supplied
+  long  position;         //!< Current input tracking position
+  long  size;             //!< Total size in bytes of input source
+  boolean eof;            //!< Input EOF flag
 } _source;
+
+  /*
+    Globals
+  */
 
 static long *_line_map = NULL;
 static long _n_lines = 0L;
 
+  /*
+    Function prototypes
+  */
+
 static void _clear_source(void);
 static void _map_lines(void);
 static long _find_line_number(long position);
-long _search_line_number(long position, long ilow, long ihigh);
+static long _search_line_number(long position, long ilow, long ihigh);
+
+  /*!
+
+     \brief Initialize an input source.
+    
+     This function initializes an input source.
+     - If the \b source parameter is NULL, then \e stdin will be read into a
+     dynamically allocated buffer.
+     - If the \b source parameter is a string containing no new-line characters,
+     then the string is considered a file pathname, and that file will be
+     read into a dynamically allocated buffer.
+     - If the \b source parameter is a string containing at least one new-line
+     characer, then this string is used as the input buffer in place.
+    
+     \note The input tracking position is initially set to 0
+    
+     \note All input source lines are mapped for later line/char tracking.
+    
+     \note This function is not re-entrant.  Only one input source can be
+     managed at a time with this function.
+    
+     \todo If deemed necessary, implement a multiple input source mechanism.
+    
+     \param source NULL\n
+                   pathname\n
+                   string with at least one new-line\n
+    
+     \retval true success
+     \retval false failure
+
+  */
 
 boolean input_initialize(char *source)
 {
@@ -120,10 +166,10 @@ boolean input_initialize(char *source)
     _source.type = source_type_file;
     _source.size = st.st_size;
 
-		b = (byte *)malloc(_source.size + 1);
-		memset(b, 0, _source.size + 1);
+    b = (byte *)malloc(_source.size + 1);
+    memset(b, 0, _source.size + 1);
 
-		fread(b, sizeof(byte), _source.size, _source.file);
+    n_read = fread(b, sizeof(byte), _source.size, _source.file);
 
     fclose(_source.file);
 
@@ -138,6 +184,16 @@ boolean input_initialize(char *source)
 
   return false;
 }
+
+  /*!
+
+     \brief Destroy and cleanup an input source.
+    
+     This function destroys any allocated buffer associated with an input
+     source.  Also, the input tracking position is reset to 0, and the line
+     mapping is destroyed.
+    
+  */
 
 void input_cleanup(void)
 {
@@ -162,6 +218,21 @@ void input_cleanup(void)
   return;
 }
 
+  /*!
+
+     \brief Fetch and return the next byte from an input source.
+    
+     This function reads the next byte from an input source and returns that
+     byte.  If the input source is at its end, then the EOF condition is
+     marked.  Also, the input tracking position is updated.
+    
+     \param None
+
+     \retval byte
+     \retval 0 on any condition where byte can not be read.
+
+  */
+
 byte input_byte(void)
 {
   byte b;
@@ -171,8 +242,8 @@ byte input_byte(void)
     case source_type_file:
     case source_type_stdin:
     case source_type_buffer:
-			b = _source.buffer[_source.position];
-			_source.position++;
+      b = _source.buffer[_source.position];
+      _source.position++;
       if (_source.position == _source.size)
         _source.eof = true;
       return b;
@@ -183,10 +254,31 @@ byte input_byte(void)
   return 0;
 }
 
+  /*!
+
+     \brief Returns current input tracking position.
+    
+     \param None
+
+     \retval position
+
+  */
+
 long input_get_position(void)
 {
   return _source.position;
 }
+
+  /*!
+
+     \brief Set input tracking position.
+    
+     \param pos
+
+     \retval true success
+     \retval false failure
+
+  */
 
 boolean input_set_position(long pos)
 {
@@ -213,10 +305,35 @@ boolean input_set_position(long pos)
   return false;
 }
 
+  /*!
+
+     \brief Return input source EOF condition.
+    
+     \param None
+
+     \retval true on EOF
+     \retval false otherwise
+
+  */
+
 boolean input_eof(void)
 {
   return _source.eof;
 }
+
+  /*!
+
+     \brief Retrieve current input location information.
+    
+     This function calculates the current input line and character location
+     and fills in a user supplied \e input_location struct.
+    
+     \param loc pointer to \e input_location struct
+
+     \retval true success
+     \retval false failure
+
+  */
 
 boolean input_get_location(input_location *loc)
 {
@@ -239,11 +356,34 @@ boolean input_get_location(input_location *loc)
   return true;
 }
 
+  /*!
+
+     \brief Resets _source structure to all default values
+    
+  */
+
 static void _clear_source(void)
 {
   memset(&_source, 0, sizeof(_source));
   return;
 }
+
+  /*!
+
+     \brief Creates a line number mapping array.
+    
+     This function creates a global line mapping array for detailed input
+     source location tracking.  Each array element corresponds to a line
+     in the input source, and the value of each element is the byte offset
+     from the beginning of the input source of the first byte in the
+     corresponding line.
+
+     \note Currently, a line is defined by a string of bytes that end with
+           the literal new-line ASCII character.
+
+     \see \e _line_map
+    
+  */
 
 static void _map_lines(void)
 {
@@ -276,12 +416,50 @@ static void _map_lines(void)
   return;
 }
 
+  /*!
+
+     \brief Find a line number based on input tracking position.
+    
+     This function returns the mapped line number based on the input tracking
+     \e position.
+
+     \note This function simply serves as the head call to the recursive
+           function \e _search_line_number.
+
+     \see \e _search_line_number
+    
+     \param position
+
+     \retval long = line number
+
+  */
+
 static long _find_line_number(long position)
 {
   return _search_line_number(position, 0L, _n_lines - 1);
 }
 
-long _search_line_number(long position, long ilow, long ihigh)
+  /*!
+
+     \brief Perform binary search for input line number.
+    
+     This function returns the mapped line number based on the input tracking
+     \e position.
+
+     \note This function is recursive.  Normally should be called from
+           function \e _find_line_number.
+
+     \see \e _find_line_number
+    
+     \param position   target position in input source
+     \param ilow       low end line number for search
+     \param ihigh      high end line number for search
+
+     \retval long      line number of target position in input source
+
+  */
+
+static long _search_line_number(long position, long ilow, long ihigh)
 {
   long imid;
   long p1, p2;

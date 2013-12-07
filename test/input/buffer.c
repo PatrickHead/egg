@@ -11,6 +11,7 @@ int main(int argc, char **argv)
 {
   FILE *f;
   struct stat st;
+  int n_read;
   byte *b;
 
   stat("/etc/passwd", &st);
@@ -19,7 +20,7 @@ int main(int argc, char **argv)
   b = (byte *)malloc(st.st_size + 1);
   memset(b, 0, st.st_size + 1);
 
-  fread(b, sizeof(byte), st.st_size, f);
+  n_read = fread(b, sizeof(byte), st.st_size, f);
 
   fclose(f);
 

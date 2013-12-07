@@ -45,7 +45,7 @@ DONE    Stage II:  start 2013-10-27
 
 WIP     Stage IV:  start 2013-11-24
 
-CURR      1)  Increased robustness of generated code:
+DONE      1)  Increased robustness of generated code:
 
 DONE            A)  Add input line/char position tracking.
 
@@ -61,9 +61,9 @@ DONE            D)  Support for user registered callbacks for each phrase
                        ii)  Registerable callback at successful function exit.
                       iii)  Registerable callback for function failure.
 
-          2)  Documentation:
+CURR      2)  Documentation:
 
-                A)  In-source annotations.
+WIP             A)  In-source annotations.
 
                 B)  Reference documentation (auto generated from code.)
 
@@ -73,7 +73,7 @@ DONE            D)  Support for user registered callbacks for each phrase
 
                 E)  Examples (use SPICE model and EGG grammar)
 
-                F)  Complete and proper GNU license inclusion
+DONE            F)  Complete and proper GNU license inclusion
 
 DONE      3)  Add generic (syntax checking only) parser for any project.
               NOTE:  named <PROJECT>-walker

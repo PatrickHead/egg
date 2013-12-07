@@ -1,7 +1,11 @@
 CC = gcc
-COPTS = -g -Wall -O0 -I include -I parser/include
+ifeq ($(DEBUG),on)
+  COPTS = -g -Wall -O0 -I include -I parser/include
+else
+  COPTS = -O3 -I include -I parser/include
+endif
 
-all: embryo tests printable-egg egg-pdf git
+all: embryo tests git docs
 
 _parser: obj/input.o \
 		obj/callback.o \
@@ -141,6 +145,8 @@ test/input/buffer.o: test/input/buffer.c \
 		include/common.h
 	$(CC) $(COPTS) -o test/input/buffer.o -c test/input/buffer.c
 
+docs: printable-egg egg-pdf reference-manual
+
 egg-pdf: doc/egg.pdf
 
 doc/egg.pdf: doc/printable.egg
@@ -154,6 +160,17 @@ doc/printable.egg: doc/.egg
 	@echo Creating doc/printable.egg
 	@pr -F -W 70 -o 10 -h "EGG Grammar Definition" \
 		-D "$$(date -r doc/.egg +'rev. %Y%m%d')" doc/.egg > doc/printable.egg
+
+reference-manual: doc/reference-manual/latex/refman.tex
+
+doc/reference-manual/latex/refman.tex: doc/reference-manual/doxygen.cfg \
+    doc/reference-manual/DoxygenLayout.xml \
+		include/*.h \
+		src/*.c \
+		parser/include/*.h \
+		parser/src/*.c
+	@doxygen doc/reference-manual/doxygen.cfg
+	@(cd doc/reference-manual/latex; make)
 
 code-stats:
 	@wc -l include/*.h src/*.c parser/include/*.h parser/src/*.c test/*/*.c doc/* misc/* Makefile parser/Makefile
@@ -195,6 +212,7 @@ git: .git
 	@git add parser/include
 
 commit:
+	@misc/auto-version.sh
 	git commit -a
 
 push:

@@ -21,6 +21,11 @@
 
 #include "common.h"
 
+  /*@
+   *  Structure to capture and track the current line and character
+   *  position of the input file.
+   */
+
 typedef struct input_location
 {
   int line_number;

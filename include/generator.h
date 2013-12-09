@@ -3,7 +3,7 @@
 
     \brief Header file for parser code generation routines for EGG grammars.
 
-    \version 20131207175824
+    \version 20131209035052
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -33,7 +33,7 @@ void generate_token_header(FILE *of, char *parser_name);
 void generate_token_source(FILE *of, char *parser_name);
 void generate_token_type_header(FILE *of, char *parser_name, egg_token *t);
 void generate_token_util_source(FILE *of, char *parser_name, egg_token *t);
-void generate_token_util_header(FILE *of, char *parser_name, egg_token *t);
+void generate_token_util_header(FILE *of, char *parser_name);
 void generate_walker_source(FILE *of, char *parser_name, egg_token *t);
 void generate_input_source(FILE *of, char *parser_name);
 void generate_input_header(FILE *of, char *parser_name);

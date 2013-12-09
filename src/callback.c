@@ -3,7 +3,7 @@
 
     \brief Source code for callback system.
 
-    \version 20131207175824
+    \version 20131209035052
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -31,7 +31,19 @@
 
 static int find_entry_by_tag(callback_table *cbt, char *tag);
 
-callback_table *callback_initialize()
+  /*!
+
+     \brief Initialize the callback mechanism.
+    
+     This function creates a callback table, initializes it, and returns
+     a pointer to the new callback table.
+    
+     \retval "callback_table *" success
+     \retval NULL               failure
+
+  */
+
+callback_table *callback_initialize(void)
 {
   callback_table *cbt;
 
@@ -43,6 +55,23 @@ callback_table *callback_initialize()
 
   return cbt;
 }
+
+  /*!
+
+     \brief Create a new callback entry in callback table.
+    
+     This function appends a new callback entry to the callback_table.
+     The callback_table is dynamically resized to accomodate the new
+     callback_entry.
+     The callback_table's size is incremented.
+    
+     \param cbt callback_table *
+     \param tag string containing name of new callback_entry
+    
+     \retval  0 success
+     \retval -1 failure
+
+  */
 
 int callback_create(callback_table *cbt,
                     char *tag)
@@ -63,8 +92,8 @@ int callback_create(callback_table *cbt,
   else
     cbt->callbacks = realloc(cbt->callbacks,
                              sizeof(callback_entry) * (cbt->size + 1));
-	if (!cbt->callbacks)
-		return -1;
+  if (!cbt->callbacks)
+    return -1;
 
   cbe  = &cbt->callbacks[cbt->size];
 
@@ -77,6 +106,24 @@ int callback_create(callback_table *cbt,
 
   return 0;
 }
+
+  /*!
+
+     \brief Registers a callback function.
+    
+     This function registers a callback function to a specific callback_entry
+     in the callback_table for a specific callback_type.
+    
+     \param cbt      callback_table *
+     \param tag      string containing name of new callback_entry
+     \param type     callback_type
+     \param function pointer to function with signature of:\n
+                     int (*function)(void *data)
+    
+     \retval  0 success
+     \retval -1 failure
+
+  */
 
 int callback_register(callback_table *cbt,
                       char *tag,
@@ -114,6 +161,28 @@ int callback_register(callback_table *cbt,
   return 0;
 }
 
+  /*!
+
+     \brief Makes a callback by index into callback_table.
+    
+     This function will call the callback registered for the callback_entry
+     located at index postion into callback_table for the desired
+     callback_type.\n
+     If no callback function is registered for the specific callback_type,
+     then an error is returned.
+     If the index is out of range, then an error is returned.
+    
+     \param cbt callback_table *
+     \param index integer offset position of callback_entry in
+                  callback_table
+     \param type callback_type
+     \param data pointer to user supplied data of any type.
+    
+     \retval  0 success
+     \retval -1 failure
+
+  */
+
 int callback_by_index(callback_table *cbt,
                       int index,
                       callback_type type,
@@ -149,6 +218,29 @@ int callback_by_index(callback_table *cbt,
   return func(data);
 }
 
+  /*!
+
+     \brief Makes a callback by tag name of callback_entry in
+            callback_table.
+    
+     This function will call the callback registered for the callback_entry
+     with an exact tag name in the callback_table for the desired
+     callback_type.\n
+     If no callback function is registered for the specific callback_type,
+     then an error is returned.
+     If no callback_entry exists with the tag name then an error is returned.
+    
+     \param cbt callback_table *
+     \param tag string containing name of callback_entry in the
+                callback_table
+     \param type callback_type
+     \param data pointer to user supplied data of any type.
+    
+     \retval  0 success
+     \retval -1 failure
+
+  */
+
 int callback_by_tag(callback_table *cbt,
                     char *tag,
                     callback_type type,
@@ -168,6 +260,23 @@ int callback_by_tag(callback_table *cbt,
 
   return callback_by_index(cbt, i, type, data);
 }
+
+  /*!
+
+     \brief Locate a callback_entry in the callback_table by tag name.
+    
+     This function will lookup the callback_entry in the callback_table
+     by tag name.  If the callback_entry exists, then the index of the
+     matching callback_entry is returned.  Otherwise, an error is returned.
+    
+     \param cbt callback_table *
+     \param tag string containing name of callback_entry in the
+                  callback_table
+    
+     \retval int index of matching callback_entry
+     \retval -1  failure
+
+  */
 
 static int find_entry_by_tag(callback_table *cbt, char *tag)
 {

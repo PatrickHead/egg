@@ -186,6 +186,10 @@ clean:
 	@rm -f test/token/*.o
 	@rm -f doc/printable.egg
 	@rm -f doc/egg.pdf
+	@rm -rf doc/reference-manual/html
+	@rm -rf doc/reference-manual/latex
+	@rm -rf doc/reference-manual/man
+	@rm -rf doc/reference-manual/xml
 	@make --no-print-directory -C parser clean
 
 git: .git
@@ -201,6 +205,8 @@ git: .git
 	@git add doc/README
 	@git add doc/TODOS
 	@git add doc/VERSION
+	@git add doc/reference-document/doxygen.cfg
+	@git add doc/reference-document/DoxygenLayout.xml
 	@git add include/
 	@git add src/
 	@git add examples/

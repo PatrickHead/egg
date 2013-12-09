@@ -4,7 +4,7 @@
     \brief Source code for string append function.
     \brief In the spirit of the standard C string functions.
 
-    \version 20131207175824
+    \version 20131209035052
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -27,6 +27,24 @@
 
 #include <stdlib.h>
 #include <string.h>
+
+  /*!
+
+     \brief Appends a string to an existing string.
+    
+     This function will append a string to the end of an existing string, like
+     the venerable POSIX strcat function.  Unlike strcat, this function will
+     reallocate the memory associated with the original string, or make an
+     initial allocation for the appended string, if the original string is
+     passed as a NULL.
+    
+     \param s    original string (NULL if original string does not exist)
+     \param a    string to append to original
+    
+     \retval "char *" to expanded string
+             NULL     failure
+
+  */
 
 char *strapp(char *s, char *a)
 {

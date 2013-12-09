@@ -3,7 +3,7 @@
 
     \brief Source code for parser input source.
 
-    \version 20131207175824
+    \version 20131209035052
 
     \author Patrick Head   mailto:patrickhead@gmail.com
 
@@ -75,12 +75,12 @@ static long _search_line_number(long position, long ilow, long ihigh);
     
      This function initializes an input source.
      - If the \b source parameter is NULL, then \e stdin will be read into a
-     dynamically allocated buffer.
+       dynamically allocated buffer.
      - If the \b source parameter is a string containing no new-line characters,
-     then the string is considered a file pathname, and that file will be
-     read into a dynamically allocated buffer.
+       then the string is considered a file pathname, and that file will be
+       read into a dynamically allocated buffer.
      - If the \b source parameter is a string containing at least one new-line
-     characer, then this string is used as the input buffer in place.
+       characer, then this string is used as the input buffer in place.
     
      \note The input tracking position is initially set to 0
     
@@ -95,7 +95,7 @@ static long _search_line_number(long position, long ilow, long ihigh);
                    pathname\n
                    string with at least one new-line\n
     
-     \retval true success
+     \retval true  success
      \retval false failure
 
   */
@@ -229,8 +229,8 @@ void input_cleanup(void)
     
      \param None
 
-     \retval byte
-     \retval 0 on any condition where byte can not be read.
+     \retval byte value of byte that was read
+     \retval 0    on any condition where byte can not be read.
 
   */
 
@@ -261,7 +261,7 @@ byte input_byte(void)
     
      \param None
 
-     \retval position
+     \retval long position
 
   */
 
@@ -276,7 +276,7 @@ long input_get_position(void)
     
      \param pos
 
-     \retval true success
+     \retval true  success
      \retval false failure
 
   */
@@ -312,7 +312,7 @@ boolean input_set_position(long pos)
     
      \param None
 
-     \retval true on EOF
+     \retval true  EOF
      \retval false otherwise
 
   */
@@ -331,7 +331,7 @@ boolean input_eof(void)
     
      \param loc pointer to \e input_location struct
 
-     \retval true success
+     \retval true  success
      \retval false failure
 
   */
@@ -431,7 +431,7 @@ static void _map_lines(void)
     
      \param position
 
-     \retval long = line number
+     \retval long line number
 
   */
 

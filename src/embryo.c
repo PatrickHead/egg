@@ -3,7 +3,7 @@
 
     \brief Source code for embryo parser generator.
 
-    \version 20131207175824
+    \version 20131209035052
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -38,10 +38,30 @@
 #include "egg-parser.h"
 
 
-void usage(char *program_name);
-char *build_file_name(char *dir, char *project_name, char *file_name);
-char *build_path(char *dir, char *sub);
-int create_directories(char *top);
+static void usage(char *program_name);
+static char *build_file_name(char *dir, char *project_name, char *file_name);
+static char *build_path(char *dir, char *sub);
+static int create_directories(char *top);
+
+  /*!
+
+     \brief main function for \b embryo utility command.
+    
+     This is the main function for the \b embryo utility.\n
+       - Accepts and parses command line arguments
+       - Initializes the input source
+       - Creates directories required for generated source code files
+       - Calls appropriate code generation functions based on command line
+         arguments
+       - Cleans up input source and other data
+    
+     \param argc count of command line arguments
+     \param argv array of command line argument strings
+    
+     \retval 0 success
+     \retval 1 any failure
+
+  */
 
 int main(int argc, char **argv)
 {
@@ -198,7 +218,7 @@ int main(int argc, char **argv)
       free(fn);
       if (fo)
       {
-        generate_token_util_header(fo, project_name, t);
+        generate_token_util_header(fo, project_name);
         if (output_type)
           fclose(fo);
       }
@@ -315,7 +335,19 @@ int main(int argc, char **argv)
   return 0;
 }
 
-void usage(char *program_name)
+  /*!
+
+     \brief Displays usage/help message in conventional format.
+    
+     This function displays a help and usage message for the \b embryo
+     utility in the mostly ubiquitous POSIX/GNU format.
+    
+     \param program_name string containing the program name used in the
+                         usage message
+    
+  */
+
+static void usage(char *program_name)
 {
   if (!program_name)
     program_name = "embryo";
@@ -352,7 +384,29 @@ void usage(char *program_name)
   return;
 }
 
-char *build_file_name(char *dir, char *project_name, char *file_name)
+  /*!
+
+     \brief Builds a pathname for a file.
+    
+     This function builds a \e pathname for a file that will be created by
+     the \b embryo utility.  This \e pathname consists of the user supplied
+     project directory, if any, followed by the user supplied project name,
+     followed by the base file name.
+
+     \warning This function returns a pointer to dynamically allocated memory.
+              It is the caller's responsibility to free this memory when
+              appropriate.
+    
+     \param dir          string containing the project storage directory, if any
+            NULL         for no specific project directory
+     \param project_name string containing the name of the project
+     \param file_name    string containing the name of the file to be generated
+    
+     \retval "char *"    string containing \e pathname of file to be generated
+
+  */
+
+static char *build_file_name(char *dir, char *project_name, char *file_name)
 {
   char *fn;
   int len;
@@ -389,7 +443,26 @@ char *build_file_name(char *dir, char *project_name, char *file_name)
   return fn;
 }
 
-char *build_path(char *dir, char *sub)
+  /*!
+
+     \brief Builds a directory path from two directory components.
+    
+     This function essentially appends a sub-directory path component to
+     a known parent directory path.
+    
+     \warning This function returns a pointer to dynamically allocated memory.
+              It is the caller's responsibility to free this memory when
+              appropriate.
+    
+     \param dir string containing parent directory path component
+     \param sub string containing sub-directory path component
+    
+     \retval "char *" string containing new directory path
+     \retval NULL     failure
+
+  */
+
+static char *build_path(char *dir, char *sub)
 {
   char *path;
 
@@ -408,7 +481,29 @@ char *build_path(char *dir, char *sub)
   return path;
 }
 
-int create_directories(char *top)
+  /*!
+
+     \brief Creates all project related directories.
+    
+     This function creates all essential project related directories and
+     sub-directories for a project.  All sub-directories are created under a
+     single user supplied top-level directory for the project.
+
+     The directories created are:
+       - <PROJECT> directory
+       - <PROJECT>/include sub-directory
+       - <PROJECT>/src sub-directory
+       - <PROJECT>/bin sub-directory
+       - <PROJECT>/obj sub-directory
+    
+     \param top string containing the top-level project directory
+    
+     \retval  0 success
+     \retval -1 failure
+
+  */
+
+static int create_directories(char *top)
 {
   char *path = NULL;
   int r = 0;

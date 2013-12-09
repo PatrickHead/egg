@@ -3,7 +3,7 @@
 
     \brief Source code for "mkdir -p" like function.
 
-    \version 20131207175824
+    \version 20131209035052
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -31,6 +31,22 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <errno.h>
+
+  /*!
+
+     \brief Create a directory hierarchy in same spirit as "mkdir -p" command.
+    
+     This utility function will create a directory hierarchy much like the 
+     POSIX "mkdir -p" command, filling in any missing directory elements
+     necessary to complete the directory creation.
+    
+     \param pathname string containing path of new directory(s) to create
+     \param mode     mode_t permissions for newly created directories
+    
+     \retval  0 success
+             -1 failure
+
+  */
 
 int mkdir_p(const char *pathname, mode_t mode)
 {

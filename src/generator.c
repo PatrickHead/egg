@@ -3,7 +3,7 @@
 
     \brief Source code for parser code generation routines for EGG grammars.
 
-    \version 20131207175824
+    \version 20131209035052
 
     \author Patrick Head   mailto:patrickhead@gmail.com
 
@@ -37,14 +37,31 @@
 
 #include "generator.h"
 
-static void generate_grammar(FILE *of, char *parser_name, egg_token *t, int level);
-static void generate_phrase(FILE *of, char *parser_name, egg_token *t);
-static void generate_definition(FILE *of, char *parser_name, egg_token *t);
-static void generate_sequence(FILE *of, char *parser_name, egg_token *t);
-static void generate_item(FILE *of, char *parser_name, egg_token *t);
-static void generate_atom(FILE *of, char *parser_name, egg_token *t);
-static void generate_literal(FILE *of, char *parser_name, egg_token *t);
-static void generate_phrase_name(FILE *of, char *parser_name, egg_token *t);
+static void generate_grammar(FILE *of,
+                             char *parser_name,
+                             egg_token *t,
+                             int level);
+static void generate_phrase(FILE *of,
+                            char *parser_name,
+                            egg_token *t);
+static void generate_definition(FILE *of,
+                                char *parser_name,
+                                egg_token *t);
+static void generate_sequence(FILE *of,
+                              char *parser_name,
+                              egg_token *t);
+static void generate_item(FILE *of,
+                          char *parser_name,
+                          egg_token *t);
+static void generate_atom(FILE *of,
+                          char *parser_name,
+                          egg_token *t);
+static void generate_literal(FILE *of,
+                             char *parser_name,
+                             egg_token *t);
+static void generate_phrase_name(FILE *of,
+                                char *parser_name,
+                                egg_token *t);
 static int get_minimum(egg_token *t);
 static int get_maximum(egg_token *t);
 static char *fix_identifier(char *pn);
@@ -57,11 +74,34 @@ static char *get_year(void);
 static void emit_indent(FILE *of);
 static void emit_comment_string(FILE *of, char *s);
 static void emit_gnu_license(FILE *of);
-void isolate_top_level_phrases(phrase_map_item **pmi);
+static void isolate_top_level_phrases(phrase_map_item **pmi);
 
 static phrase_map_item *_pml = NULL;
+static int _current_level = 0;
+char *_pns = NULL;
+char *_pns_f = NULL;
 
-void generate_parser_source(FILE *of, char *parser_name, egg_token *t)
+  /*!
+
+     \brief Generates \<PROJECT\>-parser.c source code file.
+    
+     This function generates the source code for \<PROJECT\>-parser.c\n
+     \n
+     The parser source file contains exactly one function for each phrase
+     in the supplied EGG grammar.  Also, a the parser source includes a
+     static \e callback_table with one entry per phrase, and a utility
+     getter function named \<PROJECT\>_get_callback_table.
+    
+     \param of          FILE * of open output file to write source code
+     \param parser_name string containing name of parser (ie. \<PROJECT\>)
+     \param t           \e egg_token * containing the root token from which
+                        the source code is generated
+    
+  */
+
+void generate_parser_source(FILE *of,
+                            char *parser_name,
+                            egg_token *t)
 {
   phrase_map_item *pmi;
 
@@ -123,7 +163,26 @@ void generate_parser_source(FILE *of, char *parser_name, egg_token *t)
   return;
 }
 
-void generate_parser_header(FILE *of, char *parser_name, egg_token *t)
+  /*!
+
+     \brief Generates \<PROJECT\>-parser.h source code file.
+    
+     This function generates the source code for \<PROJECT\>-parser.h\n
+     \n
+     The parser header file contains exactly one function declaration for each
+     phrase in the supplied EGG grammar.  Also, a function declartion for the
+     utility getter function named \<PROJECT\>_get_callback_table is included.
+    
+     \param of          FILE * of open output file to write source code
+     \param parser_name string containing name of parser (ie. \<PROJECT\>)
+     \param t           \e egg_token * containing the root token from which
+                        the source code is generated
+
+  */
+
+void generate_parser_header(FILE *of,
+                            char *parser_name,
+                            egg_token *t)
 {
   egg_token *ge, *p, *pn;
   char *hn;
@@ -192,7 +251,24 @@ void generate_parser_header(FILE *of, char *parser_name, egg_token *t)
   return;
 }
 
-void generate_token_header(FILE *of, char *parser_name)
+  /*!
+
+     \brief Generates \<PROJECT\>-token.h source code file.
+    
+     This function generates the source code for \<PROJECT\>-token.h\n
+     \n
+     The token header file contains:
+       - an enum typedef for the \<PROJECT\>_token_direction values
+       - a struct typedef for the \<PROJECT\>_token structure
+       - the declaration for several \<PROJECT\>_token management functions
+    
+     \param of          FILE * of open output file to write source code
+     \param parser_name string containing name of parser (ie. \<PROJECT\>)
+
+  */
+
+void generate_token_header(FILE *of,
+                           char *parser_name)
 {
   char *u_parser_name;
 
@@ -303,7 +379,22 @@ void generate_token_header(FILE *of, char *parser_name)
   return;
 }
 
-void generate_token_source(FILE *of, char *parser_name)
+  /*!
+
+     \brief Generates \<PROJECT\>-token.c source code file.
+    
+     This function generates the source code for \<PROJECT\>-token.c\n
+     \n
+     The token source file contains:
+       - the definitions for several \<PROJECT\>_token management functions
+    
+     \param of          FILE * of open output file to write source code
+     \param parser_name string containing name of parser (ie. \<PROJECT\>)
+
+  */
+
+void generate_token_source(FILE *of,
+                           char *parser_name)
 {
   if (!of)
     of = stdout;
@@ -585,7 +676,26 @@ void generate_token_source(FILE *of, char *parser_name)
   return;
 }
 
-void generate_token_type_header(FILE *of, char *parser_name, egg_token *t)
+  /*!
+
+     \brief Generates \<PROJECT\>-token-type.h source code file.
+    
+     This function generates the source code for \<PROJECT\>-token-type.h\n
+     \n
+     The token type header file contains an enum typedef for the
+     \<PROJECT\>_token_type values.  A token type is defined for each phrase
+     defined in the parsed EGG grammar.
+    
+     \param of          FILE * of open output file to write source code
+     \param parser_name string containing name of parser (ie. \<PROJECT\>)
+     \param t           \e egg_token * containing the root token from which
+                        the source code is generated
+
+  */
+
+void generate_token_type_header(FILE *of,
+                                char *parser_name,
+                                egg_token *t)
 {
   egg_token *ge, *p, *pn;
   char *hn;
@@ -658,7 +768,25 @@ void generate_token_type_header(FILE *of, char *parser_name, egg_token *t)
   return;
 }
 
-void generate_token_util_source(FILE *of, char *parser_name, egg_token *t)
+  /*!
+
+     \brief Generates \<PROJECT\>-token-util.c source code file.
+    
+     This function generates the source code for \<PROJECT\>-token-util.c\n
+     \n
+     The token utililty source file contains the \<PROJECT\>_token_type_to_string
+     function definition.
+    
+     \param of          FILE * of open output file to write source code
+     \param parser_name string containing name of parser (ie. \<PROJECT\>)
+     \param t           \e egg_token * containing the root token from which
+                        the source code is generated
+
+  */
+
+void generate_token_util_source(FILE *of,
+                                char *parser_name,
+                                egg_token *t)
 {
   egg_token *ge, *p, *pn;
   char *pns;
@@ -734,7 +862,22 @@ void generate_token_util_source(FILE *of, char *parser_name, egg_token *t)
   return;
 }
 
-void generate_token_util_header(FILE *of, char *parser_name, egg_token *t)
+  /*!
+
+     \brief Generates \<PROJECT\>-token-util.h source code file.
+    
+     This function generates the source code for \<PROJECT\>-token-util.h\n
+     \n
+     The token utililty header file contains the \<PROJECT\>_token_type_to_string
+     function declaration.
+    
+     \param of          FILE * of open output file to write source code
+     \param parser_name string containing name of parser (ie. \<PROJECT\>)
+
+  */
+
+void generate_token_util_header(FILE *of,
+                                char *parser_name)
 {
   char *hn;
   int hnl;
@@ -743,9 +886,6 @@ void generate_token_util_header(FILE *of, char *parser_name, egg_token *t)
     of = stdout;
 
   if (!parser_name)
-    return;
-
-  if (!t)
     return;
 
   hnl = strlen(parser_name) + strlen("_token_util_h") + 1;
@@ -776,7 +916,29 @@ void generate_token_util_header(FILE *of, char *parser_name, egg_token *t)
   return;
 }
 
-void generate_walker_source(FILE *of, char *parser_name, egg_token *t)
+  /*!
+
+     \brief Generates \<PROJECT\>-walker.c source code file.
+    
+     This function generates the source code for \<PROJECT\>-walker.c\n
+     \n
+     The walker source file contains the code for a generic grammar walking
+     utility command.  The walker utility will walk any given file and apply
+     the \<PROJECT\> grammar rules to the file.  On success, the walker will
+     dump all the parsed phrases in the input file to \b stdout.  This
+     utility can optionally just check for correct grammar structure of the
+     input file.
+    
+     \param of          FILE * of open output file to write source code
+     \param parser_name string containing name of parser (ie. \<PROJECT\>)
+     \param t           \e egg_token * containing the root token from which
+                        the source code is generated
+
+  */
+
+void generate_walker_source(FILE *of,
+                            char *parser_name,
+                            egg_token *t)
 {
   phrase_map_item *pml;
   phrase_map_item *pmi;
@@ -965,7 +1127,25 @@ void generate_walker_source(FILE *of, char *parser_name, egg_token *t)
   return;
 }
 
-void generate_makefile(FILE *of, char *parser_name)
+  /*!
+
+     \brief Generates Makefile for \<PROJECT\> parser project.
+    
+     This function generates the Makefile for \<PROJECT\>\n
+     \n
+     The \<PROJECT\> Makefile contains all the make rules necessary to compile
+     and link all the generated source code from embryo and associated
+     utility actions, such as building a linkable library for the \<PROJECT\>
+     parsing modules, installation scripts for the library, header files,
+     and associated documention.
+    
+     \param of          FILE * of open output file to write source code
+     \param parser_name string containing name of parser (ie. \<PROJECT\>)
+
+  */
+
+void generate_makefile(FILE *of,
+                       char *parser_name)
 {
   if (!of)
     of = stdout;
@@ -1045,9 +1225,31 @@ void generate_makefile(FILE *of, char *parser_name)
   return;
 }
 
-static int current_level = 0;
+  /*!
 
-static void generate_grammar(FILE *of, char *parser_name, egg_token *t, int level)
+     \brief Helper function for \e generate_parser_source function.
+    
+     This function is the highest level helper function for generating the
+     parser for \<PROJECT\>.\n
+     \n
+     This function basically scans each individual phrase in the token tree
+     of the parsed EGG file for \<PROJECT\>'s grammar and kicks off the
+     subsequent calls to lower level generator functions.
+    
+     \warning This function is recursive.
+
+     \param of          FILE * of open output file to write source code
+     \param parser_name string containing name of parser (ie. \<PROJECT\>)
+     \param t           \e egg_token * containing the root token from which
+                        the source code is generated
+     \param level       the current indentation level for generated code
+
+  */
+
+static void generate_grammar(FILE *of,
+                             char *parser_name,
+                             egg_token *t,
+                             int level)
 {
   if (!t) return;
 
@@ -1073,10 +1275,28 @@ static void generate_grammar(FILE *of, char *parser_name, egg_token *t, int leve
   return;
 }
 
-char *_pns = NULL;
-char *_pns_f = NULL;
+  /*!
 
-static void generate_phrase(FILE *of, char *parser_name, egg_token *t)
+     \brief Helper function for \e generate_parser_source function.
+    
+     This function parses a phrase token and generates the appropriate
+     code for the phrase parsing function.\n
+     \n
+     A phrase consists of a phrase-name and a definition.  This function
+     directly generates the source for the phrase parsing function pre-amble
+     code, calls the subsequent definition code generating function, and then
+     closes out the code for the phrase parsing function.
+    
+     \param of          FILE * of open output file to write source code
+     \param parser_name string containing name of parser (ie. \<PROJECT\>)
+     \param t           \e egg_token * containing the phrase token from which
+                        the source code is generated
+
+  */
+
+static void generate_phrase(FILE *of,
+                            char *parser_name,
+                            egg_token *t)
 {
   egg_token *pn;
   egg_token *def;
@@ -1160,12 +1380,12 @@ static void generate_phrase(FILE *of, char *parser_name, egg_token *t)
     }
   }
 
-	fprintf(of, "  callback_by_index(&_cbt,\n"
+  fprintf(of, "  callback_by_index(&_cbt,\n"
               "                    %d,\n"
               "                    fail,\n"
-							"                    (void *)%s_token_type_%s);\n",
-								phrase_map_list_get_item_index(_pml, _pns),
-								parser_name, _pns_f);
+              "                    (void *)%s_token_type_%s);\n",
+                phrase_map_list_get_item_index(_pml, _pns),
+                parser_name, _pns_f);
   fprintf(of, "\n");
 
   fprintf(of, "  return NULL;\n");
@@ -1173,14 +1393,35 @@ static void generate_phrase(FILE *of, char *parser_name, egg_token *t)
   fprintf(of, "\n");
 
   if (_pns)
-	  free(_pns);
+    free(_pns);
   if (_pns_f)
-	  free(_pns_f);
+    free(_pns_f);
 
   return;
 }
 
-static void generate_definition(FILE *of, char *parser_name, egg_token *t)
+  /*!
+
+     \brief Helper function for \e generate_parser_source function.
+    
+     This function parses a definition token and generates the appropriate
+     code for all contents of the phrase definition.\n
+     \n
+     A definition consists of a sequence of definition elements.  This function
+     directly generates the source for the definition pre-amble code, calls the
+     subsequent sequence code generating function, and then closes out the code
+     for the definition.
+    
+     \param of          FILE * of open output file to write source code
+     \param parser_name string containing name of parser (ie. \<PROJECT\>)
+     \param t           \e egg_token * containing the definition token from
+                        which the source code is generated
+
+  */
+
+static void generate_definition(FILE *of,
+                                char *parser_name,
+                                egg_token *t)
 {
   egg_token *seq;
   egg_token *cont;
@@ -1231,11 +1472,31 @@ static void generate_definition(FILE *of, char *parser_name, egg_token *t)
   return;
 }
 
-static void generate_sequence(FILE *of, char *parser_name, egg_token *t)
+  /*!
+
+     \brief Helper function for \e generate_parser_source function.
+    
+     This function parses a sequence token and generates the appropriate
+     code for all contents of the sequence.\n
+     \n
+     A sequence consists of a list of grammar items.  This function calls
+     the item generation function, and directly generates the source for the
+     definition close-out code.
+    
+     \param of          FILE * of open output file to write source code
+     \param parser_name string containing name of parser (ie. \<PROJECT\>)
+     \param t           \e egg_token * containing the sequence token from which
+                        the source code is generated
+
+  */
+
+static void generate_sequence(FILE *of,
+                              char *parser_name,
+                              egg_token *t)
 {
   egg_token *itm;
   egg_token *cont;
-  int level_in = current_level;
+  int level_in = _current_level;
 
   if (!t)
     return;
@@ -1251,7 +1512,7 @@ static void generate_sequence(FILE *of, char *parser_name, egg_token *t)
   itm = egg_token_find(t, egg_token_type_item);
   if (itm)
   {
-    ++current_level;
+    ++_current_level;
 
     generate_item(of, parser_name, itm);
 
@@ -1264,7 +1525,7 @@ static void generate_sequence(FILE *of, char *parser_name, egg_token *t)
         itm = egg_token_find(t, egg_token_type_item);
         if (itm)
         {
-           ++current_level;
+           ++_current_level;
            generate_item(of, parser_name, itm);
         }
       }
@@ -1272,33 +1533,54 @@ static void generate_sequence(FILE *of, char *parser_name, egg_token *t)
     }
 
     emit_indent(of);
-		fprintf(of, "  callback_by_index(&_cbt,\n");
+    fprintf(of, "  callback_by_index(&_cbt,\n");
     emit_indent(of);
     fprintf(of, "                    %d,\n",
-									phrase_map_list_get_item_index(_pml, _pns));
+                  phrase_map_list_get_item_index(_pml, _pns));
     emit_indent(of);
     fprintf(of, "                    success,\n");
     emit_indent(of);
     fprintf(of, "                    (void *)%s_token_type_%s);\n",
-									parser_name, _pns_f);
+                  parser_name, _pns_f);
     fprintf(of, "\n");
     emit_indent(of);
     fprintf(of, "  return nt;\n");
 
-    while (current_level > level_in)
+    while (_current_level > level_in)
     {
       emit_indent(of);
       fprintf(of, "}\n");
-      --current_level;
+      --_current_level;
     }
   }
 
-  current_level = 0;
+  _current_level = 0;
 
   return;
 }
 
-static void generate_item(FILE *of, char *parser_name, egg_token *t)
+  /*!
+
+     \brief Helper function for \e generate_parser_source function.
+    
+     This function parses an item token and generates the appropriate
+     code for all contents of the item.\n
+     \n
+     An item consists of an atom which is possibly quantified.  This function
+     directly generates the item and quantifier pre-amble code, calls the atom
+     generation function, and directly generates the source for the
+     item close-out code.
+    
+     \param of          FILE * of open output file to write source code
+     \param parser_name string containing name of parser (ie. \<PROJECT\>)
+     \param t           \e egg_token * containing the item token from which
+                        the source code is generated
+
+  */
+
+static void generate_item(FILE *of,
+                          char *parser_name,
+                          egg_token *t)
 {
   egg_token *atm;
   egg_token *qty;
@@ -1338,12 +1620,12 @@ static void generate_item(FILE *of, char *parser_name, egg_token *t)
       }
       emit_indent(of);
       fprintf(of, "{\n");
-      ++current_level;
+      ++_current_level;
     }
     generate_atom(of, parser_name, atm);
     if (qty)
     {
-      --current_level;
+      --_current_level;
       emit_indent(of);
       fprintf(of, "    ++count;\n");
       emit_indent(of);
@@ -1372,7 +1654,26 @@ static void generate_item(FILE *of, char *parser_name, egg_token *t)
   return;
 }
 
-static void generate_atom(FILE *of, char *parser_name, egg_token *t)
+  /*!
+
+     \brief Helper function for \e generate_parser_source function.
+    
+     This function parses an atom token and generates the appropriate
+     code for all contents of the atom.\n
+     \n
+     An atom contains either a literal or a phrase-name.  This function calls
+     the appropriate code generation function for a literal or a phrase name.
+    
+     \param of          FILE * of open output file to write source code
+     \param parser_name string containing name of parser (ie. \<PROJECT\>)
+     \param t           \e egg_token * containing the atom token from which
+                        the source code is generated
+
+  */
+
+static void generate_atom(FILE *of,
+                          char *parser_name,
+                          egg_token *t)
 {
   egg_token *lit;
   egg_token *pn;
@@ -1405,7 +1706,26 @@ static void generate_atom(FILE *of, char *parser_name, egg_token *t)
   return;
 }
 
-static void generate_literal(FILE *of, char *parser_name, egg_token *t)
+  /*!
+
+     \brief Helper function for \e generate_parser_source function.
+    
+     This function parses a literal token and generates the appropriate
+     code for all contents of the literal.\n
+     \n
+     An literal contains either a string or integer.  This function directly
+     generates the code for all types of literals.
+    
+     \param of          FILE * of open output file to write source code
+     \param parser_name string containing name of parser (ie. \<PROJECT\>)
+     \param t           \e egg_token * containing the literal token from which
+                        the source code is generated
+
+  */
+
+static void generate_literal(FILE *of,
+                             char *parser_name,
+                             egg_token *t)
 {
   egg_token *lit;
   char *s;
@@ -1473,6 +1793,23 @@ static void generate_literal(FILE *of, char *parser_name, egg_token *t)
   return;
 }
 
+  /*!
+
+     \brief Helper function for \e generate_parser_source function.
+    
+     This function parses a phrase-name token and generates the appropriate
+     code for all contents of the phrase-name.\n
+     \n
+     A phrase-name contains is a literal EGG grammer name of a phrase.  This
+     function directly generates the code for a phrase-name.
+    
+     \param of          FILE * of open output file to write source code
+     \param parser_name string containing name of parser (ie. \<PROJECT\>)
+     \param t           \e egg_token * containing the phrase-name token from
+                        which the source code is generated
+
+  */
+
 static void generate_phrase_name(FILE *of, char *parser_name, egg_token *t)
 {
   char *pns = NULL;
@@ -1509,6 +1846,19 @@ static void generate_phrase_name(FILE *of, char *parser_name, egg_token *t)
   return;
 }
 
+  /*!
+
+     \brief Helper function for \e generate_parser_source function.
+    
+     This function finds the minimum range value in a quantifier.
+    
+     \param t           \e egg_token * containing the quantifier token
+
+     \retval int value of quantifier range minimum
+             1   on any error
+
+  */
+
 static int get_minimum(egg_token *t)
 {
   egg_token *in;
@@ -1535,6 +1885,20 @@ static int get_minimum(egg_token *t)
 
   return 1;
 }
+
+  /*!
+
+     \brief Helper function for \e generate_parser_source function.
+    
+     This function finds the maximum range value in a quantifier.
+    
+     \param t           \e egg_token * containing the quantifier token
+
+     \retval int value of quantifier range maximum
+             -1  when range maximum is unlimited (ie. asterisk)
+              1  on any error
+
+  */
 
 static int get_maximum(egg_token *t)
 {
@@ -1580,6 +1944,20 @@ static int get_maximum(egg_token *t)
   return 1;
 }
 
+  /*!
+
+     \brief Generic helper function for code generation functions.
+    
+     This function converts all EGG grammar identifiers (ie. phrase-name) to
+     C language identifiers.  Specifically all '-' (minus) characters are
+     converted to '_' (underscore) characters.
+    
+     \param pn string containing EGG phrase-name
+    
+     \retval "char *" string containing C language equivalent identifier
+
+  */
+
 static char *fix_identifier(char *pn)
 {
   char *t;
@@ -1598,6 +1976,26 @@ static char *fix_identifier(char *pn)
 
   return pn;
 }
+
+  /*!
+
+     \brief Generic helper function for code generation functions.
+    
+     This function converts all EGG grammar quoted literals to C language
+     compatible strings.  All single-quoted-literals are converted to double
+     quoted strings, including preceding any double-quotes contained within
+     the single-quoted-literal with a C string '\' (backslash) character.
+    
+     \warning This function returns a pointer to dynamically allocated memory.
+              It is the caller's responsibility to free this memory when
+              appropriate.
+
+     \param s string containing single quoted literal
+    
+     \retval "char *" string containing C language compatible double quoted
+                      string
+
+  */
 
 static char *fix_quotes(char *s)
 {
@@ -1628,6 +2026,23 @@ static char *fix_quotes(char *s)
 
   return n;
 }
+
+  /*!
+
+     \brief Generic helper function for code generation functions.
+    
+     This function builds a C language compatible literal value.
+    
+     \warning This function returns a pointer to dynamically allocated memory.
+              It is the caller's responsibility to free this memory when
+              appropriate.
+
+     \param t           \e egg_token * containing the literal token
+
+     \retval "char *" string containing the C language literal code.
+             NULL     on any error
+
+  */
 
 static char *build_literal(egg_token *t)
 {
@@ -1702,6 +2117,23 @@ static char *build_literal(egg_token *t)
   return NULL;
 }
 
+  /*!
+
+     \brief Generic helper function for code generation functions.
+    
+     This function converts all alpha characters in a string to upper case.
+    
+     \warning This function modifies the passed string, therefore a copy must be
+              made by the caller if the original string contents are to be
+              preserved.
+
+     \param s string
+
+     \retval "char *" string with all upper case alpha characters
+             NULL     on any error
+
+  */
+
 static char *str_toupper(char *s)
 {
   char *t = s;
@@ -1717,6 +2149,22 @@ static char *str_toupper(char *s)
 
   return s;
 }
+
+  /*!
+
+     \brief Helper function for \e generate_token_util_source function.
+    
+     This function determines if a given phrase contains only literals.  If so,
+     then a C language compatible literal is returned, else a C language
+     compatible string containing a phrase's phrase-name is returned.
+    
+     \param t           \e egg_token * containing the phrase token
+
+     \retval "char *" string containing either literal or phrase name in C
+                      language compatible form
+     \retval NULL     on any error
+
+  */
 
 static char *literal_or_phrase_name(egg_token *t)
 {
@@ -1764,6 +2212,23 @@ static char *literal_or_phrase_name(egg_token *t)
   return egg_token_to_string(pn->d, pns);
 }
 
+  /*!
+
+     \brief Generic helper function for code generation functions.
+    
+     This function any long to a C language compatible hexadecimal literal.
+    
+     \warning This function returns a pointer to dynamically allocated memory.
+              It is the caller's responsibility to free this memory when
+              appropriate.
+
+     \param l long to convert
+
+     \retval "char *" string containing C language compatible hexadecimal
+                      literal
+
+  */
+
 static char *long_to_bytes(unsigned long l)
 {
   char *s = NULL;
@@ -1784,6 +2249,20 @@ static char *long_to_bytes(unsigned long l)
   return s;
 }
 
+  /*!
+
+     \brief Generic helper function for code generation functions.
+    
+     This function returns a string representation of the current 4 digit year
+    
+     \warning This function returns a pointer to dynamically allocated memory.
+              It is the caller's responsibility to free this memory when
+              appropriate.
+
+     \retval "char *" string containing the current 4 digit year
+
+  */
+
 char *get_year(void)
 {
   time_t now;
@@ -1800,6 +2279,17 @@ char *get_year(void)
   return year;
 }
 
+  /*!
+
+     \brief Generic helper function for code generation functions.
+    
+     This emits an appropriate number of spaces to an open output file based
+     on value in global \e _current_level variable.
+    
+     \param of file * to open file for writing
+
+  */
+
 static void emit_indent(FILE *of)
 {
   int i;
@@ -1807,11 +2297,27 @@ static void emit_indent(FILE *of)
   if (!of)
     return;
 
-  for (i = 0; i < current_level; i++)
+  for (i = 0; i < _current_level; i++)
     fprintf(of, "  ");
 
   return;
 }
+
+  /*!
+
+     \brief Generic helper function for code generation functions.
+    
+     This emits a comment string adorned with a '*' (asterisk) character
+     preceeding each line and indentation.
+    
+     \deprecated This may become deprecated in the future due to a less
+                 ornate style of block comments used in non-parser code and
+                 to facilitate doxygen style markups in a simpler manner.
+
+     \param of file * to open file for writing
+     \param s  string containing unadorned comment string
+
+  */
 
 static void emit_comment_string(FILE *of, char *s)
 {
@@ -1840,39 +2346,78 @@ static void emit_comment_string(FILE *of, char *s)
   return;
 }
 
+  /*!
+
+     \brief Generic helper function for code generation functions.
+    
+     This function emits a standard GNU license comment block intended to be
+     included in every generated source code file's file level description
+     comments.
+    
+     \note This function is dead stupid as far as the year of the copyright
+           notice.   It simply includes the current 4 digit year.
+
+     \param of file * to open file for writing
+
+  */
+
 static void emit_gnu_license(FILE *of)
 {
   if (!of)
     of = stdout;
 
-  fprintf(of, "    Copyright (C) %s  Patrick Head\n", get_year());
+  fprintf(of, "    \\copyright Copyright (C) %s  Patrick Head\n", get_year());
   fprintf(of, "\n");
+  fprintf(of, "    \\license\n");
   fprintf(of, "    This program is free software: you can redistribute it "
               "and/or modify\n");
   fprintf(of, "    it under the terms of the GNU General Public License as "
               "published by\n");
   fprintf(of, "    the Free Software Foundation, either version 3 of the "
               "License, or\n");
-  fprintf(of, "    (at your option) any later version.\n");
-  fprintf(of, "\n");
+  fprintf(of, "    (at your option) any later version.\\n\n");
+  fprintf(of, "    \\n\n");
   fprintf(of, "    This program is distributed in the hope that it will be "
               "useful,\n");
-  fprintf(of, "    but WITHOUT ANY WARRANTY; without even the implied warranty "
-              "of\n");
+  fprintf(of, "    but WITHOUT ANY WARRANTY; without even the implied "
+              "warranty of\n");
   fprintf(of, "    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See "
               "the\n");
-  fprintf(of, "    GNU General Public License for more details.\n");
-  fprintf(of, "\n");
+  fprintf(of, "    GNU General Public License for more details.\\n\n");
+  fprintf(of, "    \\n\n");
   fprintf(of, "    You should have received a copy of the GNU General Public "
               "License\n");
-  fprintf(of, "    along with this program.  If not, "
-              "see <http://www.gnu.org/licenses/>.\n");
+  fprintf(of, "    along with this program.  If not, see "
+              "<http://www.gnu.org/licenses/>.\n");
   fprintf(of, "*/\n");
 
   return;
 }
 
-void isolate_top_level_phrases(phrase_map_item **list)
+  /*!
+
+     \brief Generic helper function for code generation functions.
+    
+     This function finds all the top-level phrases in an EGG grammar phrase map.
+     A top-level phrase is defined as a phrase in an EGG grammar that has no
+     dependent phrases.  In other words, no other EGG grammar phrases make
+     reference to a top-level phrase.\n
+     \n
+     This is useful for any code generation that needs to be able to make
+     calls to or reports of specific sub-sets of a grammar at a top level.
+     The \<PROJECT\>-walker utility is an example of the use of top-level
+     phrases.
+
+     \warning This function modifies the contents of the passed list of
+              \e phrase_map_item, specifically by deleting all phrase map items
+              that do not contain EGG grammar phrases that qualify as top-level
+              phrases.
+    
+     \param list address of an array of \e phrase_map_item
+    
+  */
+
+static void isolate_top_level_phrases(phrase_map_item **list)
 {
   phrase_map_item *ppmi;
   phrase_map_item *ppmi2;

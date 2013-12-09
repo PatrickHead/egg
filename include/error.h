@@ -3,7 +3,7 @@
 
     \brief Header file for generic error handling routines.
 
-    \version 20131207175824
+    \version 20131209035052
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -27,15 +27,15 @@
 #ifndef ERROR_H
 #define ERROR_H
 
-	/*
-	 * Macros defining error codes
-	 */
+  /*
+   * Macros defining error codes
+   */
 
-#define ERROR_OK																		00
+#define ERROR_OK                                    00
 
-	/*
-	 * Function prototypes
-	 */
+  /*
+   * Function prototypes
+   */
 
 void errorSet(unsigned char code);
 unsigned char errorGet(void);

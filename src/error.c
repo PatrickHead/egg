@@ -3,7 +3,10 @@
 
     \brief Source code for generic error handling routines.
 
-    \version 20131207175824
+    \note Currently, this source is not implemented in any portion of the
+          \b EGG/embryo system.
+
+    \version 20131209035052
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -28,13 +31,29 @@
 
 static unsigned char _errorCode = 0;
 
+  /*!
+
+     \brief Sets error code state to a value.
+    
+     \param code unsigned char with error code
+    
+  */
+
 void errorSet(unsigned char code)
 {
-	_errorCode = code;
+  _errorCode = code;
 }
+
+  /*!
+
+     \brief Gets current error code.
+    
+     \retval errorCode unsigned char of current error code
+
+  */
 
 unsigned char errorGet(void)
 {
-	return _errorCode;
+  return _errorCode;
 }
 

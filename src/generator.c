@@ -3,7 +3,7 @@
 
     \brief Source code for parser code generation routines for EGG grammars.
 
-    \version 20131209035052
+    \version 20131210022217
 
     \author Patrick Head   mailto:patrickhead@gmail.com
 
@@ -70,16 +70,52 @@ static char *str_toupper(char *s);
 static char *build_literal(egg_token *t);
 static char *literal_or_phrase_name(egg_token *t);
 static char *long_to_bytes(unsigned long l);
-static char *get_year(void);
+static int get_year(void);
 static void emit_indent(FILE *of);
 static void emit_comment_string(FILE *of, char *s);
-static void emit_gnu_license(FILE *of);
+static void emit_source_comment_header(FILE *of);
 static void isolate_top_level_phrases(phrase_map_item **pmi);
+static char * make_file_name(char *project, char *file_name);
 
 static phrase_map_item *_pml = NULL;
 static int _current_level = 0;
-char *_pns = NULL;
-char *_pns_f = NULL;
+static char *_pns = NULL;
+static char *_pns_f = NULL;
+static boolean _use_doxygen = false;
+static char * _file_name = "Unknown";
+static char * _project_brief = "";
+static char * _version = "0";
+static char * _author = "Anonymous";
+static char * _email = "";
+static int _first_year = 2013;
+static char * _license =
+    "This program is free software: you can redistribute it and/or modify\n"
+    "  it under the terms of the GNU General Public License as published by\n"
+    "  the Free Software Foundation, either version 3 of the License, or\n"
+    "  (at your option) any later version.\n"
+    "\n"
+    "  This program is distributed in the hope that it will be useful,\n"
+    "  but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+    "  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+    "  GNU General Public License for more details.\n"
+    "\n"
+    "  You should have received a copy of the GNU General Public License\n"
+    "  along with this program.  If not, see <http://www.gnu.org/licenses/>.";
+static char * _license_with_doxygen =
+    "\\license\n"
+    "  This program is free software: you can redistribute it and/or modify\n"
+    "  it under the terms of the GNU General Public License as published by\n"
+    "  the Free Software Foundation, either version 3 of the License, or\n"
+    "  (at your option) any later version.\\n\n"
+    "  \\n\n"
+    "  This program is distributed in the hope that it will be useful,\n"
+    "  but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+    "  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+    "  GNU General Public License for more details.\\n\n"
+    "  \\n\n"
+    "  You should have received a copy of the GNU General Public License\n"
+    "  along with this program.  If not, see "
+    "  \\<http://www.gnu.org/licenses/\\>.";
 
   /*!
 
@@ -103,7 +139,10 @@ void generate_parser_source(FILE *of,
                             char *parser_name,
                             egg_token *t)
 {
-  phrase_map_item *pmi;
+  phrase_map_item *pmi;  // Generic phrase map item pointer
+  char *fn;              // A generated file name for emitted documentation
+
+    // Sanity check parameters
 
   if (!of)
     of = stdout;
@@ -114,23 +153,58 @@ void generate_parser_source(FILE *of,
   if (!t)
     return;
 
+    // Create a top level phrase map of all grammar phrases
+
   _pml = phrase_map(t);
   if (!_pml)
     return;
 
-  fprintf(of, "/*\n");
-  fprintf(of, "    %s-parser.c\n", parser_name);
-  emit_gnu_license(of);
+    // Emit the file level comment block
+
+  fn = make_file_name(parser_name, "parser.c");
+  generator_set_file_name(fn);
+  emit_source_comment_header(of);
+
+    // Emit documentation to explain the standard phrase parsing functions
+
+  fprintf(of, "\n");
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %s%s%s",
+                (_use_doxygen) ? "\\file " : "",
+                (_use_doxygen) ? fn : "",
+                (_use_doxygen) ? "\n\n" : "");
+  fprintf(of, "    %s%s",
+                (_use_doxygen) ?
+                  "\\par \"Description of Parsing Functions\"" :
+                  "",
+                (_use_doxygen) ? "\n" : "");
+  fprintf(of, "    With the exception of the %s_get_callback_table() "
+              "function,\n", parser_name);
+  fprintf(of, "    every function in this parser has the same calling "
+              "signature and \n");
+  fprintf(of, "    return value pattern:\n");
+  fprintf(of, "    %s\n", (_use_doxygen) ? "\\n\\n" : "");
+  fprintf(of, "      %s_token * <phrase-name>(void);\n", parser_name);
+  fprintf(of, "    %s\n", (_use_doxygen) ? "\\n\\n" : "");
+  fprintf(of, "    Each function returns a pointer to a struct of type "
+              "%s_token,\n", parser_name);
+  fprintf(of, "    which is set to the %s_<phrase-name>_token_type type, "
+              "and possibly\n", parser_name);
+  fprintf(of, "    contains a child hierarchy of related tokens.\n");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
   fprintf(of, "\n");
 
+    // Emit code for included header files
+
   fprintf(of, "#include <stdlib.h>\n");
-  fprintf(of, "\n");
-  fprintf(of, "#include \"input.h\"\n");
-  fprintf(of, "#include \"callback.h\"\n");
   fprintf(of, "\n");
   fprintf(of, "#include \"%s-token.h\"\n", parser_name);
   fprintf(of, "#include \"%s-parser.h\"\n", parser_name);
   fprintf(of, "\n");
+
+    // Emit code for array of callback entries
 
   fprintf(of, "static callback_entry _callbacks[] =\n");
   fprintf(of, "{\n");
@@ -146,9 +220,33 @@ void generate_parser_source(FILE *of,
   fprintf(of, "};\n");
   fprintf(of, "\n");
 
+    // Emit code for actual callback table structure
+
   fprintf(of, "static callback_table _cbt = { %d, _callbacks };\n",
               phrase_map_list_count_items(_pml));
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>_get_callback_table()
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %sReturns pointer to callback table.\n",
+                (_use_doxygen) ? "\\brief " : "");
+  fprintf(of, "\n");
+  fprintf(of, "    This function returns a pointer to the parser's callback "
+              "table.  The\n");
+  fprintf(of, "    caller can use this to register its own callback functions "
+              "for additional\n");
+  fprintf(of, "    parsing actions.\n");
+  fprintf(of, "\n");
+  fprintf(of, "    %s\"callback_table *\" pointer to head of parser "
+              "callback table\n",
+                (_use_doxygen) ? "\\retval " : "Returns: ");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>_get_callback_table()
 
   fprintf(of, "callback_table *%s_get_callback_table(void)\n", parser_name);
   fprintf(of, "{\n");
@@ -156,9 +254,14 @@ void generate_parser_source(FILE *of,
   fprintf(of, "}\n");
   fprintf(of, "\n");
 
+    // Emit code for each phrase parsing function
+
   generate_grammar(of, parser_name, t, 0);
 
+    // Clean up and return
+
   phrase_map_list_delete(_pml);
+  free(fn);
 
   return;
 }
@@ -188,6 +291,7 @@ void generate_parser_header(FILE *of,
   char *hn;
   int hnl;
   char *pns;
+  char *fn;
 
   if (!of)
     of = stdout;
@@ -206,10 +310,10 @@ void generate_parser_header(FILE *of,
 
   hn = str_toupper(hn);
 
-  fprintf(of, "/*\n");
-  fprintf(of, "    %s-parser.h\n", parser_name);
-  emit_gnu_license(of);
-  fprintf(of, "\n");
+  fn = make_file_name(parser_name, "parser.h");
+  generator_set_file_name(fn);
+  emit_source_comment_header(of);
+  free(fn);
 
   fprintf(of, "#ifndef %s\n", hn);
   fprintf(of, "#define %s\n", hn);
@@ -271,6 +375,7 @@ void generate_token_header(FILE *of,
                            char *parser_name)
 {
   char *u_parser_name;
+  char *fn;
 
   if (!of)
     of = stdout;
@@ -280,10 +385,10 @@ void generate_token_header(FILE *of,
 
   u_parser_name = str_toupper(strdup(parser_name));
 
-  fprintf(of, "/*\n");
-  fprintf(of, "    %s-token.h\n", parser_name);
-  emit_gnu_license(of);
-  fprintf(of, "\n");
+  fn = make_file_name(parser_name, "token.h");
+  generator_set_file_name(fn);
+  emit_source_comment_header(of);
+  free(fn);
 
   fprintf(of, "#ifndef %s_TOKEN_H\n", u_parser_name);
   fprintf(of, "#define %s_TOKEN_H\n", u_parser_name);
@@ -396,16 +501,18 @@ void generate_token_header(FILE *of,
 void generate_token_source(FILE *of,
                            char *parser_name)
 {
+  char *fn;
+
   if (!of)
     of = stdout;
 
   if (!parser_name)
     return;
 
-  fprintf(of, "/*\n");
-  fprintf(of, "    %s-token.c\n", parser_name);
-  emit_gnu_license(of);
-  fprintf(of, "\n");
+  fn = make_file_name(parser_name, "token.c");
+  generator_set_file_name(fn);
+  emit_source_comment_header(of);
+  free(fn);
 
   fprintf(of, "#include <stdlib.h>\n");
   fprintf(of, "#include <string.h>\n");
@@ -701,6 +808,7 @@ void generate_token_type_header(FILE *of,
   char *hn;
   int hnl;
   char *pns;
+  char *fn;
 
   if (!of)
     of = stdout;
@@ -719,10 +827,10 @@ void generate_token_type_header(FILE *of,
 
   hn = str_toupper(hn);
 
-  fprintf(of, "/*\n");
-  fprintf(of, "    %s-token-type.h\n", parser_name);
-  emit_gnu_license(of);
-  fprintf(of, "\n");
+  fn = make_file_name(parser_name, "token-type.h");
+  generator_set_file_name(fn);
+  emit_source_comment_header(of);
+  free(fn);
 
   fprintf(of, "#ifndef %s\n", hn);
   fprintf(of, "#define %s\n", hn);
@@ -791,6 +899,7 @@ void generate_token_util_source(FILE *of,
   egg_token *ge, *p, *pn;
   char *pns;
   char *val;
+  char *fn;
 
   if (!of)
     of = stdout;
@@ -801,10 +910,10 @@ void generate_token_util_source(FILE *of,
   if (!t)
     return;
 
-  fprintf(of, "/*\n");
-  fprintf(of, "    %s-token-util.c\n", parser_name);
-  emit_gnu_license(of);
-  fprintf(of, "\n");
+  fn = make_file_name(parser_name, "token-util.c");
+  generator_set_file_name(fn);
+  emit_source_comment_header(of);
+  free(fn);
 
   fprintf(of, "#include <stdlib.h>\n");
   fprintf(of, "#include <string.h>\n");
@@ -881,6 +990,7 @@ void generate_token_util_header(FILE *of,
 {
   char *hn;
   int hnl;
+  char *fn;
 
   if (!of)
     of = stdout;
@@ -896,10 +1006,10 @@ void generate_token_util_header(FILE *of,
 
   hn = str_toupper(hn);
 
-  fprintf(of, "/*\n");
-  fprintf(of, "    %s-token-util.h\n", parser_name);
-  emit_gnu_license(of);
-  fprintf(of, "\n");
+  fn = make_file_name(parser_name, "token-util.h");
+  generator_set_file_name(fn);
+  emit_source_comment_header(of);
+  free(fn);
 
   fprintf(of, "#ifndef %s\n", hn);
   fprintf(of, "#define %s\n", hn);
@@ -944,6 +1054,7 @@ void generate_walker_source(FILE *of,
   phrase_map_item *pmi;
   char *phrase_name;
   int opt_count = 0;
+  char *fn;
 
   if (!of)
     of = stdout;
@@ -957,10 +1068,10 @@ void generate_walker_source(FILE *of,
   pml = phrase_map(t);
   isolate_top_level_phrases(&pml);
 
-  fprintf(of, "/*\n");
-  fprintf(of, "    %s-walker.c\n", parser_name);
-  emit_gnu_license(of);
-  fprintf(of, "\n");
+  fn = make_file_name(parser_name, "walker.c");
+  generator_set_file_name(fn);
+  emit_source_comment_header(of);
+  free(fn);
 
   fprintf(of, "#include <stdio.h>\n");
   fprintf(of, "#include <stdlib.h>\n");
@@ -2253,30 +2364,21 @@ static char *long_to_bytes(unsigned long l)
 
      \brief Generic helper function for code generation functions.
     
-     This function returns a string representation of the current 4 digit year
+     This function the current year as an integer
     
-     \warning This function returns a pointer to dynamically allocated memory.
-              It is the caller's responsibility to free this memory when
-              appropriate.
-
-     \retval "char *" string containing the current 4 digit year
+     \retval int current year
 
   */
 
-char *get_year(void)
+int get_year(void)
 {
   time_t now;
   struct tm *stm;
-  static char year[5];
-
-  memset(year, 0, 5);
 
   now = time(NULL);
   stm = localtime(&now);
 
-  sprintf(year, "%4.4d", stm->tm_year + 1900);
-
-  return year;
+  return stm->tm_year + 1900;
 }
 
   /*!
@@ -2347,51 +2449,288 @@ static void emit_comment_string(FILE *of, char *s)
 }
 
   /*!
+     \brief Get doxygen use flag from code generator.
+     \retval boolean doxygen use flag
+  */
+
+boolean generator_get_doxygen_flag(void)
+{
+  return _use_doxygen;
+}
+
+  /*!
+     \brief Set doxygen use flag for code generator.
+     \param boolean true or false
+  */
+
+void generator_set_doxygen_flag(boolean flag)
+{
+  _use_doxygen = flag;
+}
+
+  /*!
+     \brief Get current file name for code documenation from code generator.
+     \retval "char *" string containing current file name
+  */
+
+char * generator_get_file_name(void)
+{
+  return _file_name;
+}
+
+  /*!
+     \brief Set file name for code documenation for code generator.
+     \param "char *" file name
+  */
+
+void generator_set_file_name(char *file_name)
+{
+  _file_name = file_name;
+}
+
+  /*!
+     \brief Get current project brief name for code documentation from code
+            generator.
+     \retval "char *" string containing current project brief name
+  */
+
+char * generator_get_project_brief(void)
+{
+  return _project_brief;
+}
+
+  /*!
+     \brief Set brief project name for code documenation for code generator.
+     \param "char *" brief project name
+  */
+
+void generator_set_project_brief(char *brief)
+{
+  _project_brief = brief;
+}
+
+  /*!
+     \brief Get current version for code documention from code generator.
+     \retval "char *" string containing current version
+  */
+
+char * generator_get_version(void)
+{
+  return _version;
+}
+
+  /*!
+     \brief Set version for code documenation for code generator.
+     \param "char *" version
+  */
+
+void generator_set_version(char *version)
+{
+  _version = version;
+}
+
+  /*!
+     \brief Get current author for code documention from code generator.
+     \retval "char *" string containing current author
+  */
+
+char * generator_get_author(void)
+{
+  return _author;
+}
+
+  /*!
+     \brief Set author for code documenation for code generator.
+     \param "char *" author
+  */
+
+void generator_set_author(char *author)
+{
+  _author = author;
+}
+
+  /*!
+     \brief Get current email for code documention from code generator.
+     \retval "char *" string containing current email
+  */
+
+char * generator_get_email(void)
+{
+  return _email;
+}
+
+  /*!
+     \brief Set email for code documenation for code generator.
+     \param "char *" email
+  */
+
+void generator_set_email(char *email)
+{
+  _email = email;
+}
+
+  /*!
+     \brief Get current first copyright year for code documention from code
+            generator.
+     \retval int first year used for copyright range
+  */
+
+int generator_get_first_year(void)
+{
+  return _first_year;
+}
+
+  /*!
+     \brief Set first copyright year for code documenation for code generator.
+     \param int first copyright year
+  */
+
+void generator_set_first_year(int year)
+{
+  _first_year = year;
+}
+
+  /*!
+     \brief Get current license text for code documention from code generator.
+     \note The current license text depends on the doxygen use flag.
+           There are two complete license texts used by the code generator.
+           One for doxygen markup, and one for plain text.
+     \retval "char *" string containing current license text
+  */
+
+char * generator_get_license(void)
+{
+  if (_use_doxygen)
+    return _license_with_doxygen;
+  else
+    return _license;
+}
+
+  /*!
+     \brief Set license text for code documenation for code generator.
+     \param "char *" license text
+  */
+
+void generator_set_license(char *license)
+{
+  if (_use_doxygen)
+    _license_with_doxygen = license;
+  else
+    _license = license;
+}
+
+  /*!
 
      \brief Generic helper function for code generation functions.
     
-     This function emits a standard GNU license comment block intended to be
-     included in every generated source code file's file level description
-     comments.
-    
-     \note This function is dead stupid as far as the year of the copyright
-           notice.   It simply includes the current 4 digit year.
+     This functions emits a source code file level comment block which
+     describes the source code file itself.  The comment block contains:
+       - The base file name of the source code file (no default)
+       - The a brief description of the source code file
+         (default uses the base file name)
+       - The version of the source code file (default is "0")
+       - The name of the author of the source code file. (default is "Unknown")
+       - The email address of the author (default is \<none\>)
+       - The copyright notice (default uses current year and author)
+       - The license that applies to the source code file (default is GNU)
 
-     \param of file * to open file for writing
+     \param of FILE * to open file for writing
 
   */
 
-static void emit_gnu_license(FILE *of)
+static void emit_source_comment_header(FILE *of)
 {
   if (!of)
     of = stdout;
 
-  fprintf(of, "    \\copyright Copyright (C) %s  Patrick Head\n", get_year());
+    // open comment block
+  fprintf(of, "/*%s\n", (_use_doxygen) ? "!" : "");
   fprintf(of, "\n");
-  fprintf(of, "    \\license\n");
-  fprintf(of, "    This program is free software: you can redistribute it "
-              "and/or modify\n");
-  fprintf(of, "    it under the terms of the GNU General Public License as "
-              "published by\n");
-  fprintf(of, "    the Free Software Foundation, either version 3 of the "
-              "License, or\n");
-  fprintf(of, "    (at your option) any later version.\\n\n");
-  fprintf(of, "    \\n\n");
-  fprintf(of, "    This program is distributed in the hope that it will be "
-              "useful,\n");
-  fprintf(of, "    but WITHOUT ANY WARRANTY; without even the implied "
-              "warranty of\n");
-  fprintf(of, "    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See "
-              "the\n");
-  fprintf(of, "    GNU General Public License for more details.\\n\n");
-  fprintf(of, "    \\n\n");
-  fprintf(of, "    You should have received a copy of the GNU General Public "
-              "License\n");
-  fprintf(of, "    along with this program.  If not, see "
-              "<http://www.gnu.org/licenses/>.\n");
+
+    // emit file name
+  fprintf(of, "  %s%s\n", (_use_doxygen) ? "\\file " : "", _file_name);
+  fprintf(of, "\n");
+
+    // emit brief description
+  fprintf(of, "  %sSource code for %s\n",
+                (_use_doxygen) ? "\\brief " : "",
+                (_project_brief && strlen(_project_brief))
+                  ? _project_brief
+                  : _file_name);
+  fprintf(of, "\n");
+
+    // emit version
+  fprintf(of, "  %s%s\n",
+                (_use_doxygen) ? "\\version " : "Version: ",
+                (_version) ? _version : "0");
+  fprintf(of, "\n");
+
+    // emit author
+  fprintf(of, "  %s%s%s%s\n",
+                (_use_doxygen) ? "\\author " : "Author: ",
+                (_author) ? _author : "Unknown",
+                (_email && strlen(_email)) ? " mailto:": "",
+                (_email) ? _email : "");
+  fprintf(of, "\n");
+
+    // emit author
+  if (_first_year != get_year())
+    fprintf(of, "  %sCopyright (C) %4.4d-%4.4d %s\n",
+                  (_use_doxygen) ? "\\copyright " : "",
+                  _first_year,
+                  get_year(),
+                  _author);
+  else
+    fprintf(of, "  %sCopyright (C) %4.4d %s\n",
+                  (_use_doxygen) ? "\\copyright " : "",
+                  _first_year,
+                  _author);
+  fprintf(of, "\n");
+
+    // emit license
+  fprintf(of, "  %s\n", (_use_doxygen) ? _license_with_doxygen : _license);
+  fprintf(of, "\n");
+
+    // close comment block
   fprintf(of, "*/\n");
+  fprintf(of, "\n");
 
   return;
+}
+
+  /*!
+
+     \brief Generic helper function for code generation functions.
+    
+     This function creates a file name for the file comment block.
+
+     \warn This file returns a pointer to dynamically allocated memory.  It
+           is the caller's responsibility to free this memory when
+           appropriate.
+
+     \param project string containing desired prepended project name
+
+     \retval "char *" string containing full file name for comment block
+
+  */
+
+static char * make_file_name(char *project, char *file_name)
+{
+  char *fn;
+
+  if (!project)
+    return NULL;
+
+  if (!file_name)
+    return NULL;
+
+  fn = (char *)malloc(strlen(file_name) + strlen(project) + 2);
+  if (!fn)
+    return NULL;
+
+  sprintf(fn, "%s-%s", project, file_name);
+
+  return fn;
 }
 
   /*!

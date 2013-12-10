@@ -3,7 +3,7 @@
 
     \brief Header file for parser code generation routines for EGG grammars.
 
-    \version 20131209035052
+    \version 20131210022217
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -41,5 +41,22 @@ void generate_strapp_source(FILE *of, char *parser_name);
 void generate_strapp_header(FILE *of, char *parser_name);
 void generate_common_header(FILE *of, char *parser_name);
 void generate_makefile(FILE *of, char *parser_name);
+
+boolean generator_get_doxygen_flag(void);
+void generator_set_doxygen_flag(boolean flag);
+char * generator_get_file_name(void);
+void generator_set_file_name(char *file_name);
+char * generator_get_project_brief(void);
+void generator_set_project_brief(char *brief);
+char * generator_get_version(void);
+void generator_set_version(char *version);
+char * generator_get_author(void);
+void generator_set_author(char *author);
+char * generator_get_email(void);
+void generator_set_email(char *email);
+int generator_get_first_year(void);
+void generator_set_first_year(int year);
+char * generator_get_license(void);
+void generator_set_license(char *license);
 
 #endif // GENERATOR_H

@@ -1,25 +1,50 @@
-/*
-    egg-parser.c
-    Copyright (C) 2013  Patrick Head
+/*!
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+  \file egg-parser.c
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+  \brief Source code for egg-parser.c
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  \version 20131210022217
+
+  \author Patrick Head mailto:patrickhead@gmail.com
+
+  \copyright Copyright (C) 2013 Patrick Head
+
+  \license
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.\n
+  \n
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.\n
+  \n
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see   \<http://www.gnu.org/licenses/\>.
+
 */
 
-#include <stdlib.h>
 
-#include "input.h"
-#include "callback.h"
+  /*!
+
+    \file egg-parser.c
+
+    \par "Description of Parsing Functions"
+    With the exception of the egg_get_callback_table() function,
+    every function in this parser has the same calling signature and 
+    return value pattern:
+    \n\n
+      egg_token * <phrase-name>(void);
+    \n\n
+    Each function returns a pointer to a struct of type egg_token,
+    which is set to the egg_<phrase-name>_token_type type, and possibly
+    contains a child hierarchy of related tokens.
+
+  */
+
+#include <stdlib.h>
 
 #include "egg-token.h"
 #include "egg-parser.h"
@@ -213,6 +238,18 @@ static callback_entry _callbacks[] =
 };
 
 static callback_table _cbt = { 184, _callbacks };
+
+  /*!
+
+    \brief Returns pointer to callback table.
+
+    This function returns a pointer to the parser's callback table.  The
+    caller can use this to register its own callback functions for additional
+    parsing actions.
+
+    \retval "callback_table *" pointer to head of parser callback table
+
+  */
 
 callback_table *egg_get_callback_table(void)
 {

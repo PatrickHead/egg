@@ -3,7 +3,7 @@
 
     \brief Source code for embryo parser generator.
 
-    \version 20131209035052
+    \version 20131210022217
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -74,6 +74,12 @@ int main(int argc, char **argv)
       { "generate-list", 1, 0, 'g' },
       { "output-type", 1, 0, 'o' },
       { "directory", 1, 0, 'd' },
+      { "use-doxygen", 1, 0, 1000 },
+      { "code-version", 1, 0, 1001 },
+      { "author", 1, 0, 1002 },
+      { "email", 1, 0, 1003 },
+      { "first-year", 1, 0, 1004 },
+      { "license-text", 1, 0, 1005 },
       { "help", 0, 0, 'h' }
     };
   char *directory = NULL;
@@ -86,6 +92,12 @@ int main(int argc, char **argv)
   boolean gen_sources = false;
   boolean gen_headers = false;
   boolean gen_makefile = false;
+  boolean use_doxygen = false;
+  char *code_version = NULL;
+  char *author = NULL;
+  char *email = NULL;
+  int first_year = 2013;
+  char *license_text = NULL;
   FILE *fo;
   char *path;
 
@@ -108,6 +120,31 @@ int main(int argc, char **argv)
         break;
       case 'p':
         project_name = strdup(optarg);
+        break;
+      case 1000:
+        if (!strcmp(optarg, "true"))
+          use_doxygen = true;
+        else if (!strcmp(optarg, "on"))
+          use_doxygen = true;
+        else if (!strcmp(optarg, "1"))
+          use_doxygen = true;
+        else
+          use_doxygen = false;
+        break;
+      case 1001:
+        code_version = strdup(optarg);
+        break;
+      case 1002:
+        author = strdup(optarg);
+        break;
+      case 1003:
+        email = strdup(optarg);
+        break;
+      case 1004:
+        first_year = atoi(optarg);
+        break;
+      case 1005:
+        license_text = strdup(optarg);
         break;
       case 'h':
       default:
@@ -134,6 +171,23 @@ int main(int argc, char **argv)
 
   if (output_type && !directory)
     directory = strdup(".");
+
+  generator_set_doxygen_flag(use_doxygen);
+
+  if (code_version)
+    generator_set_version(code_version);
+
+  if (author)
+    generator_set_author(author);
+
+  if (email)
+    generator_set_email(email);
+
+  if (first_year)
+    generator_set_first_year(first_year);
+
+  if (license_text)
+    generator_set_license(license_text);
 
   input_file = NULL;
   if (optind < argc)
@@ -354,11 +408,17 @@ static void usage(char *program_name)
 
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage:  "
-                  "%s \\\n"
-                  "          <-p | --project-name=> <project name> \\\n"
-                  "          [<-g | --generate-list=> <generate list>] \\\n"
-                  "          [<-d | --directory=> <output directory>] \\\n"
-                  "          [<-o | --output-type=> <output type>] \\\n"
+                  "%s \n"
+                  "          <-p | --project-name=> <project name> \n"
+                  "          [<-g | --generate-list=> <generate list>] \n"
+                  "          [<-d | --directory=> <output directory>] \n"
+                  "          [<-o | --output-type=> <output type>] \n"
+                  "          [--use-doxygen=<true|false|on|off|0|1>] \n"
+                  "          [--code-version=<version>] \n"
+                  "          [--author=<author>] \n"
+                  "          [--email=<email address>] \n"
+                  "          [--first-year=<4 digit year>] \n"
+                  "          [--license-text=<license string>] \n"
                   "          [<egg file name>]\n",
            program_name);
   fprintf(stderr, "\n");
@@ -376,6 +436,11 @@ static void usage(char *program_name)
   fprintf(stderr, "    <output type>      = 'f' or '-'.\n");
   fprintf(stderr, "                           'f' = generate files.\n");
   fprintf(stderr, "                           '-' = send output to STDOUT.\n");
+  fprintf(stderr, "    <version>          = abritrary version string.\n");
+  fprintf(stderr, "    <author>           = abritrary author name.\n");
+  fprintf(stderr, "    <email>            = abritrary email address.\n");
+  fprintf(stderr, "    <4 digit year>     = first year of copyright.\n");
+  fprintf(stderr, "    <license string>   = abritrary license information.\n");
   fprintf(stderr, "    <egg file name>    = pathname to EGG grammar definition "
                   "file.  NONE or '-' \n"
                   "                         implies input from STDIN.\n");
@@ -490,11 +555,11 @@ static char *build_path(char *dir, char *sub)
      single user supplied top-level directory for the project.
 
      The directories created are:
-       - <PROJECT> directory
-       - <PROJECT>/include sub-directory
-       - <PROJECT>/src sub-directory
-       - <PROJECT>/bin sub-directory
-       - <PROJECT>/obj sub-directory
+       - \<PROJECT\> directory
+       - \<PROJECT\>/include sub-directory
+       - \<PROJECT\>/src sub-directory
+       - \<PROJECT\>/bin sub-directory
+       - \<PROJECT\>/obj sub-directory
     
      \param top string containing the top-level project directory
     

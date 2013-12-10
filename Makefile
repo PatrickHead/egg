@@ -5,7 +5,8 @@ else
   COPTS = -O3 -I include -I parser/include
 endif
 
-all: embryo tests git docs
+#all: embryo tests git docs
+all: embryo tests git 
 
 _parser: obj/input.o \
 		obj/callback.o \

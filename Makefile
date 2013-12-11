@@ -232,3 +232,4 @@ commit: version
 
 push:
 	git push backup master
+	git push brawndo master

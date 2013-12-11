@@ -4,7 +4,7 @@
 
   \brief Source code for egg-token-util.c
 
-  \version 20131211012146
+  \version 20131211015347
 
   \author Patrick Head mailto:patrickhead@gmail.com
 

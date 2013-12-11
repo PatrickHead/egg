@@ -2,9 +2,9 @@
 
   \file egg-walker.c
 
-  \brief Source code for egg-walker.c
+  \brief Source code for grammar specific walking/dumping utility
 
-  \version 20131211015347
+  \version 20131211163732
 
   \author Patrick Head mailto:patrickhead@gmail.com
 
@@ -37,8 +37,27 @@
 #include "egg-token-util.h"
 #include "egg-parser.h"
 
-void usage(char *program_name);
-void walk(egg_token *t, int level);
+static void usage(char *program_name);
+static void walk(egg_token *t, int level);
+
+  /*!
+
+     \brief main function for \brief \b-walker utility command.
+
+     This is the main function for the \b egg-walker utility.\n
+       - Accepts and parses command line arguments
+       - Initializes the input source
+       - Parses the input using the specified phrase(s)
+       - Walks the egg_token tree and displays each egg_token
+       - Cleans up input source and other data
+
+     \param argc count of command line arguments
+     \param argv array of command line argument strings
+
+     \retval 0 success
+     \retval 1 any failure
+
+  */
 
 int main(int argc, char **argv)
 {
@@ -109,7 +128,19 @@ int main(int argc, char **argv)
   return 0;
 }
 
-void usage(char *program_name)
+  /*!
+
+     \brief Displays usage/help message in conventional format.
+
+     This function displays a help and usage message for the \b egg-walker
+     utility in the mostly ubiquitous POSIX/GNU format.
+
+     \param program_name string containing the program name used in the
+                         usage message
+
+  */
+
+static void usage(char *program_name)
 {
   if (!program_name)
     program_name = "egg-walker";
@@ -129,12 +160,27 @@ void usage(char *program_name)
   return;
 }
 
-void walk(egg_token *t, int level)
+  /*!
+
+     \brief Walks a egg_token tree.
+
+     This function walks egg_token tree, and displays each egg_token.
+
+     \param t egg_token * to root of egg_token tree
+     \param level int depth level of recursion during walk
+
+  */
+
+static void walk(egg_token *t, int level)
 {
   if (!t)
     return;
 
-  printf("%*.*s%s@%d.%d\n", level, level, " ", egg_token_type_to_string(t), t->loc.line_number, t->loc.character_offset);
+  printf("%*.*s%s@%d.%d\n",
+           level, level, " ",
+           egg_token_type_to_string(t),
+           t->loc.line_number,
+           t->loc.character_offset);
 
   walk(t->d, level+1);
 

@@ -3,7 +3,7 @@
 
     \brief Source code for parser code generation routines for EGG grammars.
 
-    \version 20131211012140
+    \version 20131211162937
 
     \author Patrick Head   mailto:patrickhead@gmail.com
 
@@ -502,6 +502,8 @@ void generate_token_source(FILE *of,
                            char *parser_name)
 {
   char *fn;              // A generated file name for emitted documentation
+
+    // Sanity check parameters
 
   if (!of)
     of = stdout;
@@ -1346,6 +1348,8 @@ void generate_token_util_source(FILE *of,
   char *val;
   char *fn;
 
+    // Sanity check parameters
+
   if (!of)
     of = stdout;
 
@@ -1355,10 +1359,14 @@ void generate_token_util_source(FILE *of,
   if (!t)
     return;
 
+    // Emit the file level comment block
+
   fn = make_file_name(parser_name, "token-util.c");
   generator_set_file_name(fn);
   emit_source_comment_header(of);
   free(fn);
+
+    // Emit code for included header files
 
   fprintf(of, "#include <stdlib.h>\n");
   fprintf(of, "#include <string.h>\n");
@@ -1366,6 +1374,34 @@ void generate_token_util_source(FILE *of,
   fprintf(of, "#include \"%s-token.h\"\n", parser_name);
   fprintf(of, "#include \"%s-token-util.h\"\n", parser_name);
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>_token_type_to_string()
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %sReturns a string representation of %s_token.\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %sThis function returns a pointer to dynamically allocated "
+              "memory.\n",
+                (_use_doxygen) ? "\\warn " : "Warning: ");
+  fprintf(of, "    %sIt is the caller's responsibility to free this memory "
+              "when\n",
+                (_use_doxygen) ? "      " : "         ");
+  fprintf(of, "    %sappropriate.\n",
+                (_use_doxygen) ? "      " : "         ");
+  fprintf(of, "\n");
+  fprintf(of, "    %st %s_token * to %s_token to string-ize\n",
+                (_use_doxygen) ? "\\param " : "Param: ",
+                parser_name,
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>_token_type_to_string()
+
   fprintf(of, "char *%s_token_type_to_string(%s_token *t)\n",
                 parser_name, parser_name);
   fprintf(of, "{\n");
@@ -1501,6 +1537,8 @@ void generate_walker_source(FILE *of,
   int opt_count = 0;
   char *fn;
 
+    // Sanity check parameters
+
   if (!of)
     of = stdout;
 
@@ -1510,13 +1548,19 @@ void generate_walker_source(FILE *of,
   if (!t)
     return;
 
+    // Create a top level phrase map of all grammar phrases
+
   pml = phrase_map(t);
   isolate_top_level_phrases(&pml);
+
+    // Emit the file level comment block
 
   fn = make_file_name(parser_name, "walker.c");
   generator_set_file_name(fn);
   emit_source_comment_header(of);
   free(fn);
+
+    // Emit code for included header files
 
   fprintf(of, "#include <stdio.h>\n");
   fprintf(of, "#include <stdlib.h>\n");
@@ -1529,9 +1573,46 @@ void generate_walker_source(FILE *of,
   fprintf(of, "#include \"%s-token-util.h\"\n", parser_name);
   fprintf(of, "#include \"%s-parser.h\"\n", parser_name);
   fprintf(of, "\n");
-  fprintf(of, "void usage(char *program_name);\n");
-  fprintf(of, "void walk(%s_token *t, int level);\n", parser_name);
+
+    // Emit code for function declarations
+
+  fprintf(of, "static void usage(char *program_name);\n");
+  fprintf(of, "static void walk(%s_token *t, int level);\n", parser_name);
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>-walker's main() function
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "     \\brief main function for %s %s-walker utility command.\n",
+                (_use_doxygen) ? "\\brief" : "",
+                (_use_doxygen) ? "\\b" : "",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "     This is the main function for the %s %s-walker "
+              "utility.%s\n",
+                (_use_doxygen) ? "\\b" : "",
+                parser_name,
+                (_use_doxygen) ? "\\n" : "");
+  fprintf(of, "       - Accepts and parses command line arguments\n");
+  fprintf(of, "       - Initializes the input source\n");
+  fprintf(of, "       - Parses the input using the specified phrase(s)\n");
+  fprintf(of, "       - Walks the %s_token tree and displays each %s_token\n",
+                parser_name,
+                parser_name);
+  fprintf(of, "       - Cleans up input source and other data\n");
+  fprintf(of, "\n");
+  fprintf(of, "     \\param argc count of command line arguments\n");
+  fprintf(of, "     \\param argv array of command line argument strings\n");
+  fprintf(of, "\n");
+  fprintf(of, "     \\retval 0 success\n");
+  fprintf(of, "     \\retval 1 any failure\n");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>-walker's main() function
+
   fprintf(of, "int main(int argc, char **argv)\n");
   fprintf(of, "{\n");
   fprintf(of, "  int c;\n");
@@ -1635,7 +1716,31 @@ void generate_walker_source(FILE *of,
   fprintf(of, "  return 0;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
-  fprintf(of, "void usage(char *program_name)\n");
+
+    // Emit comment block for <PROJECT>-walker's usage() function
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "     %s Displays usage/help message in conventional format.\n",
+                (_use_doxygen) ? "\\brief" : "");
+  fprintf(of, "\n");
+  fprintf(of, "     This function displays a help and usage message for the "
+              "%s %s-walker\n",
+                (_use_doxygen) ? "\\b" : "",
+                parser_name);
+  fprintf(of, "     utility in the mostly ubiquitous POSIX/GNU format.\n");
+  fprintf(of, "\n");
+  fprintf(of, "     %sprogram_name string containing the program name used "
+              "in the\n",
+                (_use_doxygen) ? "\\param " : "Param: ");
+  fprintf(of, "                         usage message\n");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>-walker's usage() function
+
+  fprintf(of, "static void usage(char *program_name)\n");
   fprintf(of, "{\n");
   fprintf(of, "  if (!program_name)\n");
   fprintf(of, "    program_name = \"%s-walker\";\n", parser_name);
@@ -1662,15 +1767,43 @@ void generate_walker_source(FILE *of,
   fprintf(of, "  return;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
-  fprintf(of, "void walk(%s_token *t, int level)\n", parser_name);
+
+    // Emit comment block for <PROJECT>-walker's walk() function
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "     %s Walks a %s_token tree.\n",
+                (_use_doxygen) ? "\\brief" : "",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "     This function walks %s_token tree, and displays each "
+              "%s_token.\n",
+                parser_name,
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "     %st %s_token * to root of %s_token tree\n",
+                (_use_doxygen) ? "\\param " : "Param: ",
+                parser_name,
+                parser_name);
+  fprintf(of, "     %slevel int depth level of recursion during walk\n",
+                (_use_doxygen) ? "\\param " : "Param: ");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>-walker's walk() function
+
+  fprintf(of, "static void walk(%s_token *t, int level)\n", parser_name);
   fprintf(of, "{\n");
   fprintf(of, "  if (!t)\n");
   fprintf(of, "    return;\n");
   fprintf(of, "\n");
-  fprintf(of, "  printf(\"%%*.*s%%s@%%d.%%d\\n\", level, level, \" \", "
-              "%s_token_type_to_string(t), "
-              "t->loc.line_number, "
-              "t->loc.character_offset);\n", parser_name);
+  fprintf(of, "  printf(\"%%*.*s%%s@%%d.%%d\\n\",\n"
+              "           level, level, \" \",\n"
+              "           %s_token_type_to_string(t),\n"
+              "           t->loc.line_number,\n"
+              "           t->loc.character_offset);\n",
+                parser_name);
   fprintf(of, "\n");
   fprintf(of, "  walk(t->d, level+1);\n");
   fprintf(of, "\n");

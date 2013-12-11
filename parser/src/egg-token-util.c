@@ -2,9 +2,9 @@
 
   \file egg-token-util.c
 
-  \brief Source code for egg-token-util.c
+  \brief Source code for grammer specific token utility functions
 
-  \version 20131211015347
+  \version 20131211163732
 
   \author Patrick Head mailto:patrickhead@gmail.com
 
@@ -31,6 +31,18 @@
 
 #include "egg-token.h"
 #include "egg-token-util.h"
+
+  /*!
+
+    \brief Returns a string representation of egg_token.
+
+    \warn This function returns a pointer to dynamically allocated memory.
+          It is the caller's responsibility to free this memory when
+          appropriate.
+
+    \param t egg_token * to egg_token to string-ize
+
+  */
 
 char *egg_token_type_to_string(egg_token *t)
 {

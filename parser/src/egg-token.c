@@ -2,9 +2,9 @@
 
   \file egg-token.c
 
-  \brief Source code for egg-token.c
+  \brief Source code for grammer specific token handling functions
 
-  \version 20131211015347
+  \version 20131211163732
 
   \author Patrick Head mailto:patrickhead@gmail.com
 

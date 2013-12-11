@@ -2,9 +2,9 @@
 
   \file egg-parser.c
 
-  \brief Source code for egg-parser.c
+  \brief Source code for grammer phrase parsing functions
 
-  \version 20131211015347
+  \version 20131211163732
 
   \author Patrick Head mailto:patrickhead@gmail.com
 

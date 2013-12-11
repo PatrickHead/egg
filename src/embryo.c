@@ -3,7 +3,7 @@
 
     \brief Source code for embryo parser generator.
 
-    \version 20131210022217
+    \version 20131211163725
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -293,6 +293,7 @@ int main(int argc, char **argv)
       free(fn);
       if (fo)
       {
+        generator_set_project_brief("grammer phrase parsing functions");
         generate_parser_source(fo, project_name, t);
         if (output_type)
           fclose(fo);
@@ -311,6 +312,7 @@ int main(int argc, char **argv)
       free(fn);
       if (fo)
       {
+        generator_set_project_brief("grammer specific token handling functions");
         generate_token_source(fo, project_name);
         if (output_type)
           fclose(fo);
@@ -329,6 +331,7 @@ int main(int argc, char **argv)
       free(fn);
       if (fo)
       {
+        generator_set_project_brief("grammer specific token utility functions");
         generate_token_util_source(fo, project_name, t);
         if (output_type)
           fclose(fo);
@@ -347,6 +350,7 @@ int main(int argc, char **argv)
       free(fn);
       if (fo)
       {
+        generator_set_project_brief("grammar specific walking/dumping utility");
         generate_walker_source(fo, project_name, t);
         if (output_type)
           fclose(fo);

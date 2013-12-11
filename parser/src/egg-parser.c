@@ -4,7 +4,7 @@
 
   \brief Source code for egg-parser.c
 
-  \version 20131210022217
+  \version 20131211012146
 
   \author Patrick Head mailto:patrickhead@gmail.com
 
@@ -256,8 +256,16 @@ callback_table *egg_get_callback_table(void)
   return &_cbt;
 }
 
-/*
- * nul =               /0x00/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    nul =               /0x00/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *nul(void)
@@ -313,8 +321,16 @@ egg_token *nul(void)
   return NULL;
 }
 
-/*
- * soh =               /0x01/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    soh =               /0x01/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *soh(void)
@@ -370,8 +386,16 @@ egg_token *soh(void)
   return NULL;
 }
 
-/*
- * stx =               /0x02/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    stx =               /0x02/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *stx(void)
@@ -427,8 +451,16 @@ egg_token *stx(void)
   return NULL;
 }
 
-/*
- * etx =               /0x03/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    etx =               /0x03/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *etx(void)
@@ -484,8 +516,16 @@ egg_token *etx(void)
   return NULL;
 }
 
-/*
- * eot =               /0x04/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    eot =               /0x04/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *eot(void)
@@ -541,8 +581,16 @@ egg_token *eot(void)
   return NULL;
 }
 
-/*
- * enq =               /0x05/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    enq =               /0x05/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *enq(void)
@@ -598,8 +646,16 @@ egg_token *enq(void)
   return NULL;
 }
 
-/*
- * ack =               /0x06/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    ack =               /0x06/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *ack(void)
@@ -655,8 +711,16 @@ egg_token *ack(void)
   return NULL;
 }
 
-/*
- * bel =               /0x07/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    bel =               /0x07/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *bel(void)
@@ -712,8 +776,16 @@ egg_token *bel(void)
   return NULL;
 }
 
-/*
- * bs =                /0x08/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    bs =                /0x08/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *bs(void)
@@ -769,8 +841,16 @@ egg_token *bs(void)
   return NULL;
 }
 
-/*
- * ht =                /0x09/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    ht =                /0x09/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *ht(void)
@@ -826,8 +906,16 @@ egg_token *ht(void)
   return NULL;
 }
 
-/*
- * lf =                /0x0A/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    lf =                /0x0A/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *lf(void)
@@ -883,8 +971,16 @@ egg_token *lf(void)
   return NULL;
 }
 
-/*
- * vt =                /0x0B/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    vt =                /0x0B/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *vt(void)
@@ -940,8 +1036,16 @@ egg_token *vt(void)
   return NULL;
 }
 
-/*
- * ff =                /0x0C/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    ff =                /0x0C/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *ff(void)
@@ -997,8 +1101,16 @@ egg_token *ff(void)
   return NULL;
 }
 
-/*
- * cr =                /0x0D/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    cr =                /0x0D/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *cr(void)
@@ -1054,8 +1166,16 @@ egg_token *cr(void)
   return NULL;
 }
 
-/*
- * so =                /0x0E/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    so =                /0x0E/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *so(void)
@@ -1111,8 +1231,16 @@ egg_token *so(void)
   return NULL;
 }
 
-/*
- * si =                /0x0F/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    si =                /0x0F/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *si(void)
@@ -1168,8 +1296,16 @@ egg_token *si(void)
   return NULL;
 }
 
-/*
- * dle =               /0x10/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    dle =               /0x10/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *dle(void)
@@ -1225,8 +1361,16 @@ egg_token *dle(void)
   return NULL;
 }
 
-/*
- * dc1 =               /0x11/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    dc1 =               /0x11/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *dc1(void)
@@ -1282,8 +1426,16 @@ egg_token *dc1(void)
   return NULL;
 }
 
-/*
- * dc2 =               /0x12/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    dc2 =               /0x12/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *dc2(void)
@@ -1339,8 +1491,16 @@ egg_token *dc2(void)
   return NULL;
 }
 
-/*
- * dc3 =               /0x13/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    dc3 =               /0x13/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *dc3(void)
@@ -1396,8 +1556,16 @@ egg_token *dc3(void)
   return NULL;
 }
 
-/*
- * dc4 =               /0x14/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    dc4 =               /0x14/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *dc4(void)
@@ -1453,8 +1621,16 @@ egg_token *dc4(void)
   return NULL;
 }
 
-/*
- * nak =               /0x15/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    nak =               /0x15/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *nak(void)
@@ -1510,8 +1686,16 @@ egg_token *nak(void)
   return NULL;
 }
 
-/*
- * syn =               /0x16/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    syn =               /0x16/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *syn(void)
@@ -1567,8 +1751,16 @@ egg_token *syn(void)
   return NULL;
 }
 
-/*
- * etb =               /0x17/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    etb =               /0x17/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *etb(void)
@@ -1624,8 +1816,16 @@ egg_token *etb(void)
   return NULL;
 }
 
-/*
- * can =               /0x18/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    can =               /0x18/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *can(void)
@@ -1681,8 +1881,16 @@ egg_token *can(void)
   return NULL;
 }
 
-/*
- * em =                /0x19/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    em =                /0x19/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *em(void)
@@ -1738,8 +1946,16 @@ egg_token *em(void)
   return NULL;
 }
 
-/*
- * sub =               /0x1A/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    sub =               /0x1A/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *sub(void)
@@ -1795,8 +2011,16 @@ egg_token *sub(void)
   return NULL;
 }
 
-/*
- * esc =               /0x1B/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    esc =               /0x1B/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *esc(void)
@@ -1852,8 +2076,16 @@ egg_token *esc(void)
   return NULL;
 }
 
-/*
- * fs =                /0x1C/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    fs =                /0x1C/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *fs(void)
@@ -1909,8 +2141,16 @@ egg_token *fs(void)
   return NULL;
 }
 
-/*
- * gs =                /0x1D/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    gs =                /0x1D/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *gs(void)
@@ -1966,8 +2206,16 @@ egg_token *gs(void)
   return NULL;
 }
 
-/*
- * rs =                /0x1E/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    rs =                /0x1E/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *rs(void)
@@ -2023,8 +2271,16 @@ egg_token *rs(void)
   return NULL;
 }
 
-/*
- * us =                /0x1F/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    us =                /0x1F/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *us(void)
@@ -2080,8 +2336,16 @@ egg_token *us(void)
   return NULL;
 }
 
-/*
- * space =             /0x20/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    space =             /0x20/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *space(void)
@@ -2137,8 +2401,16 @@ egg_token *space(void)
   return NULL;
 }
 
-/*
- * exclamation-point = /0x21/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    exclamation-point = /0x21/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *exclamation_point(void)
@@ -2194,8 +2466,16 @@ egg_token *exclamation_point(void)
   return NULL;
 }
 
-/*
- * quote =             /0x22/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    quote =             /0x22/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *quote(void)
@@ -2251,8 +2531,16 @@ egg_token *quote(void)
   return NULL;
 }
 
-/*
- * number-sign =       /0x23/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    number-sign =       /0x23/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *number_sign(void)
@@ -2308,8 +2596,16 @@ egg_token *number_sign(void)
   return NULL;
 }
 
-/*
- * dollar =            /0x24/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    dollar =            /0x24/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *dollar(void)
@@ -2365,8 +2661,16 @@ egg_token *dollar(void)
   return NULL;
 }
 
-/*
- * percent =           /0x25/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    percent =           /0x25/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *percent(void)
@@ -2422,8 +2726,16 @@ egg_token *percent(void)
   return NULL;
 }
 
-/*
- * ampersand =         /0x26/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    ampersand =         /0x26/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *ampersand(void)
@@ -2479,8 +2791,16 @@ egg_token *ampersand(void)
   return NULL;
 }
 
-/*
- * single-quote =      /0x27/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    single-quote =      /0x27/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *single_quote(void)
@@ -2536,8 +2856,16 @@ egg_token *single_quote(void)
   return NULL;
 }
 
-/*
- * open-parenthesis =  /0x28/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    open-parenthesis =  /0x28/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *open_parenthesis(void)
@@ -2593,8 +2921,16 @@ egg_token *open_parenthesis(void)
   return NULL;
 }
 
-/*
- * close-parenthesis = /0x29/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    close-parenthesis = /0x29/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *close_parenthesis(void)
@@ -2650,8 +2986,16 @@ egg_token *close_parenthesis(void)
   return NULL;
 }
 
-/*
- * asterisk =          /0x2A/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    asterisk =          /0x2A/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *asterisk(void)
@@ -2707,8 +3051,16 @@ egg_token *asterisk(void)
   return NULL;
 }
 
-/*
- * plus =              /0x2B/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    plus =              /0x2B/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *plus(void)
@@ -2764,8 +3116,16 @@ egg_token *plus(void)
   return NULL;
 }
 
-/*
- * comma =             /0x2C/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    comma =             /0x2C/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *comma(void)
@@ -2821,8 +3181,16 @@ egg_token *comma(void)
   return NULL;
 }
 
-/*
- * minus =             /0x2D/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    minus =             /0x2D/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *minus(void)
@@ -2878,8 +3246,16 @@ egg_token *minus(void)
   return NULL;
 }
 
-/*
- * period =            /0x2E/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    period =            /0x2E/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *period(void)
@@ -2935,8 +3311,16 @@ egg_token *period(void)
   return NULL;
 }
 
-/*
- * slash =             /0x2F/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    slash =             /0x2F/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *slash(void)
@@ -2992,8 +3376,16 @@ egg_token *slash(void)
   return NULL;
 }
 
-/*
- * zero =              /0x30/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    zero =              /0x30/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *zero(void)
@@ -3049,8 +3441,16 @@ egg_token *zero(void)
   return NULL;
 }
 
-/*
- * one =               /0x31/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    one =               /0x31/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *one(void)
@@ -3106,8 +3506,16 @@ egg_token *one(void)
   return NULL;
 }
 
-/*
- * two =               /0x32/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    two =               /0x32/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *two(void)
@@ -3163,8 +3571,16 @@ egg_token *two(void)
   return NULL;
 }
 
-/*
- * three =             /0x33/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    three =             /0x33/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *three(void)
@@ -3220,8 +3636,16 @@ egg_token *three(void)
   return NULL;
 }
 
-/*
- * four =              /0x34/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    four =              /0x34/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *four(void)
@@ -3277,8 +3701,16 @@ egg_token *four(void)
   return NULL;
 }
 
-/*
- * five =              /0x35/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    five =              /0x35/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *five(void)
@@ -3334,8 +3766,16 @@ egg_token *five(void)
   return NULL;
 }
 
-/*
- * six =               /0x36/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    six =               /0x36/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *six(void)
@@ -3391,8 +3831,16 @@ egg_token *six(void)
   return NULL;
 }
 
-/*
- * seven =             /0x37/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    seven =             /0x37/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *seven(void)
@@ -3448,8 +3896,16 @@ egg_token *seven(void)
   return NULL;
 }
 
-/*
- * eight =             /0x38/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    eight =             /0x38/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *eight(void)
@@ -3505,8 +3961,16 @@ egg_token *eight(void)
   return NULL;
 }
 
-/*
- * nine =              /0x39/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    nine =              /0x39/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *nine(void)
@@ -3562,8 +4026,16 @@ egg_token *nine(void)
   return NULL;
 }
 
-/*
- * colon =             /0x3A/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    colon =             /0x3A/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *colon(void)
@@ -3619,8 +4091,16 @@ egg_token *colon(void)
   return NULL;
 }
 
-/*
- * semicolon =         /0x3B/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    semicolon =         /0x3B/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *semicolon(void)
@@ -3676,8 +4156,16 @@ egg_token *semicolon(void)
   return NULL;
 }
 
-/*
- * less-than =         /0x3C/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    less-than =         /0x3C/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *less_than(void)
@@ -3733,8 +4221,16 @@ egg_token *less_than(void)
   return NULL;
 }
 
-/*
- * equal =             /0x3D/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    equal =             /0x3D/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *equal(void)
@@ -3790,8 +4286,16 @@ egg_token *equal(void)
   return NULL;
 }
 
-/*
- * greater-than =      /0x3E/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    greater-than =      /0x3E/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *greater_than(void)
@@ -3847,8 +4351,16 @@ egg_token *greater_than(void)
   return NULL;
 }
 
-/*
- * question-mark =     /0x3F/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    question-mark =     /0x3F/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *question_mark(void)
@@ -3904,8 +4416,16 @@ egg_token *question_mark(void)
   return NULL;
 }
 
-/*
- * at =                /0x40/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    at =                /0x40/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *at(void)
@@ -3961,8 +4481,16 @@ egg_token *at(void)
   return NULL;
 }
 
-/*
- * A =                 /0x41/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    A =                 /0x41/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *A(void)
@@ -4018,8 +4546,16 @@ egg_token *A(void)
   return NULL;
 }
 
-/*
- * B =                 /0x42/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    B =                 /0x42/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *B(void)
@@ -4075,8 +4611,16 @@ egg_token *B(void)
   return NULL;
 }
 
-/*
- * C =                 /0x43/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    C =                 /0x43/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *C(void)
@@ -4132,8 +4676,16 @@ egg_token *C(void)
   return NULL;
 }
 
-/*
- * D =                 /0x44/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    D =                 /0x44/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *D(void)
@@ -4189,8 +4741,16 @@ egg_token *D(void)
   return NULL;
 }
 
-/*
- * E =                 /0x45/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    E =                 /0x45/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *E(void)
@@ -4246,8 +4806,16 @@ egg_token *E(void)
   return NULL;
 }
 
-/*
- * F =                 /0x46/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    F =                 /0x46/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *F(void)
@@ -4303,8 +4871,16 @@ egg_token *F(void)
   return NULL;
 }
 
-/*
- * G =                 /0x47/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    G =                 /0x47/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *G(void)
@@ -4360,8 +4936,16 @@ egg_token *G(void)
   return NULL;
 }
 
-/*
- * H =                 /0x48/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    H =                 /0x48/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *H(void)
@@ -4417,8 +5001,16 @@ egg_token *H(void)
   return NULL;
 }
 
-/*
- * I =                 /0x49/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    I =                 /0x49/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *I(void)
@@ -4474,8 +5066,16 @@ egg_token *I(void)
   return NULL;
 }
 
-/*
- * J =                 /0x4A/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    J =                 /0x4A/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *J(void)
@@ -4531,8 +5131,16 @@ egg_token *J(void)
   return NULL;
 }
 
-/*
- * K =                 /0x4B/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    K =                 /0x4B/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *K(void)
@@ -4588,8 +5196,16 @@ egg_token *K(void)
   return NULL;
 }
 
-/*
- * L =                 /0x4C/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    L =                 /0x4C/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *L(void)
@@ -4645,8 +5261,16 @@ egg_token *L(void)
   return NULL;
 }
 
-/*
- * M =                 /0x4D/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    M =                 /0x4D/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *M(void)
@@ -4702,8 +5326,16 @@ egg_token *M(void)
   return NULL;
 }
 
-/*
- * N =                 /0x4E/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    N =                 /0x4E/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *N(void)
@@ -4759,8 +5391,16 @@ egg_token *N(void)
   return NULL;
 }
 
-/*
- * O =                 /0x4F/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    O =                 /0x4F/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *O(void)
@@ -4816,8 +5456,16 @@ egg_token *O(void)
   return NULL;
 }
 
-/*
- * P =                 /0x50/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    P =                 /0x50/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *P(void)
@@ -4873,8 +5521,16 @@ egg_token *P(void)
   return NULL;
 }
 
-/*
- * Q =                 /0x51/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    Q =                 /0x51/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *Q(void)
@@ -4930,8 +5586,16 @@ egg_token *Q(void)
   return NULL;
 }
 
-/*
- * R =                 /0x52/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    R =                 /0x52/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *R(void)
@@ -4987,8 +5651,16 @@ egg_token *R(void)
   return NULL;
 }
 
-/*
- * S =                 /0x53/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    S =                 /0x53/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *S(void)
@@ -5044,8 +5716,16 @@ egg_token *S(void)
   return NULL;
 }
 
-/*
- * T =                 /0x54/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    T =                 /0x54/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *T(void)
@@ -5101,8 +5781,16 @@ egg_token *T(void)
   return NULL;
 }
 
-/*
- * U =                 /0x55/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    U =                 /0x55/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *U(void)
@@ -5158,8 +5846,16 @@ egg_token *U(void)
   return NULL;
 }
 
-/*
- * V =                 /0x56/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    V =                 /0x56/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *V(void)
@@ -5215,8 +5911,16 @@ egg_token *V(void)
   return NULL;
 }
 
-/*
- * W =                 /0x57/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    W =                 /0x57/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *W(void)
@@ -5272,8 +5976,16 @@ egg_token *W(void)
   return NULL;
 }
 
-/*
- * X =                 /0x58/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    X =                 /0x58/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *X(void)
@@ -5329,8 +6041,16 @@ egg_token *X(void)
   return NULL;
 }
 
-/*
- * Y =                 /0x59/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    Y =                 /0x59/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *Y(void)
@@ -5386,8 +6106,16 @@ egg_token *Y(void)
   return NULL;
 }
 
-/*
- * Z =                 /0x5A/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    Z =                 /0x5A/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *Z(void)
@@ -5443,8 +6171,16 @@ egg_token *Z(void)
   return NULL;
 }
 
-/*
- * open-bracket =      /0x5B/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    open-bracket =      /0x5B/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *open_bracket(void)
@@ -5500,8 +6236,16 @@ egg_token *open_bracket(void)
   return NULL;
 }
 
-/*
- * back-slash =        /0x5C/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    back-slash =        /0x5C/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *back_slash(void)
@@ -5557,8 +6301,16 @@ egg_token *back_slash(void)
   return NULL;
 }
 
-/*
- * close-bracket =     /0x5D/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    close-bracket =     /0x5D/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *close_bracket(void)
@@ -5614,8 +6366,16 @@ egg_token *close_bracket(void)
   return NULL;
 }
 
-/*
- * carat =             /0x5E/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    carat =             /0x5E/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *carat(void)
@@ -5671,8 +6431,16 @@ egg_token *carat(void)
   return NULL;
 }
 
-/*
- * underscore =        /0x5F/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    underscore =        /0x5F/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *underscore(void)
@@ -5728,8 +6496,16 @@ egg_token *underscore(void)
   return NULL;
 }
 
-/*
- * back-quote =        /0x60/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    back-quote =        /0x60/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *back_quote(void)
@@ -5785,8 +6561,16 @@ egg_token *back_quote(void)
   return NULL;
 }
 
-/*
- * a =                 /0x61/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    a =                 /0x61/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *a(void)
@@ -5842,8 +6626,16 @@ egg_token *a(void)
   return NULL;
 }
 
-/*
- * b =                 /0x62/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    b =                 /0x62/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *b(void)
@@ -5899,8 +6691,16 @@ egg_token *b(void)
   return NULL;
 }
 
-/*
- * c =                 /0x63/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    c =                 /0x63/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *c(void)
@@ -5956,8 +6756,16 @@ egg_token *c(void)
   return NULL;
 }
 
-/*
- * d =                 /0x64/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    d =                 /0x64/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *d(void)
@@ -6013,8 +6821,16 @@ egg_token *d(void)
   return NULL;
 }
 
-/*
- * e =                 /0x65/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    e =                 /0x65/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *e(void)
@@ -6070,8 +6886,16 @@ egg_token *e(void)
   return NULL;
 }
 
-/*
- * f =                 /0x66/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    f =                 /0x66/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *f(void)
@@ -6127,8 +6951,16 @@ egg_token *f(void)
   return NULL;
 }
 
-/*
- * g =                 /0x67/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    g =                 /0x67/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *g(void)
@@ -6184,8 +7016,16 @@ egg_token *g(void)
   return NULL;
 }
 
-/*
- * h =                 /0x68/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    h =                 /0x68/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *h(void)
@@ -6241,8 +7081,16 @@ egg_token *h(void)
   return NULL;
 }
 
-/*
- * i =                 /0x69/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    i =                 /0x69/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *i(void)
@@ -6298,8 +7146,16 @@ egg_token *i(void)
   return NULL;
 }
 
-/*
- * j =                 /0x6A/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    j =                 /0x6A/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *j(void)
@@ -6355,8 +7211,16 @@ egg_token *j(void)
   return NULL;
 }
 
-/*
- * k =                 /0x6B/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    k =                 /0x6B/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *k(void)
@@ -6412,8 +7276,16 @@ egg_token *k(void)
   return NULL;
 }
 
-/*
- * l =                 /0x6C/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    l =                 /0x6C/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *l(void)
@@ -6469,8 +7341,16 @@ egg_token *l(void)
   return NULL;
 }
 
-/*
- * m =                 /0x6D/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    m =                 /0x6D/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *m(void)
@@ -6526,8 +7406,16 @@ egg_token *m(void)
   return NULL;
 }
 
-/*
- * n =                 /0x6E/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    n =                 /0x6E/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *n(void)
@@ -6583,8 +7471,16 @@ egg_token *n(void)
   return NULL;
 }
 
-/*
- * o =                 /0x6F/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    o =                 /0x6F/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *o(void)
@@ -6640,8 +7536,16 @@ egg_token *o(void)
   return NULL;
 }
 
-/*
- * p =                 /0x70/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    p =                 /0x70/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *p(void)
@@ -6697,8 +7601,16 @@ egg_token *p(void)
   return NULL;
 }
 
-/*
- * q =                 /0x71/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    q =                 /0x71/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *q(void)
@@ -6754,8 +7666,16 @@ egg_token *q(void)
   return NULL;
 }
 
-/*
- * r =                 /0x72/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    r =                 /0x72/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *r(void)
@@ -6811,8 +7731,16 @@ egg_token *r(void)
   return NULL;
 }
 
-/*
- * s =                 /0x73/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    s =                 /0x73/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *s(void)
@@ -6868,8 +7796,16 @@ egg_token *s(void)
   return NULL;
 }
 
-/*
- * t =                 /0x74/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    t =                 /0x74/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *t(void)
@@ -6925,8 +7861,16 @@ egg_token *t(void)
   return NULL;
 }
 
-/*
- * u =                 /0x75/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    u =                 /0x75/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *u(void)
@@ -6982,8 +7926,16 @@ egg_token *u(void)
   return NULL;
 }
 
-/*
- * v =                 /0x76/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    v =                 /0x76/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *v(void)
@@ -7039,8 +7991,16 @@ egg_token *v(void)
   return NULL;
 }
 
-/*
- * w =                 /0x77/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    w =                 /0x77/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *w(void)
@@ -7096,8 +8056,16 @@ egg_token *w(void)
   return NULL;
 }
 
-/*
- * x =                 /0x78/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    x =                 /0x78/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *x(void)
@@ -7153,8 +8121,16 @@ egg_token *x(void)
   return NULL;
 }
 
-/*
- * y =                 /0x79/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    y =                 /0x79/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *y(void)
@@ -7210,8 +8186,16 @@ egg_token *y(void)
   return NULL;
 }
 
-/*
- * z =                 /0x7A/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    z =                 /0x7A/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *z(void)
@@ -7267,8 +8251,16 @@ egg_token *z(void)
   return NULL;
 }
 
-/*
- * open-brace =        /0x7B/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    open-brace =        /0x7B/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *open_brace(void)
@@ -7324,8 +8316,16 @@ egg_token *open_brace(void)
   return NULL;
 }
 
-/*
- * bar =               /0x7C/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    bar =               /0x7C/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *bar(void)
@@ -7381,8 +8381,16 @@ egg_token *bar(void)
   return NULL;
 }
 
-/*
- * close-brace =       /0x7D/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    close-brace =       /0x7D/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *close_brace(void)
@@ -7438,8 +8446,16 @@ egg_token *close_brace(void)
   return NULL;
 }
 
-/*
- * tilde =             /0x7E/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    tilde =             /0x7E/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *tilde(void)
@@ -7495,8 +8511,16 @@ egg_token *tilde(void)
   return NULL;
 }
 
-/*
- * del =               /0x7F/ ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    del =               /0x7F/ ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *del(void)
@@ -7552,11 +8576,19 @@ egg_token *del(void)
   return NULL;
 }
 
-/*
- * control-character = nul | soh | stx | etx | eot | enq | ack | bel | bs
- *                   | so | si | dle | dc1 | dc2 | dc3 | dc4 | nak | syn
- *                   | etb | can | em | sub | esc | fs | gs | rs | us
- *                   | del ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    control-character = nul | soh | stx | etx | eot | enq | ack | bel | bs
+                      | so | si | dle | dc1 | dc2 | dc3 | dc4 | nak | syn
+                      | etb | can | em | sub | esc | fs | gs | rs | us
+                      | del ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *control_character(void)
@@ -7965,10 +8997,18 @@ egg_token *control_character(void)
   return NULL;
 }
 
-/*
- * upper-case-letter = A | B | C | D | E | F | G | H | I | J | K | L | M
- *                   | N | O | P | Q | R | S | T | U | V | W | X | Y | Z
- *                   ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    upper-case-letter = A | B | C | D | E | F | G | H | I | J | K | L | M
+                      | N | O | P | Q | R | S | T | U | V | W | X | Y | Z
+                      ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *upper_case_letter(void)
@@ -8351,10 +9391,18 @@ egg_token *upper_case_letter(void)
   return NULL;
 }
 
-/*
- * lower-case-letter = a | b | c | d | e | f | g | h | i | j | k | l | m
- *                   | n | o | p | q | r | s | t | u | v | w | x | y | z
- *                   ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    lower-case-letter = a | b | c | d | e | f | g | h | i | j | k | l | m
+                      | n | o | p | q | r | s | t | u | v | w | x | y | z
+                      ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *lower_case_letter(void)
@@ -8737,8 +9785,16 @@ egg_token *lower_case_letter(void)
   return NULL;
 }
 
-/*
- * letter = upper-case-letter | lower-case-letter ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    letter = upper-case-letter | lower-case-letter ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *letter(void)
@@ -8809,8 +9865,16 @@ egg_token *letter(void)
   return NULL;
 }
 
-/*
- * binary-digit = zero | one ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    binary-digit = zero | one ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *binary_digit(void)
@@ -8881,8 +9945,16 @@ egg_token *binary_digit(void)
   return NULL;
 }
 
-/*
- * octal-digit = zero | one | two | three | four | five | six | seven ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    octal-digit = zero | one | two | three | four | five | six | seven ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *octal_digit(void)
@@ -9031,9 +10103,17 @@ egg_token *octal_digit(void)
   return NULL;
 }
 
-/*
- * decimal-digit = zero | one | two | three | four
- *               | five | six | seven | eight | nine ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    decimal-digit = zero | one | two | three | four
+                  | five | six | seven | eight | nine ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *decimal_digit(void)
@@ -9208,11 +10288,19 @@ egg_token *decimal_digit(void)
   return NULL;
 }
 
-/*
- * hexadecimal-digit = zero | one | two | three | four
- *                   | five | six | seven | eight | nine
- *                   | A | B | C | D | E | F
- *                   | a | b | c | d | e | f ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    hexadecimal-digit = zero | one | two | three | four
+                      | five | six | seven | eight | nine
+                      | A | B | C | D | E | F
+                      | a | b | c | d | e | f ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *hexadecimal_digit(void)
@@ -9543,8 +10631,16 @@ egg_token *hexadecimal_digit(void)
   return NULL;
 }
 
-/*
- * white-space = space | ht | lf | vt | ff | cr ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    white-space = space | ht | lf | vt | ff | cr ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *white_space(void)
@@ -9667,14 +10763,22 @@ egg_token *white_space(void)
   return NULL;
 }
 
-/*
- * common-character = exclamation-point | number-sign | dollar | percent
- *                  | ampersand | plus | comma | minus | period | colon
- *                  | semicolon | less-than | equal | greater-than
- *                  | question-mark | at | open-bracket | back-slash
- *                  | close-bracket | carat | underscore | back-quote
- *                  | open-brace | bar | close-brace | tilde | letter
- *                  | decimal-digit ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    common-character = exclamation-point | number-sign | dollar | percent
+                     | ampersand | plus | comma | minus | period | colon
+                     | semicolon | less-than | equal | greater-than
+                     | question-mark | at | open-bracket | back-slash
+                     | close-bracket | carat | underscore | back-quote
+                     | open-brace | bar | close-brace | tilde | letter
+                     | decimal-digit ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *common_character(void)
@@ -10083,12 +11187,20 @@ egg_token *common_character(void)
   return NULL;
 }
 
-/*
- * literal-character = common-character
- *                   | space
- *                   | open-parenthesis
- *                   | close-parenthesis
- *                   | asterisk ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    literal-character = common-character
+                      | space
+                      | open-parenthesis
+                      | close-parenthesis
+                      | asterisk ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *literal_character(void)
@@ -10198,12 +11310,20 @@ egg_token *literal_character(void)
   return NULL;
 }
 
-/*
- * comment-basic-character = common-character
- *                         | white-space
- *                         | quote
- *                         | single-quote
- *                         | slash ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    comment-basic-character = common-character
+                            | white-space
+                            | quote
+                            | single-quote
+                            | slash ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *comment_basic_character(void)
@@ -10313,9 +11433,17 @@ egg_token *comment_basic_character(void)
   return NULL;
 }
 
-/*
- * non-comment-start-character = comment-basic-character
- *                             | close-parenthesis ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    non-comment-start-character = comment-basic-character
+                                | close-parenthesis ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *non_comment_start_character(void)
@@ -10386,9 +11514,17 @@ egg_token *non_comment_start_character(void)
   return NULL;
 }
 
-/*
- * non-comment-end-character = comment-basic-character
- *                           | open-parenthesis ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    non-comment-end-character = comment-basic-character
+                              | open-parenthesis ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *non_comment_end_character(void)
@@ -10459,9 +11595,17 @@ egg_token *non_comment_end_character(void)
   return NULL;
 }
 
-/*
- * non-comment-start-sequence = open-parenthesis
- *                              + non-comment-start-character ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    non-comment-start-sequence = open-parenthesis
+                                 + non-comment-start-character ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *non_comment_start_sequence(void)
@@ -10524,9 +11668,17 @@ egg_token *non_comment_start_sequence(void)
   return NULL;
 }
 
-/*
- * non-comment-end-sequence = asterisk
- *                            + non-comment-end-character ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    non-comment-end-sequence = asterisk
+                               + non-comment-end-character ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *non_comment_end_sequence(void)
@@ -10589,11 +11741,19 @@ egg_token *non_comment_end_sequence(void)
   return NULL;
 }
 
-/*
- * comment-character = comment-basic-character
- *                   | non-comment-start-sequence
- *                   | non-comment-end-sequence
- *                   | close-parenthesis ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    comment-character = comment-basic-character
+                      | non-comment-start-sequence
+                      | non-comment-end-sequence
+                      | close-parenthesis ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *comment_character(void)
@@ -10690,8 +11850,16 @@ egg_token *comment_character(void)
   return NULL;
 }
 
-/*
- * single-quoted-character = literal-character | quote ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    single-quoted-character = literal-character | quote ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *single_quoted_character(void)
@@ -10762,8 +11930,16 @@ egg_token *single_quoted_character(void)
   return NULL;
 }
 
-/*
- * quoted-character = literal-character | single-quote ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    quoted-character = literal-character | single-quote ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *quoted_character(void)
@@ -10834,8 +12010,16 @@ egg_token *quoted_character(void)
   return NULL;
 }
 
-/*
- * phrase-conjugator = underscore | minus ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    phrase-conjugator = underscore | minus ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *phrase_conjugator(void)
@@ -10906,8 +12090,16 @@ egg_token *phrase_conjugator(void)
   return NULL;
 }
 
-/*
- * phrase-name-character = letter | decimal_digit | phrase-conjugator ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    phrase-name-character = letter | decimal_digit | phrase-conjugator ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *phrase_name_character(void)
@@ -10991,8 +12183,16 @@ egg_token *phrase_name_character(void)
   return NULL;
 }
 
-/*
- * binary-indicator = b | B ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    binary-indicator = b | B ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *binary_indicator(void)
@@ -11063,8 +12263,16 @@ egg_token *binary_indicator(void)
   return NULL;
 }
 
-/*
- * octal-indicator = o | O ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    octal-indicator = o | O ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *octal_indicator(void)
@@ -11135,8 +12343,16 @@ egg_token *octal_indicator(void)
   return NULL;
 }
 
-/*
- * hexadecimal-indicator = x | X ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    hexadecimal-indicator = x | X ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *hexadecimal_indicator(void)
@@ -11207,8 +12423,16 @@ egg_token *hexadecimal_indicator(void)
   return NULL;
 }
 
-/*
- * comment-start-symbol = open-parenthesis + asterisk ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    comment-start-symbol = open-parenthesis + asterisk ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *comment_start_symbol(void)
@@ -11271,8 +12495,16 @@ egg_token *comment_start_symbol(void)
   return NULL;
 }
 
-/*
- * comment-end-symbol = asterisk + close-parenthesis ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    comment-end-symbol = asterisk + close-parenthesis ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *comment_end_symbol(void)
@@ -11335,8 +12567,16 @@ egg_token *comment_end_symbol(void)
   return NULL;
 }
 
-/*
- * alternation-symbol = bar ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    alternation-symbol = bar ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *alternation_symbol(void)
@@ -11394,8 +12634,16 @@ egg_token *alternation_symbol(void)
   return NULL;
 }
 
-/*
- * concatenation-symbol = plus ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    concatenation-symbol = plus ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *concatenation_symbol(void)
@@ -11453,8 +12701,16 @@ egg_token *concatenation_symbol(void)
   return NULL;
 }
 
-/*
- * phrase-terminator-symbol = semicolon ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    phrase-terminator-symbol = semicolon ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *phrase_terminator_symbol(void)
@@ -11512,10 +12768,18 @@ egg_token *phrase_terminator_symbol(void)
   return NULL;
 }
 
-/*
- * binary-integer = zero
- *                  + binary-indicator
- *                  + binary-digit{1,*} ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    binary-integer = zero
+                     + binary-indicator
+                     + binary-digit{1,*} ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *binary_integer(void)
@@ -11593,10 +12857,18 @@ egg_token *binary_integer(void)
   return NULL;
 }
 
-/*
- * octal-integer = zero
- *                 + octal-indicator
- *                 + octal-digit{1,*} ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    octal-integer = zero
+                    + octal-indicator
+                    + octal-digit{1,*} ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *octal_integer(void)
@@ -11674,10 +12946,18 @@ egg_token *octal_integer(void)
   return NULL;
 }
 
-/*
- * hexadecimal-integer = zero
- *                       + hexadecimal-indicator
- *                       + hexadecimal-digit{1,*} ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    hexadecimal-integer = zero
+                          + hexadecimal-indicator
+                          + hexadecimal-digit{1,*} ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *hexadecimal_integer(void)
@@ -11755,8 +13035,16 @@ egg_token *hexadecimal_integer(void)
   return NULL;
 }
 
-/*
- * decimal-integer = decimal-digit{1,*} ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    decimal-integer = decimal-digit{1,*} ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *decimal_integer(void)
@@ -11824,11 +13112,19 @@ egg_token *decimal_integer(void)
   return NULL;
 }
 
-/*
- * integer = binary-integer
- *         | octal-integer
- *         | hexadecimal-integer
- *         | decimal-integer ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    integer = binary-integer
+            | octal-integer
+            | hexadecimal-integer
+            | decimal-integer ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *integer(void)
@@ -11925,10 +13221,18 @@ egg_token *integer(void)
   return NULL;
 }
 
-/*
- * single-quoted-literal = single-quote
- *                         + single-quoted-character{1,*}
- *                         + single-quote ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    single-quoted-literal = single-quote
+                            + single-quoted-character{1,*}
+                            + single-quote ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *single_quoted_literal(void)
@@ -12006,8 +13310,16 @@ egg_token *single_quoted_literal(void)
   return NULL;
 }
 
-/*
- * quoted-literal = quote + quoted-character{1,*} + quote ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    quoted-literal = quote + quoted-character{1,*} + quote ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *quoted_literal(void)
@@ -12085,8 +13397,16 @@ egg_token *quoted_literal(void)
   return NULL;
 }
 
-/*
- * absolute-literal = slash + space{0,*} + integer + space{0,*} + slash ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    absolute-literal = slash + space{0,*} + integer + space{0,*} + slash ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *absolute_literal(void)
@@ -12184,8 +13504,16 @@ egg_token *absolute_literal(void)
   return NULL;
 }
 
-/*
- * literal = single-quoted-literal | quoted-literal | absolute-literal ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    literal = single-quoted-literal | quoted-literal | absolute-literal ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *literal(void)
@@ -12269,8 +13597,16 @@ egg_token *literal(void)
   return NULL;
 }
 
-/*
- * comment-item = comment | comment-character ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    comment-item = comment | comment-character ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *comment_item(void)
@@ -12341,10 +13677,18 @@ egg_token *comment_item(void)
   return NULL;
 }
 
-/*
- * comment = comment-start-symbol
- *           + comment-item{0,*}
- *           + comment-end-symbol ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    comment = comment-start-symbol
+              + comment-item{0,*}
+              + comment-end-symbol ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *comment(void)
@@ -12422,8 +13766,16 @@ egg_token *comment(void)
   return NULL;
 }
 
-/*
- * illumination = white-space | comment ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    illumination = white-space | comment ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *illumination(void)
@@ -12494,8 +13846,16 @@ egg_token *illumination(void)
   return NULL;
 }
 
-/*
- * non-grammar-item = control-character | illumination ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    non-grammar-item = control-character | illumination ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *non_grammar_item(void)
@@ -12566,8 +13926,16 @@ egg_token *non_grammar_item(void)
   return NULL;
 }
 
-/*
- * non-grammar-element = non-grammar-item{1,*} ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    non-grammar-element = non-grammar-item{1,*} ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *non_grammar_element(void)
@@ -12635,8 +14003,16 @@ egg_token *non_grammar_element(void)
   return NULL;
 }
 
-/*
- * phrase-name = letter + phrase-name-character{0,*} ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    phrase-name = letter + phrase-name-character{0,*} ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *phrase_name(void)
@@ -12709,8 +14085,16 @@ egg_token *phrase_name(void)
   return NULL;
 }
 
-/*
- * quantifier-item = integer | asterisk ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    quantifier-item = integer | asterisk ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *quantifier_item(void)
@@ -12781,8 +14165,16 @@ egg_token *quantifier_item(void)
   return NULL;
 }
 
-/*
- * quantifier-option = comma + quantifier-item ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    quantifier-option = comma + quantifier-item ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *quantifier_option(void)
@@ -12845,11 +14237,19 @@ egg_token *quantifier_option(void)
   return NULL;
 }
 
-/*
- * quantifier = open-brace
- *              + integer
- *              + quantifier-option{0,1}
- *              + close-brace ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    quantifier = open-brace
+                 + integer
+                 + quantifier-option{0,1}
+                 + close-brace ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *quantifier(void)
@@ -12932,8 +14332,16 @@ egg_token *quantifier(void)
   return NULL;
 }
 
-/*
- * atom = literal | phrase-name ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    atom = literal | phrase-name ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *atom(void)
@@ -13004,8 +14412,16 @@ egg_token *atom(void)
   return NULL;
 }
 
-/*
- * item = atom + quantifier{0,1} ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    item = atom + quantifier{0,1} ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *item(void)
@@ -13078,11 +14494,19 @@ egg_token *item(void)
   return NULL;
 }
 
-/*
- * sequence-continuation = non-grammar-element{0,1}
- *                         + concatenation-symbol
- *                         + non-grammar-element{0,1}
- *                         + item ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    sequence-continuation = non-grammar-element{0,1}
+                            + concatenation-symbol
+                            + non-grammar-element{0,1}
+                            + item ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *sequence_continuation(void)
@@ -13175,8 +14599,16 @@ egg_token *sequence_continuation(void)
   return NULL;
 }
 
-/*
- * sequence = item + sequence-continuation{0,*} ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    sequence = item + sequence-continuation{0,*} ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *sequence(void)
@@ -13249,11 +14681,19 @@ egg_token *sequence(void)
   return NULL;
 }
 
-/*
- * definition-continuation = non-grammar-element{0,1}
- *                           + alternation-symbol
- *                           + non-grammar-element{0,1}
- *                           + sequence ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    definition-continuation = non-grammar-element{0,1}
+                              + alternation-symbol
+                              + non-grammar-element{0,1}
+                              + sequence ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *definition_continuation(void)
@@ -13346,8 +14786,16 @@ egg_token *definition_continuation(void)
   return NULL;
 }
 
-/*
- * definition = sequence + definition-continuation{0,*} ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    definition = sequence + definition-continuation{0,*} ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *definition(void)
@@ -13420,14 +14868,22 @@ egg_token *definition(void)
   return NULL;
 }
 
-/*
- * phrase = phrase-name
- *          + non-grammar-element{0,1}
- *          + equal
- *          + non-grammar-element{0,1}
- *          + definition
- *          + non-grammar-element{0,1}
- *          + phrase-terminator-symbol ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    phrase = phrase-name
+             + non-grammar-element{0,1}
+             + equal
+             + non-grammar-element{0,1}
+             + definition
+             + non-grammar-element{0,1}
+             + phrase-terminator-symbol ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *phrase(void)
@@ -13545,8 +15001,16 @@ egg_token *phrase(void)
   return NULL;
 }
 
-/*
- * grammar-element = non-grammar-element{0,1} + phrase ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    grammar-element = non-grammar-element{0,1} + phrase ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *grammar_element(void)
@@ -13619,8 +15083,16 @@ egg_token *grammar_element(void)
   return NULL;
 }
 
-/*
- * grammar = grammar-element{0,*} + non-grammar-element{0,1} ;
+  /*!
+
+    \par "EGG Phrase Definition"
+    \verbatim
+    grammar = grammar-element{0,*} + non-grammar-element{0,1} ;
+    \endverbatim
+
+    \retval "egg_token *" on synctactical match of phrase
+    \retval NULL on error including NO MATCH
+
  */
 
 egg_token *grammar(void)

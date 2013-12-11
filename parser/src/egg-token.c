@@ -4,7 +4,7 @@
 
   \brief Source code for egg-token.c
 
-  \version 20131210022217
+  \version 20131211012146
 
   \author Patrick Head mailto:patrickhead@gmail.com
 
@@ -34,6 +34,21 @@
 #include "egg-token.h"
 #include "egg-token-util.h"
 
+  /*!
+
+    \brief Create a new egg_token
+
+    \warning This function returns a pointer to dynamically allocated memory.
+             It is the caller's responsibility to free this memory when 
+             appropriate.
+
+    \param type egg_token_type
+
+    \retval "egg_token *" new egg_token
+    \retval NULL failure
+
+  */
+
 egg_token *egg_token_new(egg_token_type type)
 {
   egg_token *new = NULL;
@@ -51,6 +66,17 @@ egg_token *egg_token_new(egg_token_type type)
   return new;
 }
 
+  /*!
+
+    \brief Free the memory associated with egg_token
+
+    \warning This function does NOT perform any unlinking of the freed token.
+    \sa egg_token_unlink()
+
+    \param t egg_token *
+
+  */
+
 void egg_token_free(egg_token *t)
 {
   if (!t)
@@ -60,6 +86,19 @@ void egg_token_free(egg_token *t)
 
   return;
 }
+
+  /*!
+
+    \brief Link egg_token into an existing token tree
+
+    \param t   existing egg_token *
+    \param dir egg_token_direction
+    \param n   egg_token * to link
+
+    \retval true  success
+    \retval false failure
+
+  */
 
 boolean egg_token_add(egg_token *t, egg_token_direction dir, egg_token *n)
 {
@@ -114,6 +153,18 @@ boolean egg_token_add(egg_token *t, egg_token_direction dir, egg_token *n)
   return true;
 }
 
+  /*!
+
+    \brief Delete egg_token from an existing token tree, if any
+
+    This function unlinks egg_token from an existing token 
+    tree, if required.
+    Also, the memory associated with egg_token is freed.
+
+    \param t egg_token *
+
+  */
+
 void egg_token_delete(egg_token *t)
 {
   if (!t)
@@ -127,6 +178,17 @@ void egg_token_delete(egg_token *t)
 
   return;
 }
+
+  /*!
+
+    \brief Unlink egg_token from an existing token tree
+
+    \warning This function does NOT perform any freeing of the unlinked token.
+    \sa egg_token_free()
+
+    \param t egg_token *
+
+  */
 
 void egg_token_unlink(egg_token *t)
 {
@@ -146,6 +208,16 @@ void egg_token_unlink(egg_token *t)
   return;
 }
 
+  /*!
+
+    \brief Returns egg_token_type of egg_token
+
+    \param t egg_token *
+
+    \retval egg_token_type
+
+  */
+
 egg_token_type egg_token_get_type(egg_token *t)
 {
   if (!t)
@@ -153,6 +225,15 @@ egg_token_type egg_token_get_type(egg_token *t)
 
   return t->t;
 }
+
+  /*!
+
+    \brief Sets egg_token_type of egg_token
+
+    \param t    egg_token *
+    \param type egg_token_type
+
+  */
 
 void egg_token_set_type(egg_token *t, egg_token_type type)
 {
@@ -162,6 +243,16 @@ void egg_token_set_type(egg_token *t, egg_token_type type)
   t->t = type;
 }
 
+  /*!
+
+    \brief Returns pointer to ascendant of egg_token
+
+    \param t egg_token *
+
+    \retval "egg_token *"
+
+  */
+
 egg_token *egg_token_get_ascendant(egg_token *t)
 {
   if (!t)
@@ -169,6 +260,15 @@ egg_token *egg_token_get_ascendant(egg_token *t)
 
   return t->a;
 }
+
+  /*!
+
+    \brief Sets pointer to ascendant of egg_token
+
+    \param t existing egg_token *
+    \param a ascendant of egg_token *
+
+  */
 
 void egg_token_set_ascendant(egg_token *t, egg_token *a)
 {
@@ -178,6 +278,16 @@ void egg_token_set_ascendant(egg_token *t, egg_token *a)
   t->a = a;
 }
 
+  /*!
+
+    \brief Returns pointer to descendant of egg_token
+
+    \param t egg_token *
+
+    \retval "egg_token *"
+
+  */
+
 egg_token *egg_token_get_descendant(egg_token *t)
 {
   if (!t)
@@ -185,6 +295,15 @@ egg_token *egg_token_get_descendant(egg_token *t)
 
   return t->d;
 }
+
+  /*!
+
+    \brief Sets pointer to descendant of egg_token
+
+    \param t existing egg_token *
+    \param d descendant of egg_token *
+
+  */
 
 void egg_token_set_descendant(egg_token *t, egg_token *d)
 {
@@ -194,6 +313,16 @@ void egg_token_set_descendant(egg_token *t, egg_token *d)
   t->d = d;
 }
 
+  /*!
+
+    \brief Returns pointer to previous egg_token
+
+    \param t egg_token *
+
+    \retval "egg_token *"
+
+  */
+
 egg_token *egg_token_get_previous(egg_token *t)
 {
   if (!t)
@@ -201,6 +330,15 @@ egg_token *egg_token_get_previous(egg_token *t)
 
   return t->p;
 }
+
+  /*!
+
+    \brief Sets pointer to previous egg_token
+
+    \param t existing egg_token *
+    \param p previous egg_token *
+
+  */
 
 void egg_token_set_previous(egg_token *t, egg_token *p)
 {
@@ -210,6 +348,16 @@ void egg_token_set_previous(egg_token *t, egg_token *p)
   t->p = p;
 }
 
+  /*!
+
+    \brief Returns pointer to next egg_token
+
+    \param t egg_token *
+
+    \retval "egg_token *"
+
+  */
+
 egg_token *egg_token_get_next(egg_token *t)
 {
   if (!t)
@@ -218,6 +366,15 @@ egg_token *egg_token_get_next(egg_token *t)
   return t->n;
 }
 
+  /*!
+
+    \brief Sets pointer to next egg_token
+
+    \param t existing egg_token *
+    \param n next egg_token *
+
+  */
+
 void egg_token_set_next(egg_token *t, egg_token *n)
 {
   if (!t)
@@ -225,6 +382,18 @@ void egg_token_set_next(egg_token *t, egg_token *n)
 
   t->n = n;
 }
+
+  /*!
+
+    \brief Find next egg_token of specified egg_token_type
+
+    \param t    existing egg_token *
+    \param type egg_token_type
+
+    \retval "egg_token *" found egg_token
+    \retval NULL failure, including NOT FOUND
+
+  */
 
 egg_token *egg_token_find(egg_token *t, egg_token_type type)
 {
@@ -246,6 +415,24 @@ egg_token *egg_token_find(egg_token *t, egg_token_type type)
 
   return NULL;
 }
+
+  /*!
+
+    \brief Returns string representation of egg_token
+
+    \warning This is a recursive function, therefore parameter s can NOT point to static
+              memory.
+
+    \warning This function returns a pointer to dynamically allocated memory.
+             It is the caller's responsibility to free this memory when
+             appropriate.
+
+    \param t existing egg_token *
+    \param s char * of existing string, can be NULL
+
+    \retval "char *" string, can be NULL if s is NULL
+
+  */
 
 char *egg_token_to_string(egg_token *t, char *s)
 {

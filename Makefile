@@ -169,9 +169,14 @@ doc/reference-manual/latex/refman.tex: doc/reference-manual/doxygen.cfg \
 		include/*.h \
 		src/*.c \
 		parser/include/*.h \
-		parser/src/*.c
+		parser/src/*.c \
+    doc/reference-manual/.regen
 	@doxygen doc/reference-manual/doxygen.cfg
 	@(cd doc/reference-manual/latex; make)
+	@(cd doc/reference-manual/html; scp -r * root@phs1:/var/www/htdocs)
+
+doc/reference-manual/.regen:
+	@touch doc/reference-manual/.regen
 
 code-stats:
 	@wc -l include/*.h src/*.c parser/include/*.h parser/src/*.c test/*/*.c doc/* misc/* Makefile parser/Makefile
@@ -192,6 +197,10 @@ clean:
 	@rm -rf doc/reference-manual/man
 	@rm -rf doc/reference-manual/xml
 	@make --no-print-directory -C parser clean
+
+version:
+	@misc/auto-version.sh
+	@touch doc/reference-manual/.regen
 
 git: .git
 
@@ -218,8 +227,7 @@ git: .git
 	@git add parser/src
 	@git add parser/include
 
-commit:
-	@misc/auto-version.sh
+commit: version
 	git commit -a
 
 push:

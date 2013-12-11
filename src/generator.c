@@ -3,7 +3,7 @@
 
     \brief Source code for parser code generation routines for EGG grammars.
 
-    \version 20131210022217
+    \version 20131211012140
 
     \author Patrick Head   mailto:patrickhead@gmail.com
 
@@ -72,7 +72,7 @@ static char *literal_or_phrase_name(egg_token *t);
 static char *long_to_bytes(unsigned long l);
 static int get_year(void);
 static void emit_indent(FILE *of);
-static void emit_comment_string(FILE *of, char *s);
+static void emit_phrase_comment_lines(FILE *of, char *s);
 static void emit_source_comment_header(FILE *of);
 static void isolate_top_level_phrases(phrase_map_item **pmi);
 static char * make_file_name(char *project, char *file_name);
@@ -501,7 +501,7 @@ void generate_token_header(FILE *of,
 void generate_token_source(FILE *of,
                            char *parser_name)
 {
-  char *fn;
+  char *fn;              // A generated file name for emitted documentation
 
   if (!of)
     of = stdout;
@@ -509,10 +509,14 @@ void generate_token_source(FILE *of,
   if (!parser_name)
     return;
 
+    // Emit the file level comment block
+
   fn = make_file_name(parser_name, "token.c");
   generator_set_file_name(fn);
   emit_source_comment_header(of);
   free(fn);
+
+    // Emit code for included header files
 
   fprintf(of, "#include <stdlib.h>\n");
   fprintf(of, "#include <string.h>\n");
@@ -522,6 +526,40 @@ void generate_token_source(FILE *of,
   fprintf(of, "#include \"%s-token.h\"\n", parser_name);
   fprintf(of, "#include \"%s-token-util.h\"\n", parser_name);
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>_token_new()
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %sCreate a new %s_token\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %sThis function returns a pointer to dynamically "
+              "allocated memory.\n",
+                (_use_doxygen) ? "\\warning " : "Warning: ");
+  fprintf(of, "             It is the caller's responsibility to free this "
+              "memory when \n");
+  fprintf(of, "             appropriate.\n");
+  fprintf(of, "\n");
+  fprintf(of, "    %stype %s_token_type\n",
+                (_use_doxygen) ? "\\param " : "Parameters: ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %s%s%s_token *%s new %s_token\n",
+                (_use_doxygen) ? "\\retval " : "Returns: ",
+                (_use_doxygen) ? "\"" : "",
+                parser_name,
+                (_use_doxygen) ? "\"" : "",
+                parser_name);
+  fprintf(of, "    %sNULL failure\n",
+                (_use_doxygen) ? "\\retval " : "         ");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>_token_new()
+
   fprintf(of, "%s_token *%s_token_new(%s_token_type type)\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "{\n");
@@ -543,6 +581,31 @@ void generate_token_source(FILE *of,
   fprintf(of, "  return new;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>_token_free()
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %sFree the memory associated with %s_token\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %sThis function does NOT perform any unlinking of "
+              "the freed token.\n",
+                (_use_doxygen) ? "\\warning " : "Warning: ");
+  fprintf(of, "    %s%s_token_unlink()\n",
+                (_use_doxygen) ? "\\sa " : "See: ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %st %s_token *\n",
+                (_use_doxygen) ? "\\param " : "Param: ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>_token_free()
+
   fprintf(of, "void %s_token_free(%s_token *t)\n",
                 parser_name, parser_name);
   fprintf(of, "{\n");
@@ -554,6 +617,35 @@ void generate_token_source(FILE *of,
   fprintf(of, "  return;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>_token_add()
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %sLink %s_token into an existing token tree\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %st   existing %s_token *\n",
+                (_use_doxygen) ? "\\param " : "Param: ",
+                parser_name);
+  fprintf(of, "    %sdir %s_token_direction\n",
+                (_use_doxygen) ? "\\param " : "       ",
+                parser_name);
+  fprintf(of, "    %sn   %s_token * to link\n",
+                (_use_doxygen) ? "\\param " : "       ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %strue  success\n",
+                (_use_doxygen) ? "\\retval " : "Returns: ");
+  fprintf(of, "    %sfalse failure\n",
+                (_use_doxygen) ? "\\retval " : "         ");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>_token_add()
+
   fprintf(of, "boolean %s_token_add(%s_token *t, "
               "%s_token_direction dir, "
               "%s_token *n)\n",
@@ -578,7 +670,8 @@ void generate_token_source(FILE *of,
   fprintf(of, "      n->a = t->a;\n");
   fprintf(of, "\n");
   fprintf(of, "        // Fix ascendant's descendant pointer, if it is t.\n");
-  fprintf(of, "        // We always want the ascendant's descendent pointer to point to\n");
+  fprintf(of, "        // We always want the ascendant's descendent pointer to "
+              "point to\n");
   fprintf(of, "        //   the beginning of the list of descendents.\n");
   fprintf(of, "\n");
   fprintf(of, "      if (t->a)\n");
@@ -613,6 +706,30 @@ void generate_token_source(FILE *of,
   fprintf(of, "  return true;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>_token_delete()
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %sDelete %s_token from an existing token tree, if any\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    This function unlinks %s_token from an existing token \n"
+              "    tree, if required.\n",
+                parser_name);
+  fprintf(of, "    Also, the memory associated with %s_token is freed.\n",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %st %s_token *\n",
+                (_use_doxygen) ? "\\param " : "Param: ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>_token_delete()
+
   fprintf(of, "void %s_token_delete(%s_token *t)\n",
                 parser_name, parser_name);
   fprintf(of, "{\n");
@@ -631,6 +748,31 @@ void generate_token_source(FILE *of,
   fprintf(of, "  return;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>_token_unlink()
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %sUnlink %s_token from an existing token tree\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %sThis function does NOT perform any freeing of "
+              "the unlinked token.\n",
+                (_use_doxygen) ? "\\warning " : "Warning: ");
+  fprintf(of, "    %s%s_token_free()\n",
+                (_use_doxygen) ? "\\sa " : "See: ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %st %s_token *\n",
+                (_use_doxygen) ? "\\param " : "Param: ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>_token_unlink()
+
   fprintf(of, "void %s_token_unlink(%s_token *t)\n",
                 parser_name, parser_name);
   fprintf(of, "{\n");
@@ -650,6 +792,29 @@ void generate_token_source(FILE *of,
   fprintf(of, "  return;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>_token_get_type()
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %sReturns %s_token_type of %s_token\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name,
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %st %s_token *\n",
+                (_use_doxygen) ? "\\param " : "Param: ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %s%s_token_type\n",
+                (_use_doxygen) ? "\\retval " : "Returns: ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>_token_get_type()
+
   fprintf(of, "%s_token_type %s_token_get_type(%s_token *t)\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "{\n");
@@ -660,6 +825,28 @@ void generate_token_source(FILE *of,
   fprintf(of, "  return t->t;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>_token_set_type()
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %sSets %s_token_type of %s_token\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name,
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %st    %s_token *\n",
+                (_use_doxygen) ? "\\param " : "Param: ",
+                parser_name);
+  fprintf(of, "    %stype %s_token_type\n",
+                (_use_doxygen) ? "\\param " : "       ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>_token_set_type()
+
   fprintf(of, "void %s_token_set_type(%s_token *t, %s_token_type type)\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "{\n");
@@ -669,6 +856,31 @@ void generate_token_source(FILE *of,
   fprintf(of, "  t->t = type;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>_token_get_ascendant()
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %sReturns pointer to ascendant of %s_token\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name,
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %st %s_token *\n",
+                (_use_doxygen) ? "\\param " : "Param: ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %s%s%s_token *%s\n",
+                (_use_doxygen) ? "\\retval " : "Returns: ",
+                (_use_doxygen) ? "\"" : "",
+                parser_name,
+                (_use_doxygen) ? "\"" : "");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>_token_get_ascendant()
+
   fprintf(of, "%s_token *%s_token_get_ascendant(%s_token *t)\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "{\n");
@@ -678,6 +890,28 @@ void generate_token_source(FILE *of,
   fprintf(of, "  return t->a;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>_token_set_ascendant()
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %sSets pointer to ascendant of %s_token\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name,
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %st existing %s_token *\n",
+                (_use_doxygen) ? "\\param " : "Param: ",
+                parser_name);
+  fprintf(of, "    %sa ascendant of %s_token *\n",
+                (_use_doxygen) ? "\\param " : "       ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>_token_set_ascendant()
+
   fprintf(of, "void %s_token_set_ascendant(%s_token *t, %s_token *a)\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "{\n");
@@ -687,6 +921,31 @@ void generate_token_source(FILE *of,
   fprintf(of, "  t->a = a;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>_token_get_descendant()
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %sReturns pointer to descendant of %s_token\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name,
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %st %s_token *\n",
+                (_use_doxygen) ? "\\param " : "Param: ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %s%s%s_token *%s\n",
+                (_use_doxygen) ? "\\retval " : "Returns: ",
+                (_use_doxygen) ? "\"" : "",
+                parser_name,
+                (_use_doxygen) ? "\"" : "");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>_token_get_descendant()
+
   fprintf(of, "%s_token *%s_token_get_descendant(%s_token *t)\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "{\n");
@@ -696,6 +955,28 @@ void generate_token_source(FILE *of,
   fprintf(of, "  return t->d;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>_token_set_descendant()
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %sSets pointer to descendant of %s_token\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name,
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %st existing %s_token *\n",
+                (_use_doxygen) ? "\\param " : "Param: ",
+                parser_name);
+  fprintf(of, "    %sd descendant of %s_token *\n",
+                (_use_doxygen) ? "\\param " : "       ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>_token_set_descendant()
+
   fprintf(of, "void %s_token_set_descendant(%s_token *t, %s_token *d)\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "{\n");
@@ -705,6 +986,31 @@ void generate_token_source(FILE *of,
   fprintf(of, "  t->d = d;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>_token_get_previous()
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %sReturns pointer to previous %s_token\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name,
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %st %s_token *\n",
+                (_use_doxygen) ? "\\param " : "Param: ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %s%s%s_token *%s\n",
+                (_use_doxygen) ? "\\retval " : "Returns: ",
+                (_use_doxygen) ? "\"" : "",
+                parser_name,
+                (_use_doxygen) ? "\"" : "");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>_token_get_previous()
+
   fprintf(of, "%s_token *%s_token_get_previous(%s_token *t)\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "{\n");
@@ -714,6 +1020,28 @@ void generate_token_source(FILE *of,
   fprintf(of, "  return t->p;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>_token_set_previous()
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %sSets pointer to previous %s_token\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name,
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %st existing %s_token *\n",
+                (_use_doxygen) ? "\\param " : "Param: ",
+                parser_name);
+  fprintf(of, "    %sp previous %s_token *\n",
+                (_use_doxygen) ? "\\param " : "       ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>_token_set_previous()
+
   fprintf(of, "void %s_token_set_previous(%s_token *t, %s_token *p)\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "{\n");
@@ -723,6 +1051,31 @@ void generate_token_source(FILE *of,
   fprintf(of, "  t->p = p;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>_token_get_next()
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %sReturns pointer to next %s_token\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name,
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %st %s_token *\n",
+                (_use_doxygen) ? "\\param " : "Param: ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %s%s%s_token *%s\n",
+                (_use_doxygen) ? "\\retval " : "Returns: ",
+                (_use_doxygen) ? "\"" : "",
+                parser_name,
+                (_use_doxygen) ? "\"" : "");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>_token_get_next()
+
   fprintf(of, "%s_token *%s_token_get_next(%s_token *t)\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "{\n");
@@ -732,6 +1085,28 @@ void generate_token_source(FILE *of,
   fprintf(of, "  return t->n;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>_token_set_next()
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %sSets pointer to next %s_token\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name,
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %st existing %s_token *\n",
+                (_use_doxygen) ? "\\param " : "Param: ",
+                parser_name);
+  fprintf(of, "    %sn next %s_token *\n",
+                (_use_doxygen) ? "\\param " : "       ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>_token_set_next()
+
   fprintf(of, "void %s_token_set_next(%s_token *t, %s_token *n)\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "{\n");
@@ -741,6 +1116,37 @@ void generate_token_source(FILE *of,
   fprintf(of, "  t->n = n;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>_token_find_next()
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %sFind next %s_token of specified %s_token_type\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name,
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %st    existing %s_token *\n",
+                (_use_doxygen) ? "\\param " : "Param: ",
+                parser_name);
+  fprintf(of, "    %stype %s_token_type\n",
+                (_use_doxygen) ? "\\param " : "       ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %s%s%s_token *%s found %s_token\n",
+                (_use_doxygen) ? "\\retval " : "Returns: ",
+                (_use_doxygen) ? "\"" : "",
+                parser_name,
+                (_use_doxygen) ? "\"" : "",
+                parser_name);
+  fprintf(of, "    %sNULL failure, including NOT FOUND\n",
+                (_use_doxygen) ? "\\retval " : "         ");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>_token_find_next()
+
   fprintf(of, "%s_token *%s_token_find(%s_token *t, %s_token_type type)\n",
                 parser_name, parser_name, parser_name, parser_name);
   fprintf(of, "{\n");
@@ -763,6 +1169,45 @@ void generate_token_source(FILE *of,
   fprintf(of, "  return NULL;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>_token_to_string()
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %sReturns string representation of %s_token\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name,
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %sThis is a recursive function, therefore parameter s can "
+              "NOT point to static\n",
+                (_use_doxygen) ? "\\warning " : "Warning: ");
+  fprintf(of, "              memory.\n");
+  fprintf(of, "\n");
+  fprintf(of, "    %sThis function returns a pointer to dynamically "
+              "allocated memory.\n",
+                (_use_doxygen) ? "\\warning " : "Warning: ");
+  fprintf(of, "             It is the caller's responsibility to free this "
+              "memory when\n");
+  fprintf(of, "             appropriate.\n");
+  fprintf(of, "\n");
+  fprintf(of, "    %st existing %s_token *\n",
+                (_use_doxygen) ? "\\param " : "Param: ",
+                parser_name);
+  fprintf(of, "    %ss char * of existing string, can be NULL\n",
+                (_use_doxygen) ? "\\param " : "       ",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    %s%schar *%s string, can be NULL if s is NULL\n",
+                (_use_doxygen) ? "\\retval " : "Returns: ",
+                (_use_doxygen) ? "\"" : "",
+                (_use_doxygen) ? "\"" : "");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>_token_to_string()
+
   fprintf(of, "char *%s_token_to_string(%s_token *t, char *s)\n",
                parser_name, parser_name);
   fprintf(of, "{\n");
@@ -1429,13 +1874,31 @@ static void generate_phrase(FILE *of,
 
   t = t->d;
 
-  fprintf(of, "/*\n");
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "    %s%sEGG Phrase Definition%s\n",
+                (_use_doxygen) ? "\\par " : "",
+                (_use_doxygen) ? "\"" : "",
+                (_use_doxygen) ? "\"" : ":");
+  if (_use_doxygen)
+    fprintf(of, "    \\verbatim\n");
   ds = egg_token_to_string(t, ds);
   if (ds)
   {
-    emit_comment_string(of, ds);
+    emit_phrase_comment_lines(of, ds);
     free(ds);
   }
+  if (_use_doxygen)
+    fprintf(of, "    \\endverbatim\n");
+  fprintf(of, "\n");
+  fprintf(of, "    %s %s%s_token *%s on synctactical match of phrase\n",
+                (_use_doxygen) ? "\\retval" : "Returns:",
+                (_use_doxygen) ? "\"" : "",
+                parser_name,
+                (_use_doxygen) ? "\"" : "");
+  fprintf(of, "    %s NULL on error including NO MATCH\n",
+                (_use_doxygen) ? "\\retval" : "        ");
+  fprintf(of, "\n");
   fprintf(of, " */\n");
   fprintf(of, "\n");
 
@@ -2409,19 +2872,15 @@ static void emit_indent(FILE *of)
 
      \brief Generic helper function for code generation functions.
     
-     This emits a comment string adorned with a '*' (asterisk) character
-     preceeding each line and indentation.
+     This function emits a comment string adorned with a 4 space indentation
+     preceeding each line.
     
-     \deprecated This may become deprecated in the future due to a less
-                 ornate style of block comments used in non-parser code and
-                 to facilitate doxygen style markups in a simpler manner.
-
      \param of file * to open file for writing
      \param s  string containing unadorned comment string
 
   */
 
-static void emit_comment_string(FILE *of, char *s)
+static void emit_phrase_comment_lines(FILE *of, char *s)
 {
   char *t = s;
 
@@ -2438,12 +2897,12 @@ static void emit_comment_string(FILE *of, char *s)
     if (!*t)
       break;
     *t = 0;
-    fprintf(of, " * %s\n", s);
+    fprintf(of, "    %s\n", s);
     s = t+1;
     t = s;
   }
 
-  fprintf(of, " * %s\n", s);
+  fprintf(of, "    %s\n", s);
 
   return;
 }

@@ -4,7 +4,7 @@
 
   \brief Source code for grammar specific walking/dumping utility
 
-  \version 20131211163732
+  \version 20131212072057
 
   \author Patrick Head mailto:patrickhead@gmail.com
 
@@ -42,7 +42,7 @@ static void walk(egg_token *t, int level);
 
   /*!
 
-     \brief main function for \brief \b-walker utility command.
+     \brief main function for \b egg-walker utility command.
 
      This is the main function for the \b egg-walker utility.\n
        - Accepts and parses command line arguments
@@ -179,12 +179,12 @@ static void walk(egg_token *t, int level)
   printf("%*.*s%s@%d.%d\n",
            level, level, " ",
            egg_token_type_to_string(t),
-           t->loc.line_number,
-           t->loc.character_offset);
+           t->location.line_number,
+           t->location.character_offset);
 
-  walk(t->d, level+1);
+  walk(t->descendant, level+1);
 
-  walk(t->n, level);
+  walk(t->next, level);
 
   return;
 }

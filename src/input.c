@@ -3,7 +3,7 @@
 
     \brief Source code for parser input source.
 
-    \version 20131209035052
+    \version 20131212071245
 
     \author Patrick Head   mailto:patrickhead@gmail.com
 
@@ -24,6 +24,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+  /*!
+
+    \file input.c
+
+    This is the source code file for a generic input source module. 
+
+  */
+
+  // Required system headers
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,26 +41,48 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+  // Module specific headers
+
 #include "input.h"
+
+  // Module specific macros
 
 #define CHUNK 512
 
+  /*!
+    \brief Definintion of source types
+  */
+
 typedef enum
 {
+    /*! \brief UNKNOWN source type */
   source_type_none = 0,
+    /*! \brief Regular file source type */
   source_type_file,
+    /*! \brief STDIN source type */
   source_type_stdin,
+    /*! \brief User supplied string buffer source type */
   source_type_buffer
 } source_type;
 
+  /*!
+    \brief Definintion of global source tracking data
+  */
+
 static struct
 {
-  source_type type;       //!< Input source type
-  FILE *file;             //!< Transient file pointer for source_type_file
-  unsigned char *buffer;  //!< Input buffer, either dynamic or user supplied
-  long  position;         //!< Current input tracking position
-  long  size;             //!< Total size in bytes of input source
-  boolean eof;            //!< Input EOF flag
+    /*! \brief Input source type */
+  source_type type;
+    /*! \brief Transient file pointer for file source type */
+  FILE *file;
+    /*! \brief Input buffer, either dynamic or user supplied */
+  unsigned char *buffer;
+    /*! \brief Current input tracking position */
+  long  position;
+    /*! \brief Total size of input source in bytes */
+  long  size;
+    /*! \brief Input EOF flag */
+  boolean eof;
 } _source;
 
   /*
@@ -109,14 +141,21 @@ boolean input_initialize(char *source)
   int n_chunks = 0;
   struct stat st;
 
+    // Clear source tracking data if being called for the first time
+
   if (first_time)
   {
     _clear_source();
     first_time = false;
   }
 
+    // If any source data exists, then we can not initialize, return with
+    // failure
+
   if (_source.file || _source.buffer)
     return false;
+
+    // If the source parameter is NULL, then read from STDIN
 
   if (!source)
   {
@@ -147,6 +186,10 @@ boolean input_initialize(char *source)
 
     return true;
   }
+
+    // If source string contains a new-line character, then this is a
+    // caller supplied buffer
+
   else if (strchr(source, '\n'))
   {
     _source.type = source_type_buffer;
@@ -157,6 +200,9 @@ boolean input_initialize(char *source)
 
     return true;
   }
+
+    // source parameter is the name of a regular file
+
   else
   {
     if (stat(source, &st))
@@ -183,6 +229,8 @@ boolean input_initialize(char *source)
     return true;
   }
 
+    // Anything else is wrong, return with failure
+
   return false;
 }
 
@@ -198,6 +246,8 @@ boolean input_initialize(char *source)
 
 void input_cleanup(void)
 {
+    // Free dynamic buffer, if appropriate
+
   switch (_source.type)
   {
     case source_type_file:
@@ -211,8 +261,12 @@ void input_cleanup(void)
       return;
   }
 
+    // Clean up the line map
+
   if (_line_map)
     free(_line_map);
+
+    // Clean up the source tracking data
 
   _clear_source();
 
@@ -227,8 +281,6 @@ void input_cleanup(void)
      byte.  If the input source is at its end, then the EOF condition is
      marked.  Also, the input tracking position is updated.
     
-     \param None
-
      \retval byte value of byte that was read
      \retval 0    on any condition where byte can not be read.
 
@@ -259,8 +311,6 @@ byte input_byte(void)
 
      \brief Returns current input tracking position.
     
-     \param None
-
      \retval long position
 
   */
@@ -283,6 +333,8 @@ long input_get_position(void)
 
 boolean input_set_position(long pos)
 {
+    // Sanity check parameter
+
   if (pos < 0)
     return false;
 
@@ -310,8 +362,6 @@ boolean input_set_position(long pos)
 
      \brief Return input source EOF condition.
     
-     \param None
-
      \retval true  EOF
      \retval false otherwise
 
@@ -341,8 +391,12 @@ boolean input_get_location(input_location *loc)
   long ln;
   long cp;
 
+    // Sanity check parameter
+
   if (!loc)
     return false;
+
+    // If line map doesn't exist, it is not possible to determine location
 
   if (!_line_map)
     return false;

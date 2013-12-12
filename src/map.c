@@ -3,7 +3,7 @@
 
     \brief Source code for line mapping routines.
 
-    \version 20131209035052
+    \version 20131212071909
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -24,14 +24,30 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+  /*!
+
+    \file map.c
+
+    This is the source code file for EGG grammar phrase mapping function module.
+
+  */
+
+  // Required system headers
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+  // Project specific headers
+
 #include "egg-token.h"
 #include "egg-token-util.h"
 
+  // Module specific headers
+
 #include "map.h"
+
+  // Function declarations
 
 static void all_phrase_names(egg_token *t, phrase_map_item *pmi);
 
@@ -68,14 +84,14 @@ phrase_map_item *phrase_map(egg_token *g)
   {
     while (ge)
     {
-      p = egg_token_find(ge->d, egg_token_type_phrase);
+      p = egg_token_find(ge->descendant, egg_token_type_phrase);
       if (p)
       {
-        pn = egg_token_find(p->d, egg_token_type_phrase_name);
+        pn = egg_token_find(p->descendant, egg_token_type_phrase_name);
         if (pn)
         {
           s = NULL;
-          s = egg_token_to_string(pn->d, s);
+          s = egg_token_to_string(pn->descendant, s);
           npmi = phrase_map_list_append_item_by_name(&list, s, false);
           if (!npmi)
           {
@@ -84,12 +100,12 @@ phrase_map_item *phrase_map(egg_token *g)
             return NULL;
           }
           free(s);
-          d = egg_token_find(p->d, egg_token_type_definition);
+          d = egg_token_find(p->descendant, egg_token_type_definition);
           if (d)
-            all_phrase_names(d->d, npmi);
+            all_phrase_names(d->descendant, npmi);
         }
       }
-      ge = ge->n;
+      ge = ge->next;
     }
   }
 
@@ -105,7 +121,7 @@ phrase_map_item *phrase_map(egg_token *g)
      the phrase name of each phrase referenced by a phrase's definition for
      a given phrase.
     
-     \param g egg_token *         to a single phrase token
+     \param t   egg_token * to a single phrase token
      \param pmi phrase_map_item * to a phrase_map_item for a phrase-name token
     
   */
@@ -121,19 +137,19 @@ static void all_phrase_names(egg_token *t, phrase_map_item *pmi)
   if (!pmi)
     return;
 
-  if (t->t == egg_token_type_phrase_name)
+  if (t->type == egg_token_type_phrase_name)
   {
     s = NULL;
-    s = egg_token_to_string(t->d, s);
+    s = egg_token_to_string(t->descendant, s);
     npmi = phrase_map_list_append_item_by_name(&(pmi->uses), s, true);
     free(s);
     if (!npmi)
       return;
   }
 
-  all_phrase_names(t->d, pmi);
+  all_phrase_names(t->descendant, pmi);
 
-  all_phrase_names(t->n, pmi);
+  all_phrase_names(t->next, pmi);
 
   return;
 }

@@ -3,7 +3,7 @@
 
     \brief Header file for parser input source.
 
-    \version 20131207175824
+    \version 20131212065815
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -27,16 +27,26 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+  /*!
+
+    \file input.h
+
+    This is the header file for a generic input source module. 
+
+  */
+
 #include "common.h"
 
-  /*@
-   *  Structure to capture and track the current line and character
-   *  position of the input file.
-   */
+  /*!
+    \brief Definition of structure to capture and track the current line and
+           character position of the input source.
+  */
 
 typedef struct input_location
 {
+    /*! \brief Line number of location in input source */
   int line_number;
+    /*! \brief Charactor position in line location in input source */
   int character_offset;
 } input_location;
 

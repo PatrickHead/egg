@@ -4,7 +4,7 @@
 
   \brief Source code for grammer specific token utility functions
 
-  \version 20131211163732
+  \version 20131212072057
 
   \author Patrick Head mailto:patrickhead@gmail.com
 
@@ -26,6 +26,18 @@
 
 */
 
+  /*!
+
+    \file egg-token-util.c
+
+    This is the source code file for the egg grammar token utility
+    functions module.
+
+    The egg_token_type_to_string function is defined in
+    this module.
+
+  */
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -36,7 +48,7 @@
 
     \brief Returns a string representation of egg_token.
 
-    \warn This function returns a pointer to dynamically allocated memory.
+    \warning This function returns a pointer to dynamically allocated memory.
           It is the caller's responsibility to free this memory when
           appropriate.
 
@@ -51,7 +63,7 @@ char *egg_token_type_to_string(egg_token *t)
   if (!t)
     return NULL;
 
-  switch (t->t)
+  switch (t->type)
   {
     case egg_token_type_none:
       s = "<none>";

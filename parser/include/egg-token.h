@@ -4,7 +4,7 @@
 
   \brief Source code for egg-token.h
 
-  \version 20131211163732
+  \version 20131212072057
 
   \author Patrick Head mailto:patrickhead@gmail.com
 
@@ -26,55 +26,67 @@
 
 */
 
+  /*!
+
+    \file egg-token.h
+
+    This is the header file for the egg grammar token and
+    token tree management functions module.
+
+  */
+
 #ifndef EGG_TOKEN_H
 #define EGG_TOKEN_H
 
 #include "common.h"
 #include "input.h"
 
-  /*
-   * Enumeration defining allowable values for egg_token_type
-   */
-
 #include "egg-token-type.h"
 
-  /*
-   * Enumeration defining direction for egg_token_add
-   * function.
-   */
+  /*!
+    \brief Definition of allowed directions for egg_token_add function.
+  */
 
 typedef enum
 {
+    /*! \brief Add new token before token (as sibling) */
   egg_token_before,
+    /*! \brief Add new token after token (as sibling) */
   egg_token_after,
+    /*! \brief Add new token below token (as descendant) */
   egg_token_below
 } egg_token_direction;
 
-  /*
-   * Definition of a egg_token
-   */
+  /*!
+    \brief Definition of egg_token
+  */
 
 typedef struct egg_token
 {
-  egg_token_type t;
-  struct egg_token *a;  // ascendant
-  struct egg_token *d;  // descendant
-  struct egg_token *p;  // previous
-  struct egg_token *n;  // next
-  input_location loc;  // line,offset
+    /*! \brief Type of token */
+  egg_token_type type;
+    /*! \brief Pointer to ascendant (parent) token */
+  struct egg_token *ascendant;
+    /*! \brief Pointer to descendant (child) token */
+  struct egg_token *descendant;
+    /*! \brief Pointer to previous (sibling) token */
+  struct egg_token *previous;
+    /*! \brief Pointer to next (sibling) token */
+  struct egg_token *next;
+    /*! \brief Line + offset location of token in input source */
+  input_location location;
 } egg_token;
 
-  /*
-   * Function prototypes
-   */
-
 egg_token *egg_token_new(egg_token_type type);
+
 void egg_token_free(egg_token *t);
 
 boolean egg_token_add(egg_token *t,
   egg_token_direction dir,
   egg_token *n);
+
 void egg_token_delete(egg_token *t);
+
 void egg_token_unlink(egg_token *t);
 
 egg_token_type egg_token_get_type(egg_token *t);
@@ -91,7 +103,10 @@ void egg_token_set_previous(egg_token *t, egg_token *p);
 
 egg_token *egg_token_get_next(egg_token *t);
 void egg_token_set_next(egg_token *t, egg_token *n);
+
 egg_token *egg_token_find(egg_token *t, egg_token_type type);
+
 char *egg_token_to_string(egg_token *t, char *s);
 
 #endif // EGG_TOKEN_H
+

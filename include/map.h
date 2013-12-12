@@ -3,7 +3,7 @@
 
     \brief Header file for line mapping routines.
 
-    \version 20131207175824
+    \version 20131212071739
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -27,18 +27,35 @@
 #ifndef MAP_H
 #define MAP_H
 
+  /*!
+
+    \file map.h
+
+    This is the header file for EGG grammar phrase mapping function module.
+
+  */
+
+  /*!
+    \brief Definition of a phrase_map_item type
+  */
+
 typedef struct phrase_map_item
 {
+    /*! \brief string containing phrase-name */
   char *name;
+    /*! \brief pointer to next mapped phrase item */
   struct phrase_map_item *next;
+    /*! \brief pointer to head of list of phrase names that this phrase uses */
   struct phrase_map_item *uses;
 } phrase_map_item;
 
 phrase_map_item *phrase_map(egg_token *grammar);
+
 phrase_map_item *phrase_map_item_new(char *name);
 void phrase_map_item_free(phrase_map_item *pmi);
 void phrase_map_item_unlink(phrase_map_item **list, phrase_map_item *pmi);
 void phrase_map_item_delete(phrase_map_item **list, phrase_map_item *pmi);
+
 void phrase_map_list_delete(phrase_map_item *list);
 phrase_map_item *phrase_map_list_find_item_by_name(phrase_map_item *list,
                                                    char *name);
@@ -49,3 +66,4 @@ int phrase_map_list_get_item_index(phrase_map_item *list, char *name);
 int phrase_map_list_count_items(phrase_map_item *list);
 
 #endif // MAP_H
+

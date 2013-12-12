@@ -3,7 +3,7 @@
 
     \brief Header file for generic error handling routines.
 
-    \version 20131209035052
+    \version 20131212042004
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -27,17 +27,30 @@
 #ifndef ERROR_H
 #define ERROR_H
 
-  /*
-   * Macros defining error codes
-   */
+  /*!
 
-#define ERROR_OK                                    00
+    \file error.h
 
-  /*
-   * Function prototypes
-   */
+    This is the header file for a generic error messaging system.
 
-void errorSet(unsigned char code);
-unsigned char errorGet(void);
+    This error mechanism is extremely simple.  It consists of defined
+    error codes, and two functions to set and retrieve the current error
+    code.
+
+  */
+
+  /*!
+    \brief Definition of error code types
+  */
+
+typedef enum
+{
+    /*! \brief OK */
+  error_ok = 0
+} error_code;
+
+void error_set(error_code code);
+
+error_code error_get(void);
  
 #endif // ERROR_H

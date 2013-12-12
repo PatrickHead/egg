@@ -65,7 +65,7 @@ CURR      2)  Documentation:
 
 WIP             A)  In-source annotations.
 
-                B)  Reference documentation (auto generated from code.)
+DONE            B)  Reference documentation (auto generated from code.)
 
                 C)  User documentation.
 
@@ -100,13 +100,13 @@ DONE      3)  Add generic (syntax checking only) parser for any project.
 
           8)  Speed optimizations for parser code.
 
-        Stage V:  start 
+        Stage V:  start 2013-12-03
 
           1)  Deployment and maintenance environments:
 
-                A)  Version control
+TEST            A)  Version control
 
-                B)  GIT repository support (both official EGG/Embryo and user
+PART            B)  GIT repository support (both official EGG/Embryo and user
                     project)
 
                 C)  GNU package support

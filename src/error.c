@@ -6,7 +6,7 @@
     \note Currently, this source is not implemented in any portion of the
           \b EGG/embryo system.
 
-    \version 20131209035052
+    \version 20131212042006
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -27,9 +27,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+  /*!
+
+    \file error.c
+
+    This is the source code file for a generic error messaging system.
+
+    This error mechanism is extremely simple.  It consists of defined
+    error codes, and two functions to set and retrieve the current error
+    code.
+
+  */
+
+  // Project specific headers
+
 #include "error.h"
 
-static unsigned char _errorCode = 0;
+  // Static global error code, used by both getter and setter functions.
+
+static unsigned char _error_code = 0;
 
   /*!
 
@@ -39,21 +55,21 @@ static unsigned char _errorCode = 0;
     
   */
 
-void errorSet(unsigned char code)
+void errorSet(error_code code)
 {
-  _errorCode = code;
+  _error_code = code;
 }
 
   /*!
 
      \brief Gets current error code.
     
-     \retval errorCode unsigned char of current error code
+     \retval error_code unsigned char of current error code
 
   */
 
-unsigned char errorGet(void)
+error_code errorGet(void)
 {
-  return _errorCode;
+  return _error_code;
 }
 

@@ -3,7 +3,7 @@
 
     \brief Source code for parser code generation routines for EGG grammars.
 
-    \version 20131211162937
+    \version 20131212064623
 
     \author Patrick Head   mailto:patrickhead@gmail.com
 
@@ -24,18 +24,45 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+  /*!
+
+    \file generator.c
+
+    This is the source code file for the embryo project source code generation
+    function module.
+
+    An individual generation function exists for each source code file that
+    can be generated.
+
+    \note Several internal settings used by the generator are available.  Each
+          setting can be managed with its own getter/setter function pairs.\n
+          \n
+          Currently, all of these internal settings are related to the
+          source code annotations that are generated within the source file
+          files.
+
+  */
+
+  // Require system headers
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
 
+  // Project specific headers
+
 #include "egg-token.h"
 #include "egg-token-util.h"
 #include "strapp.h"
 #include "map.h"
 
+  // Module specific header
+
 #include "generator.h"
+
+  // Module function declarations
 
 static void generate_grammar(FILE *of,
                              char *parser_name,
@@ -76,6 +103,8 @@ static void emit_phrase_comment_lines(FILE *of, char *s);
 static void emit_source_comment_header(FILE *of);
 static void isolate_top_level_phrases(phrase_map_item **pmi);
 static char * make_file_name(char *project, char *file_name);
+
+  // Module global values
 
 static phrase_map_item *_pml = NULL;
 static int _current_level = 0;
@@ -164,6 +193,30 @@ void generate_parser_source(FILE *of,
   fn = make_file_name(parser_name, "parser.c");
   generator_set_file_name(fn);
   emit_source_comment_header(of);
+
+    // Emit file description comment block
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  if (_use_doxygen)
+  {
+    fprintf(of, "    \\file %s-parser.c\n", parser_name);
+    fprintf(of, "\n");
+  }
+  fprintf(of, "    This is the source code file for the %s grammar phrase "
+              "parsing\n",
+                parser_name);
+  fprintf(of, "    functions module.\n");
+  fprintf(of, "\n");
+  fprintf(of, "    An individual phrase parsing function exists for each\n");
+  fprintf(of, "    %s grammar phrase.\n", parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    Also the %s_get_callback_table function is defined in\n",
+                parser_name);
+  fprintf(of, "    this module.\n");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
 
     // Emit documentation to explain the standard phrase parsing functions
 
@@ -293,6 +346,8 @@ void generate_parser_header(FILE *of,
   char *pns;
   char *fn;
 
+    // Sanity check parameters
+
   if (!of)
     of = stdout;
 
@@ -302,6 +357,8 @@ void generate_parser_header(FILE *of,
   if (!t)
     return;
 
+    // Create header include guard name
+
   hnl = strlen(parser_name) + strlen("_parser_h") + 1;
   hn = malloc(hnl);
   memset(hn, 0, hnl);
@@ -310,31 +367,64 @@ void generate_parser_header(FILE *of,
 
   hn = str_toupper(hn);
 
+    // Emit the file level comment block
+
   fn = make_file_name(parser_name, "parser.h");
   generator_set_file_name(fn);
   emit_source_comment_header(of);
   free(fn);
 
+    // Emit file description comment block
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  if (_use_doxygen)
+  {
+    fprintf(of, "    \\file %s-parser.h\n", parser_name);
+    fprintf(of, "\n");
+  }
+  fprintf(of, "    This is the header file for the %s grammar phrase parsing\n",
+                parser_name);
+  fprintf(of, "    functions module.\n");
+  fprintf(of, "\n");
+  fprintf(of, "    An individual phrase parsing function exists for each\n");
+  fprintf(of, "    %s grammar phrase.\n", parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    Also the %s_get_callback_table function is defined in\n",
+                parser_name);
+  fprintf(of, "    this module.\n");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit header include guard
+
   fprintf(of, "#ifndef %s\n", hn);
   fprintf(of, "#define %s\n", hn);
   fprintf(of, "\n");
 
+     // Emit includes
+
   fprintf(of, "#include \"callback.h\"\n");
   fprintf(of, "\n");
+
+    // Emit function declaration for utility functions
 
   fprintf(of, "callback_table *%s_get_callback_table(void);\n", parser_name);
   fprintf(of, "\n");
 
-  if ((ge = egg_token_find(t->d, egg_token_type_grammar_element)))
+    // Emit function declarations for each phrase parsing function
+
+  if ((ge = egg_token_find(t->descendant, egg_token_type_grammar_element)))
   {
     while (ge)
     {
-      if ((p = egg_token_find(ge->d, egg_token_type_phrase)))
+      if ((p = egg_token_find(ge->descendant, egg_token_type_phrase)))
       {
-        if ((pn = egg_token_find(p->d, egg_token_type_phrase_name)))
+        if ((pn = egg_token_find(p->descendant, egg_token_type_phrase_name)))
         {
           pns = NULL;
-          pns = egg_token_to_string(pn->d, pns);
+          pns = egg_token_to_string(pn->descendant, pns);
           pns = fix_identifier(pns);
 
           fprintf(of, "%s_token *%s(void);\n",
@@ -343,12 +433,16 @@ void generate_parser_header(FILE *of,
           free(pns);
         }
       }
-      ge = ge->n;
+      ge = ge->next;
     }
   }
 
+    // Emit close-out for header include guard
+
   fprintf(of, "\n");
   fprintf(of, "#endif // %s\n", hn);
+
+    // Clean up
 
   free(hn);
 
@@ -377,107 +471,195 @@ void generate_token_header(FILE *of,
   char *u_parser_name;
   char *fn;
 
+    // Sanity check parameters
+
   if (!of)
     of = stdout;
 
   if (!parser_name)
     return;
 
+    // Force parser name to upper case
+
   u_parser_name = str_toupper(strdup(parser_name));
+
+    // Emit the file level comment block
 
   fn = make_file_name(parser_name, "token.h");
   generator_set_file_name(fn);
   emit_source_comment_header(of);
   free(fn);
 
+    // Emit file description comment block
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  if (_use_doxygen)
+  {
+    fprintf(of, "    \\file %s-token.h\n", parser_name);
+    fprintf(of, "\n");
+  }
+  fprintf(of, "    This is the header file for the %s grammar token and\n",
+                parser_name);
+  fprintf(of, "    token tree management functions module.\n");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit header include guard
+
   fprintf(of, "#ifndef %s_TOKEN_H\n", u_parser_name);
   fprintf(of, "#define %s_TOKEN_H\n", u_parser_name);
   fprintf(of, "\n");
+
+    // Emit project related includes
+
   fprintf(of, "#include \"common.h\"\n");
   fprintf(of, "#include \"input.h\"\n");
   fprintf(of, "\n");
-  fprintf(of, "  /*\n");
-  fprintf(of, "   * Enumeration defining allowable values for %s_token_type\n",
-                parser_name);
-  fprintf(of, "   */\n");
-  fprintf(of, "\n");
+
+    // Emit module related includes
+
   fprintf(of, "#include \"%s-token-type.h\"\n", parser_name);
   fprintf(of, "\n");
-  fprintf(of, "  /*\n");
-  fprintf(of, "   * Enumeration defining direction for %s_token_add\n",
+
+    // Emit <PROJECT>_token_direction annotation
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "    %sDefinition of allowed directions for %s_token_add "
+              "function.\n",
+                (_use_doxygen) ? "\\brief " : "",
                 parser_name);
-  fprintf(of, "   * function.\n");
-  fprintf(of, "   */\n");
+  fprintf(of, "  */\n");
   fprintf(of, "\n");
+
+    // Emit <PROJECT>_token_direction enum
+
   fprintf(of, "typedef enum\n");
   fprintf(of, "{\n");
+  fprintf(of, "    /*%s %sAdd new token before token (as sibling) */\n",
+                (_use_doxygen) ? "!" : "",
+                (_use_doxygen) ? "\\brief " : "");
   fprintf(of, "  %s_token_before,\n", parser_name);
+  fprintf(of, "    /*%s %sAdd new token after token (as sibling) */\n",
+                (_use_doxygen) ? "!" : "",
+                (_use_doxygen) ? "\\brief " : "");
   fprintf(of, "  %s_token_after,\n", parser_name);
+  fprintf(of, "    /*%s %sAdd new token below token (as descendant) */\n",
+                (_use_doxygen) ? "!" : "",
+                (_use_doxygen) ? "\\brief " : "");
   fprintf(of, "  %s_token_below\n", parser_name);
   fprintf(of, "} %s_token_direction;\n", parser_name);
   fprintf(of, "\n");
-  fprintf(of, "  /*\n");
-  fprintf(of, "   * Definition of a %s_token\n", parser_name);
-  fprintf(of, "   */\n");
+
+    // Emit <PROJECT>_token annotation
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "    %sDefinition of %s_token\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name);
+  fprintf(of, "  */\n");
   fprintf(of, "\n");
+
+    // Emit <PROJECT>_token typedef
+
   fprintf(of, "typedef struct %s_token\n", parser_name);
   fprintf(of, "{\n");
-  fprintf(of, "  %s_token_type t;\n", parser_name);
-  fprintf(of, "  struct %s_token *a;  // ascendant\n", parser_name);
-  fprintf(of, "  struct %s_token *d;  // descendant\n", parser_name);
-  fprintf(of, "  struct %s_token *p;  // previous\n", parser_name);
-  fprintf(of, "  struct %s_token *n;  // next\n", parser_name);
-  fprintf(of, "  input_location loc;  // line,offset\n");
+  fprintf(of, "    /*%s %sType of token */\n",
+                (_use_doxygen) ? "!" : "",
+                (_use_doxygen) ? "\\brief " : "");
+  fprintf(of, "  %s_token_type type;\n", parser_name);
+  fprintf(of, "    /*%s %sPointer to ascendant (parent) token */\n",
+                (_use_doxygen) ? "!" : "",
+                (_use_doxygen) ? "\\brief " : "");
+  fprintf(of, "  struct %s_token *ascendant;\n", parser_name);
+  fprintf(of, "    /*%s %sPointer to descendant (child) token */\n",
+                (_use_doxygen) ? "!" : "",
+                (_use_doxygen) ? "\\brief " : "");
+  fprintf(of, "  struct %s_token *descendant;\n", parser_name);
+  fprintf(of, "    /*%s %sPointer to previous (sibling) token */\n",
+                (_use_doxygen) ? "!" : "",
+                (_use_doxygen) ? "\\brief " : "");
+  fprintf(of, "  struct %s_token *previous;\n", parser_name);
+  fprintf(of, "    /*%s %sPointer to next (sibling) token */\n",
+                (_use_doxygen) ? "!" : "",
+                (_use_doxygen) ? "\\brief " : "");
+  fprintf(of, "  struct %s_token *next;\n", parser_name);
+  fprintf(of, "    /*%s %sLine + offset location of token in input source */\n",
+                (_use_doxygen) ? "!" : "",
+                (_use_doxygen) ? "\\brief " : "");
+  fprintf(of, "  input_location location;\n");
   fprintf(of, "} %s_token;\n", parser_name);
   fprintf(of, "\n");
-  fprintf(of, "  /*\n");
-  fprintf(of, "   * Function prototypes\n");
-  fprintf(of, "   */\n");
-  fprintf(of, "\n");
+
+    // Emit function declarations
+
   fprintf(of, "%s_token *%s_token_new(%s_token_type type);\n",
                 parser_name, parser_name, parser_name);
+  fprintf(of, "\n");
+
   fprintf(of, "void %s_token_free(%s_token *t);\n",
                 parser_name, parser_name);
   fprintf(of, "\n");
+
   fprintf(of, "boolean %s_token_add(%s_token *t,\n",
                 parser_name, parser_name);
   fprintf(of, "  %s_token_direction dir,\n", parser_name);
   fprintf(of, "  %s_token *n);\n", parser_name);
+  fprintf(of, "\n");
+
   fprintf(of, "void %s_token_delete(%s_token *t);\n",
                 parser_name, parser_name);
+  fprintf(of, "\n");
+
   fprintf(of, "void %s_token_unlink(%s_token *t);\n",
                 parser_name, parser_name);
   fprintf(of, "\n");
+
   fprintf(of, "%s_token_type %s_token_get_type(%s_token *t);\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "void %s_token_set_type(%s_token *t, %s_token_type type);\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "\n");
+
   fprintf(of, "%s_token *%s_token_get_ascendant(%s_token *t);\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "void %s_token_set_ascendant(%s_token *t, %s_token *a);\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "\n");
+
   fprintf(of, "%s_token *%s_token_get_descendant(%s_token *t);\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "void %s_token_set_descendant(%s_token *t, %s_token *d);\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "\n");
+
   fprintf(of, "%s_token *%s_token_get_previous(%s_token *t);\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "void %s_token_set_previous(%s_token *t, %s_token *p);\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "\n");
+
   fprintf(of, "%s_token *%s_token_get_next(%s_token *t);\n",
                 parser_name, parser_name, parser_name);
   fprintf(of, "void %s_token_set_next(%s_token *t, %s_token *n);\n",
                 parser_name, parser_name, parser_name);
+  fprintf(of, "\n");
+
   fprintf(of, "%s_token *%s_token_find(%s_token *t, %s_token_type type);\n",
                 parser_name, parser_name, parser_name, parser_name);
+  fprintf(of, "\n");
+
   fprintf(of, "char *%s_token_to_string(%s_token *t, char *s);\n",
                 parser_name, parser_name);
   fprintf(of, "\n");
+
+    // Emit close-out for header include guard
+
   fprintf(of, "#endif // %s_TOKEN_H\n", u_parser_name);
+  fprintf(of, "\n");
+
+    // Clean up
 
   free(u_parser_name);
 
@@ -517,6 +699,22 @@ void generate_token_source(FILE *of,
   generator_set_file_name(fn);
   emit_source_comment_header(of);
   free(fn);
+
+    // Emit file description comment block
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  if (_use_doxygen)
+  {
+    fprintf(of, "    \\file %s-token.c\n", parser_name);
+    fprintf(of, "\n");
+  }
+  fprintf(of, "    This is the source code file for the %s grammar token and\n",
+                parser_name);
+  fprintf(of, "    token tree management functions module.\n");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
 
     // Emit code for included header files
 
@@ -576,9 +774,9 @@ void generate_token_source(FILE *of,
   fprintf(of, "  memset(new, 0, sizeof(%s_token));\n",
                 parser_name);
   fprintf(of, "\n");
-  fprintf(of, "  new->t = type;\n");
+  fprintf(of, "  new->type = type;\n");
   fprintf(of, "\n");
-  fprintf(of, "  input_get_location(&(new->loc));\n");
+  fprintf(of, "  input_get_location(&(new->location));\n");
   fprintf(of, "\n");
   fprintf(of, "  return new;\n");
   fprintf(of, "}\n");
@@ -664,43 +862,43 @@ void generate_token_source(FILE *of,
   fprintf(of, "    case %s_token_before:\n",
                 parser_name);
   fprintf(of, "\n");
-  fprintf(of, "      n->p = t->p;\n");
-  fprintf(of, "      n->n = t;\n");
-  fprintf(of, "      if (t->p)\n");
-  fprintf(of, "        t->p->n = n;\n");
-  fprintf(of, "      t->p = n;\n");
-  fprintf(of, "      n->a = t->a;\n");
+  fprintf(of, "      n->previous = t->previous;\n");
+  fprintf(of, "      n->next = t;\n");
+  fprintf(of, "      if (t->previous)\n");
+  fprintf(of, "        t->previous->next = n;\n");
+  fprintf(of, "      t->previous = n;\n");
+  fprintf(of, "      n->ascendant = t->ascendant;\n");
   fprintf(of, "\n");
   fprintf(of, "        // Fix ascendant's descendant pointer, if it is t.\n");
   fprintf(of, "        // We always want the ascendant's descendent pointer to "
               "point to\n");
   fprintf(of, "        //   the beginning of the list of descendents.\n");
   fprintf(of, "\n");
-  fprintf(of, "      if (t->a)\n");
-  fprintf(of, "        if (t->a->d == t)\n");
-  fprintf(of, "          t->a->d = n;\n");
+  fprintf(of, "      if (t->ascendant)\n");
+  fprintf(of, "        if (t->ascendant->descendant == t)\n");
+  fprintf(of, "          t->ascendant->descendant = n;\n");
   fprintf(of, "\n");
   fprintf(of, "      break;\n");
   fprintf(of, "\n");
   fprintf(of, "    case %s_token_after:\n",
                 parser_name);
   fprintf(of, "\n");
-  fprintf(of, "      n->p = t;\n");
-  fprintf(of, "      n->n = t->n;\n");
-  fprintf(of, "      if (t->n)\n");
-  fprintf(of, "        t->n->p = n;\n");
-  fprintf(of, "      t->n = n;\n");
-  fprintf(of, "      n->a = t->a;\n");
+  fprintf(of, "      n->previous = t;\n");
+  fprintf(of, "      n->next = t->next;\n");
+  fprintf(of, "      if (t->next)\n");
+  fprintf(of, "        t->next->previous = n;\n");
+  fprintf(of, "      t->next = n;\n");
+  fprintf(of, "      n->ascendant = t->ascendant;\n");
   fprintf(of, "\n");
   fprintf(of, "      break;\n");
   fprintf(of, "\n");
   fprintf(of, "    case %s_token_below:\n",
                 parser_name);
   fprintf(of, "\n");
-  fprintf(of, "      if (t->d)\n");
+  fprintf(of, "      if (t->descendant)\n");
   fprintf(of, "        return false;\n");
-  fprintf(of, "      t->d = n;\n");
-  fprintf(of, "      n->a = t;\n");
+  fprintf(of, "      t->descendant = n;\n");
+  fprintf(of, "      n->ascendant = t;\n");
   fprintf(of, "\n");
   fprintf(of, "      break;\n");
   fprintf(of, "  }\n");
@@ -738,8 +936,8 @@ void generate_token_source(FILE *of,
   fprintf(of, "  if (!t)\n");
   fprintf(of, "    return;\n");
   fprintf(of, "\n");
-  fprintf(of, "  while (t->d)\n");
-  fprintf(of, "    %s_token_delete(t->d);\n",
+  fprintf(of, "  while (t->descendant)\n");
+  fprintf(of, "    %s_token_delete(t->descendant);\n",
                 parser_name);
   fprintf(of, "\n");
   fprintf(of, "  %s_token_unlink(t);\n",
@@ -781,15 +979,15 @@ void generate_token_source(FILE *of,
   fprintf(of, "  if (!t)\n");
   fprintf(of, "    return;\n");
   fprintf(of, "\n");
-  fprintf(of, "  if (t->a)\n");
-  fprintf(of, "    if (t->a->d == t)\n");
-  fprintf(of, "      t->a->d = t->n;\n");
+  fprintf(of, "  if (t->ascendant)\n");
+  fprintf(of, "    if (t->ascendant->descendant == t)\n");
+  fprintf(of, "      t->ascendant->descendant = t->next;\n");
   fprintf(of, "\n");
-  fprintf(of, "  if (t->p)\n");
-  fprintf(of, "    t->p->n = t->n;\n");
+  fprintf(of, "  if (t->previous)\n");
+  fprintf(of, "    t->previous->next = t->next;\n");
   fprintf(of, "\n");
-  fprintf(of, "  if (t->n)\n");
-  fprintf(of, "    t->n->p = t->p;\n");
+  fprintf(of, "  if (t->next)\n");
+  fprintf(of, "    t->next->previous = t->previous;\n");
   fprintf(of, "\n");
   fprintf(of, "  return;\n");
   fprintf(of, "}\n");
@@ -824,7 +1022,7 @@ void generate_token_source(FILE *of,
   fprintf(of, "    return %s_token_type_none;\n",
                 parser_name);
   fprintf(of, "\n");
-  fprintf(of, "  return t->t;\n");
+  fprintf(of, "  return t->type;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
 
@@ -855,7 +1053,7 @@ void generate_token_source(FILE *of,
   fprintf(of, "  if (!t)\n");
   fprintf(of, "    return;\n");
   fprintf(of, "\n");
-  fprintf(of, "  t->t = type;\n");
+  fprintf(of, "  t->type = type;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
 
@@ -889,7 +1087,7 @@ void generate_token_source(FILE *of,
   fprintf(of, "  if (!t)\n");
   fprintf(of, "    return NULL;\n");
   fprintf(of, "\n");
-  fprintf(of, "  return t->a;\n");
+  fprintf(of, "  return t->ascendant;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
 
@@ -920,7 +1118,7 @@ void generate_token_source(FILE *of,
   fprintf(of, "  if (!t)\n");
   fprintf(of, "    return;\n");
   fprintf(of, "\n");
-  fprintf(of, "  t->a = a;\n");
+  fprintf(of, "  t->ascendant = a;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
 
@@ -954,7 +1152,7 @@ void generate_token_source(FILE *of,
   fprintf(of, "  if (!t)\n");
   fprintf(of, "    return NULL;\n");
   fprintf(of, "\n");
-  fprintf(of, "  return t->d;\n");
+  fprintf(of, "  return t->descendant;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
 
@@ -985,7 +1183,7 @@ void generate_token_source(FILE *of,
   fprintf(of, "  if (!t)\n");
   fprintf(of, "    return;\n");
   fprintf(of, "\n");
-  fprintf(of, "  t->d = d;\n");
+  fprintf(of, "  t->descendant = d;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
 
@@ -1019,7 +1217,7 @@ void generate_token_source(FILE *of,
   fprintf(of, "  if (!t)\n");
   fprintf(of, "    return NULL;\n");
   fprintf(of, "\n");
-  fprintf(of, "  return t->p;\n");
+  fprintf(of, "  return t->previous;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
 
@@ -1050,7 +1248,7 @@ void generate_token_source(FILE *of,
   fprintf(of, "  if (!t)\n");
   fprintf(of, "    return;\n");
   fprintf(of, "\n");
-  fprintf(of, "  t->p = p;\n");
+  fprintf(of, "  t->previous = p;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
 
@@ -1084,7 +1282,7 @@ void generate_token_source(FILE *of,
   fprintf(of, "  if (!t)\n");
   fprintf(of, "    return NULL;\n");
   fprintf(of, "\n");
-  fprintf(of, "  return t->n;\n");
+  fprintf(of, "  return t->next;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
 
@@ -1115,7 +1313,7 @@ void generate_token_source(FILE *of,
   fprintf(of, "  if (!t)\n");
   fprintf(of, "    return;\n");
   fprintf(of, "\n");
-  fprintf(of, "  t->n = n;\n");
+  fprintf(of, "  t->next = n;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
 
@@ -1157,14 +1355,14 @@ void generate_token_source(FILE *of,
   fprintf(of, "  if (!t)\n");
   fprintf(of, "    return NULL;\n");
   fprintf(of, "\n");
-  fprintf(of, "  if (t->t == type)\n");
+  fprintf(of, "  if (t->type == type)\n");
   fprintf(of, "    return t;\n");
   fprintf(of, "\n");
-  fprintf(of, "  f = %s_token_find(t->d, type);\n", parser_name);
+  fprintf(of, "  f = %s_token_find(t->descendant, type);\n", parser_name);
   fprintf(of, "  if (f)\n");
   fprintf(of, "    return f;\n");
   fprintf(of, "\n");
-  fprintf(of, "  f = %s_token_find(t->n, type);\n", parser_name);
+  fprintf(of, "  f = %s_token_find(t->next, type);\n", parser_name);
   fprintf(of, "  if (f)\n");
   fprintf(of, "    return f;\n");
   fprintf(of, "\n");
@@ -1216,12 +1414,12 @@ void generate_token_source(FILE *of,
   fprintf(of, "  if (!t)\n");
   fprintf(of, "    return s;\n");
   fprintf(of, "\n");
-  fprintf(of, "  if (!t->d)\n");
+  fprintf(of, "  if (!t->descendant)\n");
   fprintf(of, "    s = strapp(s , %s_token_type_to_string(t));\n", parser_name);
   fprintf(of, "  else\n");
-  fprintf(of, "    s = %s_token_to_string(t->d, s);\n", parser_name);
+  fprintf(of, "    s = %s_token_to_string(t->descendant, s);\n", parser_name);
   fprintf(of, "\n");
-  fprintf(of, "  s = %s_token_to_string(t->n, s);\n", parser_name);
+  fprintf(of, "  s = %s_token_to_string(t->next, s);\n", parser_name);
   fprintf(of, "\n");
   fprintf(of, "  return s;\n");
   fprintf(of, "}\n");
@@ -1257,6 +1455,8 @@ void generate_token_type_header(FILE *of,
   char *pns;
   char *fn;
 
+    // Sanity check parameters
+
   if (!of)
     of = stdout;
 
@@ -1266,57 +1466,111 @@ void generate_token_type_header(FILE *of,
   if (!t)
     return;
 
+    // Create header guard macro name
+
   hnl = strlen(parser_name) + strlen("_token_type_h") + 1;
   hn = malloc(hnl);
   memset(hn, 0, hnl);
 
   sprintf(hn, "%s_token_type_h", parser_name);
 
+    // Force header guard macro to uppercase
+
   hn = str_toupper(hn);
+
+    // Emit the file level comment block
 
   fn = make_file_name(parser_name, "token-type.h");
   generator_set_file_name(fn);
   emit_source_comment_header(of);
   free(fn);
 
+    // Emit file description comment block
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  if (_use_doxygen)
+  {
+    fprintf(of, "    \\file %s-token-type.h\n", parser_name);
+    fprintf(of, "\n");
+  }
+  fprintf(of, "    This is the header file for the %s grammar token type "
+              "definitions\n",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "    Each %s grammar phrase has an associated token type\n",
+                parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit header include guard
+
   fprintf(of, "#ifndef %s\n", hn);
   fprintf(of, "#define %s\n", hn);
   fprintf(of, "\n");
+
+    // Emit <PROJECT>_token_type annotation
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "    %sDefinition of allowed token types for %s_token.\n",
+                (_use_doxygen) ? "\\brief " : "",
+                parser_name);
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit <PROJECT>_token_direction enum
+
   fprintf(of, "typedef enum\n");
   fprintf(of, "{\n");
 
-  if ((ge = egg_token_find(t->d, egg_token_type_grammar_element)))
+  if ((ge = egg_token_find(t->descendant, egg_token_type_grammar_element)))
   {
+      // Emit special token type, none
+
+    fprintf(of, "    /*%s %sSpecial token type for unknown tokens */\n",
+                  (_use_doxygen) ? "!" : "",
+                  (_use_doxygen) ? "\\brief " : "");
     fprintf(of, "  %s_token_type_none%s\n",
                   parser_name,
-                  ge->n ? "," : "");
+                  ge->next ? "," : "");
 
     while (ge)
     {
-      if ((p = egg_token_find(ge->d, egg_token_type_phrase)))
+      if ((p = egg_token_find(ge->descendant, egg_token_type_phrase)))
       {
-        if ((pn = egg_token_find(p->d, egg_token_type_phrase_name)))
+        if ((pn = egg_token_find(p->descendant, egg_token_type_phrase_name)))
         {
           pns = NULL;
-          pns = egg_token_to_string(pn->d, pns);
+          pns = egg_token_to_string(pn->descendant, pns);
+
+          fprintf(of, "    /*%s %sToken type for %s phrase*/\n",
+                        (_use_doxygen) ? "!" : "",
+                        (_use_doxygen) ? "\\brief " : "",
+                        pns);
+
           pns = fix_identifier(pns);
 
           fprintf(of, "  %s_token_type_%s%s\n",
                         parser_name,
                         pns,
-                        ge->n ? "," : ""
+                        ge->next ? "," : ""
                  );
 
           free(pns);
         }
       }
-      ge = ge->n;
+      ge = ge->next;
     }
   }
 
   fprintf(of, "} %s_token_type;\n", parser_name);
   fprintf(of, "\n");
+
+    // Emit close-out for header include guard
+
   fprintf(of, "#endif // %s\n", hn);
+  fprintf(of, "\n");
 
   free(hn);
 
@@ -1366,6 +1620,27 @@ void generate_token_util_source(FILE *of,
   emit_source_comment_header(of);
   free(fn);
 
+    // Emit file description comment block
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  if (_use_doxygen)
+  {
+    fprintf(of, "    \\file %s-token-util.c\n", parser_name);
+    fprintf(of, "\n");
+  }
+  fprintf(of, "    This is the source code file for the %s grammar token "
+              "utility\n",
+                parser_name);
+  fprintf(of, "    functions module.\n");
+  fprintf(of, "\n");
+  fprintf(of, "    The %s_token_type_to_string function is defined in\n",
+                parser_name);
+  fprintf(of, "    this module.\n");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
     // Emit code for included header files
 
   fprintf(of, "#include <stdlib.h>\n");
@@ -1385,7 +1660,7 @@ void generate_token_util_source(FILE *of,
   fprintf(of, "\n");
   fprintf(of, "    %sThis function returns a pointer to dynamically allocated "
               "memory.\n",
-                (_use_doxygen) ? "\\warn " : "Warning: ");
+                (_use_doxygen) ? "\\warning " : "Warning: ");
   fprintf(of, "    %sIt is the caller's responsibility to free this memory "
               "when\n",
                 (_use_doxygen) ? "      " : "         ");
@@ -1410,23 +1685,23 @@ void generate_token_util_source(FILE *of,
   fprintf(of, "  if (!t)\n");
   fprintf(of, "    return NULL;\n");
   fprintf(of, "\n");
-  fprintf(of, "  switch (t->t)\n");
+  fprintf(of, "  switch (t->type)\n");
   fprintf(of, "  {\n");
   fprintf(of, "    case %s_token_type_none:\n", parser_name);
   fprintf(of, "      s = \"<none>\";\n");
   fprintf(of, "      break;\n");
 
-  if ((ge = egg_token_find(t->d, egg_token_type_grammar_element)))
+  if ((ge = egg_token_find(t->descendant, egg_token_type_grammar_element)))
   {
 
     while (ge)
     {
-      if ((p = egg_token_find(ge->d, egg_token_type_phrase)))
+      if ((p = egg_token_find(ge->descendant, egg_token_type_phrase)))
       {
-        if ((pn = egg_token_find(p->d, egg_token_type_phrase_name)))
+        if ((pn = egg_token_find(p->descendant, egg_token_type_phrase_name)))
         {
           pns = NULL;
-          pns = egg_token_to_string(pn->d, pns);
+          pns = egg_token_to_string(pn->descendant, pns);
           pns = fix_identifier(pns);
 
           fprintf(of, "    case %s_token_type_%s:\n",
@@ -1439,7 +1714,7 @@ void generate_token_util_source(FILE *of,
           free(pns);
         }
       }
-      ge = ge->n;
+      ge = ge->next;
     }
   }
 
@@ -1473,11 +1748,15 @@ void generate_token_util_header(FILE *of,
   int hnl;
   char *fn;
 
+    // Sanity check parameters
+
   if (!of)
     of = stdout;
 
   if (!parser_name)
     return;
+
+    // Create header guard macro name
 
   hnl = strlen(parser_name) + strlen("_token_util_h") + 1;
   hn = malloc(hnl);
@@ -1485,22 +1764,54 @@ void generate_token_util_header(FILE *of,
 
   sprintf(hn, "%s_token_util_h", parser_name);
 
+    // Force header guard macro name to uppercase 
+
   hn = str_toupper(hn);
+
+    // Emit the file level comment block
 
   fn = make_file_name(parser_name, "token-util.h");
   generator_set_file_name(fn);
   emit_source_comment_header(of);
   free(fn);
 
+    // Emit file description comment block
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  if (_use_doxygen)
+  {
+    fprintf(of, "    \\file %s-token-util.h\n", parser_name);
+    fprintf(of, "\n");
+  }
+  fprintf(of, "    This is the header file for the %s grammar token utility\n",
+                parser_name);
+  fprintf(of, "    functions module.\n");
+  fprintf(of, "\n");
+  fprintf(of, "    The %s_token_type_to_string function is defined in\n",
+                parser_name);
+  fprintf(of, "    this module.\n");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit header include guard
+
   fprintf(of, "#ifndef %s\n", hn);
   fprintf(of, "#define %s\n", hn);
   fprintf(of, "\n");
 
+    // Emit function declarations
+
   fprintf(of, "char *%s_token_type_to_string(%s_token *t);\n",
                 parser_name, parser_name);
-
   fprintf(of, "\n");
+
+    // Emit close-out for header include guard
+
   fprintf(of, "#endif // %s\n", hn);
+
+    // Clean up
 
   free(hn);
 
@@ -1584,8 +1895,8 @@ void generate_walker_source(FILE *of,
 
   fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
   fprintf(of, "\n");
-  fprintf(of, "     \\brief main function for %s %s-walker utility command.\n",
-                (_use_doxygen) ? "\\brief" : "",
+  fprintf(of, "     %smain function for %s %s-walker utility command.\n",
+                (_use_doxygen) ? "\\brief " : "",
                 (_use_doxygen) ? "\\b" : "",
                 parser_name);
   fprintf(of, "\n");
@@ -1801,13 +2112,13 @@ void generate_walker_source(FILE *of,
   fprintf(of, "  printf(\"%%*.*s%%s@%%d.%%d\\n\",\n"
               "           level, level, \" \",\n"
               "           %s_token_type_to_string(t),\n"
-              "           t->loc.line_number,\n"
-              "           t->loc.character_offset);\n",
+              "           t->location.line_number,\n"
+              "           t->location.character_offset);\n",
                 parser_name);
   fprintf(of, "\n");
-  fprintf(of, "  walk(t->d, level+1);\n");
+  fprintf(of, "  walk(t->descendant, level+1);\n");
   fprintf(of, "\n");
-  fprintf(of, "  walk(t->n, level);\n");
+  fprintf(of, "  walk(t->next, level);\n");
   fprintf(of, "\n");
   fprintf(of, "  return;\n");
   fprintf(of, "}\n");
@@ -1948,7 +2259,7 @@ static void generate_grammar(FILE *of,
   if (!of)
     of = stdout;
 
-  switch (t->t)
+  switch (t->type)
   {
     case egg_token_type_phrase:
       generate_phrase(of, parser_name, t);
@@ -1957,9 +2268,9 @@ static void generate_grammar(FILE *of,
       break;
   }
 
-  generate_grammar(of, parser_name, t->d, level+1);
+  generate_grammar(of, parser_name, t->descendant, level+1);
 
-  generate_grammar(of, parser_name, t->n, level);
+  generate_grammar(of, parser_name, t->next, level);
 
   return;
 }
@@ -1994,7 +2305,7 @@ static void generate_phrase(FILE *of,
   if (!t)
     return;
 
-  if (t->t != egg_token_type_phrase)
+  if (t->type != egg_token_type_phrase)
     return;
 
   if (!parser_name)
@@ -2005,7 +2316,7 @@ static void generate_phrase(FILE *of,
 
   _pns = _pns_f = NULL;
 
-  t = t->d;
+  t = t->descendant;
 
   fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
   fprintf(of, "\n");
@@ -2038,7 +2349,7 @@ static void generate_phrase(FILE *of,
   pn = egg_token_find(t, egg_token_type_phrase_name);
   if (pn)
   {
-    _pns = egg_token_to_string(pn->d, _pns);
+    _pns = egg_token_to_string(pn->descendant, _pns);
     if (_pns)
     {
       _pns_f = fix_identifier(strdup(_pns));
@@ -2142,7 +2453,7 @@ static void generate_definition(FILE *of,
   if (!of)
     of = stdout;
 
-  t = t->d;
+  t = t->descendant;
 
   seq = egg_token_find(t, egg_token_type_sequence);
   if (seq)
@@ -2152,13 +2463,13 @@ static void generate_definition(FILE *of,
     generate_sequence(of, parser_name, seq);
     fprintf(of, "\n");
 
-    cont = seq->n;
+    cont = seq->next;
 
     while (cont)
     {
-      if (cont->t == egg_token_type_definition_continuation)
+      if (cont->type == egg_token_type_definition_continuation)
       {
-        t = cont->d;
+        t = cont->descendant;
         seq = egg_token_find(t, egg_token_type_sequence);
         if (seq)
         {
@@ -2168,7 +2479,7 @@ static void generate_definition(FILE *of,
           fprintf(of, "\n");
         }
       }
-      cont = cont->n;
+      cont = cont->next;
     }
 
     fprintf(of, "  %s_token_delete(nt);\n", parser_name);
@@ -2214,7 +2525,7 @@ static void generate_sequence(FILE *of,
   if (!of)
     of = stdout;
 
-  t = t->d;
+  t = t->descendant;
 
   itm = egg_token_find(t, egg_token_type_item);
   if (itm)
@@ -2223,12 +2534,12 @@ static void generate_sequence(FILE *of,
 
     generate_item(of, parser_name, itm);
 
-    cont = itm->n;
+    cont = itm->next;
     while (cont)
     {
-      if (cont->t == egg_token_type_sequence_continuation)
+      if (cont->type == egg_token_type_sequence_continuation)
       {
-        t = cont->d;
+        t = cont->descendant;
         itm = egg_token_find(t, egg_token_type_item);
         if (itm)
         {
@@ -2236,7 +2547,7 @@ static void generate_sequence(FILE *of,
            generate_item(of, parser_name, itm);
         }
       }
-      cont = cont->n;
+      cont = cont->next;
     }
 
     emit_indent(of);
@@ -2303,12 +2614,12 @@ static void generate_item(FILE *of,
   if (!of)
     of = stdout;
 
-  t = t->d;
+  t = t->descendant;
 
   atm = egg_token_find(t, egg_token_type_atom);
   if (atm)
   {
-    qty = egg_token_find(atm->n, egg_token_type_quantifier);
+    qty = egg_token_find(atm->next, egg_token_type_quantifier);
     if (qty)
     {
       min = get_minimum(qty);
@@ -2394,7 +2705,7 @@ static void generate_atom(FILE *of,
   if (!of)
     of = stdout;
 
-  t = t->d;
+  t = t->descendant;
 
   lit = egg_token_find(t, egg_token_type_literal);
   if (lit)
@@ -2447,12 +2758,12 @@ static void generate_literal(FILE *of,
   if (!of)
     of = stdout;
 
-  t = t->d;
+  t = t->descendant;
 
   lit = egg_token_find(t, egg_token_type_absolute_literal);
   if (lit)
   {
-    s = egg_token_to_string(lit->d, s = NULL);
+    s = egg_token_to_string(lit->descendant, s = NULL);
     ++s;
     s[strlen(s)-1] = 0;
     emit_indent(of);
@@ -2466,7 +2777,7 @@ static void generate_literal(FILE *of,
   lit = egg_token_find(t, egg_token_type_quoted_literal);
   if (lit)
   {
-    s = egg_token_to_string(lit->d, s = NULL);
+    s = egg_token_to_string(lit->descendant, s = NULL);
     ++s;
     s[strlen(s)-1] = 0;
     emit_indent(of);
@@ -2482,7 +2793,7 @@ static void generate_literal(FILE *of,
   lit = egg_token_find(t, egg_token_type_single_quoted_literal);
   if (lit)
   {
-    s = egg_token_to_string(lit->d, s = NULL);
+    s = egg_token_to_string(lit->descendant, s = NULL);
     ++s;
     s[strlen(s)-1] = 0;
     s2 = fix_quotes(s);
@@ -2530,7 +2841,7 @@ static void generate_phrase_name(FILE *of, char *parser_name, egg_token *t)
   if (!of)
     of = stdout;
 
-  t = t->d;
+  t = t->descendant;
 
   pns = egg_token_to_string(t, pns);
   pns = fix_identifier(pns);
@@ -2575,13 +2886,13 @@ static int get_minimum(egg_token *t)
   if (!t)
     return 1;
 
-  if (t->t != egg_token_type_quantifier)
+  if (t->type != egg_token_type_quantifier)
     return 1;
 
-  in = egg_token_find(t->d, egg_token_type_integer);
+  in = egg_token_find(t->descendant, egg_token_type_integer);
   if (in)
   {
-    ins = egg_token_to_string(in->d, ins);
+    ins = egg_token_to_string(in->descendant, ins);
     if (ins)
     {
       i = atoi(ins);
@@ -2619,18 +2930,18 @@ static int get_maximum(egg_token *t)
   if (!t)
     return 1;
 
-  if (t->t != egg_token_type_quantifier)
+  if (t->type != egg_token_type_quantifier)
     return 1;
 
   min = get_minimum(t);
 
-  opt = egg_token_find(t->d, egg_token_type_quantifier_option);
+  opt = egg_token_find(t->descendant, egg_token_type_quantifier_option);
   if (opt)
   {
-    in = egg_token_find(opt->d, egg_token_type_integer);
+    in = egg_token_find(opt->descendant, egg_token_type_integer);
     if (in)
     {
-      ins = egg_token_to_string(in->d, ins);
+      ins = egg_token_to_string(in->descendant, ins);
       if (ins)
       {
         i = atoi(ins);
@@ -2640,7 +2951,7 @@ static int get_maximum(egg_token *t)
     }
     else
     {
-      as = egg_token_find(opt->d, egg_token_type_asterisk);
+      as = egg_token_find(opt->descendant, egg_token_type_asterisk);
       if (as)
         return -1;
     }
@@ -2761,18 +3072,18 @@ static char *build_literal(egg_token *t)
   if (!t)
     return NULL;
 
-  if (t->t != egg_token_type_literal)
+  if (t->type != egg_token_type_literal)
     return NULL;
 
-  tm = egg_token_find(t->d, egg_token_type_absolute_literal);
+  tm = egg_token_find(t->descendant, egg_token_type_absolute_literal);
   if (tm)
   {
-    tm = egg_token_find(tm->d, egg_token_type_integer);
+    tm = egg_token_find(tm->descendant, egg_token_type_integer);
     if (tm)
     {
-      s = egg_token_to_string(tm->d, s);
+      s = egg_token_to_string(tm->descendant, s);
 
-      switch (tm->d->t)
+      switch (tm->descendant->type)
       {
         case egg_token_type_binary_integer:
           l = strtol(s+2, NULL, 2);
@@ -2799,20 +3110,20 @@ static char *build_literal(egg_token *t)
     return NULL;
   }
 
-  tm = egg_token_find(t->d, egg_token_type_quoted_literal);
+  tm = egg_token_find(t->descendant, egg_token_type_quoted_literal);
   if (tm)
   {
-    s = egg_token_to_string(tm->d, s);
+    s = egg_token_to_string(tm->descendant, s);
     for (sp1 = s+1, sp2 = s; *sp1; ++sp2, ++sp1)
       *sp2 = *sp1; 
     *(strchr(s, '"')) = 0;
     return s;
   }
 
-  tm = egg_token_find(t->d, egg_token_type_single_quoted_literal);
+  tm = egg_token_find(t->descendant, egg_token_type_single_quoted_literal);
   if (tm)
   {
-    s = egg_token_to_string(tm->d, s);
+    s = egg_token_to_string(tm->descendant, s);
     for (sp1 = s+1, sp2 = s; *sp1; ++sp2, ++sp1)
       *sp2 = *sp1; 
     *(strchr(s, '\'')) = 0;
@@ -2883,30 +3194,30 @@ static char *literal_or_phrase_name(egg_token *t)
   if (!t)
     return NULL;
 
-  if (t->t != egg_token_type_phrase)
+  if (t->type != egg_token_type_phrase)
     return NULL;
 
-  pn = egg_token_find(t->d, egg_token_type_phrase_name);
+  pn = egg_token_find(t->descendant, egg_token_type_phrase_name);
   if (!pn)
     return NULL;
 
-  def = egg_token_find(t->d, egg_token_type_definition);
+  def = egg_token_find(t->descendant, egg_token_type_definition);
   if (!def)
     return NULL;
 
-  if (!(tm = egg_token_find(def->d, egg_token_type_definition_continuation)))
+  if (!(tm = egg_token_find(def->descendant, egg_token_type_definition_continuation)))
   {
-    tm = egg_token_find(def->d, egg_token_type_sequence);
+    tm = egg_token_find(def->descendant, egg_token_type_sequence);
     if (tm)
     {
-      if (!egg_token_find(tm->d, egg_token_type_sequence_continuation))
+      if (!egg_token_find(tm->descendant, egg_token_type_sequence_continuation))
       {
-        tm = egg_token_find(tm->d, egg_token_type_item);
+        tm = egg_token_find(tm->descendant, egg_token_type_item);
         if (tm)
         {
-          if (!egg_token_find(tm->n, egg_token_type_quantifier))
+          if (!egg_token_find(tm->next, egg_token_type_quantifier))
           {
-            tm = egg_token_find(tm->d, egg_token_type_literal);
+            tm = egg_token_find(tm->descendant, egg_token_type_literal);
             if (tm)
               return build_literal(tm);
           }
@@ -2916,7 +3227,7 @@ static char *literal_or_phrase_name(egg_token *t)
   }
 
   pns = NULL;
-  return egg_token_to_string(pn->d, pns);
+  return egg_token_to_string(pn->descendant, pns);
 }
 
   /*!
@@ -3296,9 +3607,9 @@ static void emit_source_comment_header(FILE *of)
     
      This function creates a file name for the file comment block.
 
-     \warn This file returns a pointer to dynamically allocated memory.  It
-           is the caller's responsibility to free this memory when
-           appropriate.
+     \warning This file returns a pointer to dynamically allocated memory.  It
+              is the caller's responsibility to free this memory when
+              appropriate.
 
      \param project string containing desired prepended project name
 

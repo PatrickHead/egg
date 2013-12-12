@@ -4,7 +4,7 @@
 
   \brief Source code for grammer phrase parsing functions
 
-  \version 20131211163732
+  \version 20131212072057
 
   \author Patrick Head mailto:patrickhead@gmail.com
 
@@ -25,6 +25,21 @@
   along with this program.  If not, see   \<http://www.gnu.org/licenses/\>.
 
 */
+
+  /*!
+
+    \file egg-parser.c
+
+    This is the source code file for the egg grammar phrase parsing
+    functions module.
+
+    An individual phrase parsing function exists for each
+    egg grammar phrase.
+
+    Also the egg_get_callback_table function is defined in
+    this module.
+
+  */
 
 
   /*!

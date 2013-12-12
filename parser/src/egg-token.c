@@ -4,7 +4,7 @@
 
   \brief Source code for grammer specific token handling functions
 
-  \version 20131211163732
+  \version 20131212072057
 
   \author Patrick Head mailto:patrickhead@gmail.com
 
@@ -25,6 +25,15 @@
   along with this program.  If not, see   \<http://www.gnu.org/licenses/\>.
 
 */
+
+  /*!
+
+    \file egg-token.c
+
+    This is the source code file for the egg grammar token and
+    token tree management functions module.
+
+  */
 
 #include <stdlib.h>
 #include <string.h>
@@ -59,9 +68,9 @@ egg_token *egg_token_new(egg_token_type type)
 
   memset(new, 0, sizeof(egg_token));
 
-  new->t = type;
+  new->type = type;
 
-  input_get_location(&(new->loc));
+  input_get_location(&(new->location));
 
   return new;
 }
@@ -112,40 +121,40 @@ boolean egg_token_add(egg_token *t, egg_token_direction dir, egg_token *n)
   {
     case egg_token_before:
 
-      n->p = t->p;
-      n->n = t;
-      if (t->p)
-        t->p->n = n;
-      t->p = n;
-      n->a = t->a;
+      n->previous = t->previous;
+      n->next = t;
+      if (t->previous)
+        t->previous->next = n;
+      t->previous = n;
+      n->ascendant = t->ascendant;
 
         // Fix ascendant's descendant pointer, if it is t.
         // We always want the ascendant's descendent pointer to point to
         //   the beginning of the list of descendents.
 
-      if (t->a)
-        if (t->a->d == t)
-          t->a->d = n;
+      if (t->ascendant)
+        if (t->ascendant->descendant == t)
+          t->ascendant->descendant = n;
 
       break;
 
     case egg_token_after:
 
-      n->p = t;
-      n->n = t->n;
-      if (t->n)
-        t->n->p = n;
-      t->n = n;
-      n->a = t->a;
+      n->previous = t;
+      n->next = t->next;
+      if (t->next)
+        t->next->previous = n;
+      t->next = n;
+      n->ascendant = t->ascendant;
 
       break;
 
     case egg_token_below:
 
-      if (t->d)
+      if (t->descendant)
         return false;
-      t->d = n;
-      n->a = t;
+      t->descendant = n;
+      n->ascendant = t;
 
       break;
   }
@@ -170,8 +179,8 @@ void egg_token_delete(egg_token *t)
   if (!t)
     return;
 
-  while (t->d)
-    egg_token_delete(t->d);
+  while (t->descendant)
+    egg_token_delete(t->descendant);
 
   egg_token_unlink(t);
   egg_token_free(t);
@@ -195,15 +204,15 @@ void egg_token_unlink(egg_token *t)
   if (!t)
     return;
 
-  if (t->a)
-    if (t->a->d == t)
-      t->a->d = t->n;
+  if (t->ascendant)
+    if (t->ascendant->descendant == t)
+      t->ascendant->descendant = t->next;
 
-  if (t->p)
-    t->p->n = t->n;
+  if (t->previous)
+    t->previous->next = t->next;
 
-  if (t->n)
-    t->n->p = t->p;
+  if (t->next)
+    t->next->previous = t->previous;
 
   return;
 }
@@ -223,7 +232,7 @@ egg_token_type egg_token_get_type(egg_token *t)
   if (!t)
     return egg_token_type_none;
 
-  return t->t;
+  return t->type;
 }
 
   /*!
@@ -240,7 +249,7 @@ void egg_token_set_type(egg_token *t, egg_token_type type)
   if (!t)
     return;
 
-  t->t = type;
+  t->type = type;
 }
 
   /*!
@@ -258,7 +267,7 @@ egg_token *egg_token_get_ascendant(egg_token *t)
   if (!t)
     return NULL;
 
-  return t->a;
+  return t->ascendant;
 }
 
   /*!
@@ -275,7 +284,7 @@ void egg_token_set_ascendant(egg_token *t, egg_token *a)
   if (!t)
     return;
 
-  t->a = a;
+  t->ascendant = a;
 }
 
   /*!
@@ -293,7 +302,7 @@ egg_token *egg_token_get_descendant(egg_token *t)
   if (!t)
     return NULL;
 
-  return t->d;
+  return t->descendant;
 }
 
   /*!
@@ -310,7 +319,7 @@ void egg_token_set_descendant(egg_token *t, egg_token *d)
   if (!t)
     return;
 
-  t->d = d;
+  t->descendant = d;
 }
 
   /*!
@@ -328,7 +337,7 @@ egg_token *egg_token_get_previous(egg_token *t)
   if (!t)
     return NULL;
 
-  return t->p;
+  return t->previous;
 }
 
   /*!
@@ -345,7 +354,7 @@ void egg_token_set_previous(egg_token *t, egg_token *p)
   if (!t)
     return;
 
-  t->p = p;
+  t->previous = p;
 }
 
   /*!
@@ -363,7 +372,7 @@ egg_token *egg_token_get_next(egg_token *t)
   if (!t)
     return NULL;
 
-  return t->n;
+  return t->next;
 }
 
   /*!
@@ -380,7 +389,7 @@ void egg_token_set_next(egg_token *t, egg_token *n)
   if (!t)
     return;
 
-  t->n = n;
+  t->next = n;
 }
 
   /*!
@@ -402,14 +411,14 @@ egg_token *egg_token_find(egg_token *t, egg_token_type type)
   if (!t)
     return NULL;
 
-  if (t->t == type)
+  if (t->type == type)
     return t;
 
-  f = egg_token_find(t->d, type);
+  f = egg_token_find(t->descendant, type);
   if (f)
     return f;
 
-  f = egg_token_find(t->n, type);
+  f = egg_token_find(t->next, type);
   if (f)
     return f;
 
@@ -439,12 +448,12 @@ char *egg_token_to_string(egg_token *t, char *s)
   if (!t)
     return s;
 
-  if (!t->d)
+  if (!t->descendant)
     s = strapp(s , egg_token_type_to_string(t));
   else
-    s = egg_token_to_string(t->d, s);
+    s = egg_token_to_string(t->descendant, s);
 
-  s = egg_token_to_string(t->n, s);
+  s = egg_token_to_string(t->next, s);
 
   return s;
 }

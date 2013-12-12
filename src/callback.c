@@ -3,7 +3,7 @@
 
     \brief Source code for callback system.
 
-    \version 20131209035052
+    \version 20131212035931
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -24,10 +24,42 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+  /*!
+
+    \file callback.c
+
+    This is the source code file for a callback function mechanism.
+
+    This callback mechanism is intended to be as generic as possible.  Any
+    software that may want to provide callback hooks for external user code
+    can use this mechanism.
+
+    This mechanism provides a callback table, that in turn contains callback
+    record entries.  Each callback entry has a tag (name), and three function
+    pointers available for entry, success and failure callbacks.
+
+    In turn, for any callback entry provided by the initiating software
+    function, user software can then register its own callback functions, which
+    provide the actual actions that are triggered by the callback initiating
+    software.
+
+    Generally, an individual software function may create a callback entry into
+    the callback table.  The only requirement for the entry is a name.  In
+    addition, this initiating function then will trigger callbacks for
+    entry into the initiating function, and at each location in the initiating
+    function were a successful, or failed return will occur.
+  */
+
+  // Required system headers
+
 #include <stdlib.h>
 #include <string.h>
 
+  // Project related headers
+
 #include "callback.h"
+
+  // Module function prototypes
 
 static int find_entry_by_tag(callback_table *cbt, char *tag);
 
@@ -47,9 +79,13 @@ callback_table *callback_initialize(void)
 {
   callback_table *cbt;
 
+    // Allocate the callback table, return on failure
+
   cbt = (callback_table *)malloc(sizeof(callback_table));
   if (!cbt)
     return NULL;
+
+    // Initialize the table to nothingness
 
   memset(cbt, 0, sizeof(callback_table));
 
@@ -78,14 +114,21 @@ int callback_create(callback_table *cbt,
 {
   callback_entry *cbe;
 
+    // Sanity check parameters
+
   if (!cbt)
     return -1;
 
   if (!tag)
     return -1;
 
+    // Lookup the callback entry in the table by tag name,
+    // if the entry already exists, return with failure.
+
   if ((find_entry_by_tag(cbt, tag)) >= 0)
     return -1;
+
+    // Allocate space for the new callback entry in the callback table array.
 
   if (!cbt->size)
     cbt->callbacks = malloc(sizeof(callback_entry));
@@ -95,6 +138,8 @@ int callback_create(callback_table *cbt,
   if (!cbt->callbacks)
     return -1;
 
+    // Establish and initialize the new callback entry at end of array.
+
   cbe  = &cbt->callbacks[cbt->size];
 
   memset(cbe, 0, sizeof(callback_entry));
@@ -102,7 +147,11 @@ int callback_create(callback_table *cbt,
   if (tag)
     cbt->callbacks[cbt->size].tag = strdup(tag);
 
+    // Record new callback entry in table
+
   ++cbt->size;
+
+    // Return with success
 
   return 0;
 }
@@ -133,17 +182,25 @@ int callback_register(callback_table *cbt,
   callback_entry *cbe;
   int i;
 
+    // Sanity check parameters
+
   if (!cbt)
     return -1;
 
   if (!tag)
     return -1;
 
+    // Lookup callback entry in callback table by tag name, return on failure
+
   i = find_entry_by_tag(cbt, tag);
   if (i < 0)
     return -1;
 
+     // Get convenience pointer to found callback entry.
+
   cbe  = &cbt->callbacks[i];
+
+    // Set appropriate callback function, based on callback type
 
   switch (type)
   {
@@ -157,6 +214,8 @@ int callback_register(callback_table *cbt,
       cbe->fail = function;
       break;
   }
+
+    // Return with success
 
   return 0;
 }
@@ -190,6 +249,8 @@ int callback_by_index(callback_table *cbt,
 {
   int (*func)(void *data);
 
+    // Sanity check parameters
+
   if (!cbt)
     return -1;
 
@@ -198,6 +259,8 @@ int callback_by_index(callback_table *cbt,
 
   if (index >= cbt->size)
     return -1;
+
+    // Establish the function pointer for callback, based on type
 
   switch (type)
   {
@@ -212,8 +275,13 @@ int callback_by_index(callback_table *cbt,
       break;
   }
 
+    // If callback type does not have a registered function, then return with
+    // failure
+
   if (!func)
     return -1;
+
+    // Call the callback function, and return its status
 
   return func(data);
 }
@@ -248,15 +316,21 @@ int callback_by_tag(callback_table *cbt,
 {
   int i;
 
+    // Sanity check parameters
+
   if (!cbt)
     return -1;
 
   if (!tag)
     return -1;
 
+    // Locate callback by tag name, return on failure
+
   i = find_entry_by_tag(cbt, tag);
   if (i < 0)
     return -1;
+
+    // Make callback, using index number of found callback
 
   return callback_by_index(cbt, i, type, data);
 }
@@ -282,15 +356,22 @@ static int find_entry_by_tag(callback_table *cbt, char *tag)
 {
   int i;
 
+    // Sanity check parameters
+
   if (!cbt)
     return -1;
 
   if (!tag)
     return -1;
 
+    // Simple sequential search of callback entries in callback table.
+    // Return on successful search match
+
   for (i = 0; i < cbt->size; i++)
     if (!strcmp(cbt->callbacks[i].tag, tag))
       return i;
+
+    // Return with failure on NO MATCH
 
   return -1;
 }

@@ -3,7 +3,7 @@
 
     \brief Header file for parser code generation routines for EGG grammars.
 
-    \version 20131210022217
+    \version 20131212042816
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -27,35 +27,78 @@
 #ifndef GENERATOR_H
 #define GENERATOR_H
 
+  /*!
+
+    \file generator.h
+
+    This is the header file for the embryo project source code generation
+    function module.
+
+    An individual generation function exists for each source code file that
+    can be generated.
+
+    \note Several internal settings used by the generator are available.  Each
+          setting can be managed with its own getter/setter function pairs.\n
+          \n
+          Currently, all of these internal settings are related to the
+          source code annotations that are generated within the source file
+          files.
+
+  */
+
+  // Source code generating functions
+
 void generate_parser_source(FILE *of, char *parser_name, egg_token *t);
+
 void generate_parser_header(FILE *of, char *parser_name, egg_token *t);
+
 void generate_token_header(FILE *of, char *parser_name);
+
 void generate_token_source(FILE *of, char *parser_name);
+
 void generate_token_type_header(FILE *of, char *parser_name, egg_token *t);
+
 void generate_token_util_source(FILE *of, char *parser_name, egg_token *t);
+
 void generate_token_util_header(FILE *of, char *parser_name);
+
 void generate_walker_source(FILE *of, char *parser_name, egg_token *t);
+
 void generate_input_source(FILE *of, char *parser_name);
+
 void generate_input_header(FILE *of, char *parser_name);
+
 void generate_strapp_source(FILE *of, char *parser_name);
+
 void generate_strapp_header(FILE *of, char *parser_name);
+
 void generate_common_header(FILE *of, char *parser_name);
+
 void generate_makefile(FILE *of, char *parser_name);
+
+  // Utility functions for managing settings within the generator
 
 boolean generator_get_doxygen_flag(void);
 void generator_set_doxygen_flag(boolean flag);
+
 char * generator_get_file_name(void);
 void generator_set_file_name(char *file_name);
+
 char * generator_get_project_brief(void);
 void generator_set_project_brief(char *brief);
+
 char * generator_get_version(void);
 void generator_set_version(char *version);
+
 char * generator_get_author(void);
 void generator_set_author(char *author);
+
 char * generator_get_email(void);
 void generator_set_email(char *email);
+
 int generator_get_first_year(void);
 void generator_set_first_year(int year);
+
 char * generator_get_license(void);
 void generator_set_license(char *license);
 

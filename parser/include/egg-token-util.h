@@ -4,7 +4,7 @@
 
   \brief Source code for egg-token-util.h
 
-  \version 20131211163732
+  \version 20131212072057
 
   \author Patrick Head mailto:patrickhead@gmail.com
 
@@ -25,6 +25,18 @@
   along with this program.  If not, see   \<http://www.gnu.org/licenses/\>.
 
 */
+
+  /*!
+
+    \file egg-token-util.h
+
+    This is the header file for the egg grammar token utility
+    functions module.
+
+    The egg_token_type_to_string function is defined in
+    this module.
+
+  */
 
 #ifndef EGG_TOKEN_UTIL_H
 #define EGG_TOKEN_UTIL_H

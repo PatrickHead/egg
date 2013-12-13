@@ -63,7 +63,7 @@ DONE            D)  Support for user registered callbacks for each phrase
 
 CURR      2)  Documentation:
 
-WIP             A)  In-source annotations.
+DONE            A)  In-source annotations.
 
 DONE            B)  Reference documentation (auto generated from code.)
 
@@ -78,7 +78,8 @@ DONE            F)  Complete and proper GNU license inclusion
 DONE      3)  Add generic (syntax checking only) parser for any project.
               NOTE:  named <PROJECT>-walker
 
-          4)  Project Management utilities.
+WIP       4)  Project Management utilities.
+              NOTE:  restructured parser specific Makefile to be more independent
 
           5)  Template Makefile for high level project management
 

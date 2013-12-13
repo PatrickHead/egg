@@ -3,7 +3,7 @@
 
     \brief Source code for parser code generation routines for EGG grammars.
 
-    \version 20131212064623
+    \version 20131213060317
 
     \author Patrick Head   mailto:patrickhead@gmail.com
 
@@ -2154,68 +2154,115 @@ void generate_makefile(FILE *of,
     return;
 
   fprintf(of, "CC = gcc\n");
-  fprintf(of, "COPTS = -g -Wall -Wno-unused-but-set-variable -O0 -I include\n");
+
+  fprintf(of, "CFLAGS = -g -Wall -Wno-unused-but-set-variable -O0 \\\n"
+              "\t\t-I include \\\n"
+              "\t\t-I /usr/local/include/egg \\\n"
+              "\t\t-I /usr/include/egg \\\n"
+              "\t\t-L /usr/local/lib/egg \\\n"
+              "\t\t-L ./lib\n");
   fprintf(of, "\n");
+
+  fprintf(of, "CFLAGS_ALL = $(CFLAGS)\n");
+  fprintf(of, "\n");
+
+  fprintf(of, "ifdef EGG_LIBRARY_PATH\n");
+  fprintf(of, "\tCFLAGS_ALL += -L $(EGG_LIBRARY_PATH)\n");
+  fprintf(of, "endif\n");
+  fprintf(of, "\n");
+
+  fprintf(of, "ifdef EGG_INCLUDE_PATH\n");
+  fprintf(of, "\tCFLAGS_ALL += -I $(EGG_INCLUDE_PATH)\n");
+  fprintf(of, "endif\n");
+  fprintf(of, "\n");
+
   fprintf(of, "all: %s-walker\n", parser_name);
   fprintf(of, "\n");
+
   fprintf(of, "%s-walker: bin/%s-walker\n",
                 parser_name, parser_name);
   fprintf(of, "\n");
+
   fprintf(of, "bin/%s-walker: obj/%s-walker.o \\\n",
                 parser_name, parser_name);
-  fprintf(of, "\t\tobj/%s-parser.o \\\n", parser_name);
-  fprintf(of, "\t\tobj/%s-token.o \\\n", parser_name);
-  fprintf(of, "\t\tobj/%s-token-util.o\n", parser_name);
-  fprintf(of, "\t$(CC) $(COPTS) -o bin/%s-walker \\\n", parser_name);
+  fprintf(of, "\t\tlib/lib%s-parser.so.1.0\n", parser_name);
+  fprintf(of, "\t$(CC) $(CFLAGS_ALL) \\\n");
+  fprintf(of, "\t\t-o bin/%s-walker \\\n", parser_name);
   fprintf(of, "\t\tobj/%s-walker.o \\\n", parser_name);
-  fprintf(of, "\t\tobj/%s-parser.o \\\n", parser_name);
-  fprintf(of, "\t\tobj/%s-token.o \\\n", parser_name);
-  fprintf(of, "\t\tobj/%s-token-util.o \\\n", parser_name);
-  fprintf(of, "\t\tobj/strapp.o \\\n");
-  fprintf(of, "\t\tobj/callback.o \\\n");
-  fprintf(of, "\t\tobj/input.o\n");
+  fprintf(of, "\t\t-legg-common \\\n");
+  fprintf(of, "\t\t-legg-parser\n");
   fprintf(of, "\n");
+
+  fprintf(of, "lib%s-parser: lib/lib%s-parser.a lib/lib%s-parser.so.1.0\n",
+                parser_name, parser_name, parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "lib/lib%s-parser.so.1.0: obj/%s-parser.o \\\n",
+                parser_name, parser_name);
+  fprintf(of, "		obj/%s-token.o \\\n", parser_name);
+  fprintf(of, "		obj/%s-token-util.o\n", parser_name);
+  fprintf(of, "	$(CC) $(COPTS) --shared -Wl,-soname,lib%s-parser.so.1 \\\n",
+                parser_name);
+  fprintf(of, "		-o lib/lib%s-parser.so.1.0 \\\n", parser_name);
+  fprintf(of, "		obj/%s-parser.o \\\n", parser_name);
+  fprintf(of, "		obj/%s-token.o \\\n", parser_name);
+  fprintf(of, "		obj/%s-token-util.o\n", parser_name);
+  fprintf(of, "	@(cd lib; ln -sf lib%s-parser.so.1.0 lib%s-parser.so.1)\n",
+                parser_name, parser_name);
+  fprintf(of, "	@(cd lib; ln -sf lib%s-parser.so.1 lib%s-parser.so)\n",
+                parser_name, parser_name);
+  fprintf(of, "\n");
+  fprintf(of, "lib/lib%s-parser.a: obj/%s-parser.o \\\n",
+                parser_name, parser_name);
+  fprintf(of, "		obj/%s-token.o \\\n", parser_name);
+  fprintf(of, "		obj/%s-token-util.o\n", parser_name);
+  fprintf(of, "	ar crD lib/lib%s-parser.a \\\n", parser_name);
+  fprintf(of, "		obj/%s-parser.o \\\n", parser_name);
+  fprintf(of, "		obj/%s-token.o \\\n", parser_name);
+  fprintf(of, "		obj/%s-token-util.o\n", parser_name);
+  fprintf(of, "\n");
+
   fprintf(of, "obj/%s-walker.o: src/%s-walker.c \\\n",
                 parser_name, parser_name);
   fprintf(of, "\t\tinclude/%s-token.h \\\n", parser_name);
   fprintf(of, "\t\tinclude/%s-token-type.h \\\n", parser_name);
   fprintf(of, "\t\tinclude/%s-token-util.h \\\n", parser_name);
   fprintf(of, "\t\tinclude/%s-parser.h\n", parser_name);
-  fprintf(of, "\t$(CC) $(COPTS) -o obj/%s-walker.o -c src/%s-walker.c\n",
-                parser_name, parser_name);
+  fprintf(of, "\t$(CC) $(CFLAGS_ALL) \\\n");
+  fprintf(of, "\t\t-o obj/%s-walker.o \\\n", parser_name);
+  fprintf(of, "\t\t-c src/%s-walker.c\n", parser_name);
   fprintf(of, "\n");
+
   fprintf(of, "obj/%s-parser.o: "
               "src/%s-parser.c \\\n",
                 parser_name, parser_name);
   fprintf(of, "\t\tinclude/%s-parser.h \\\n", parser_name);
   fprintf(of, "\t\tinclude/%s-token.h \\\n", parser_name);
   fprintf(of, "\t\tinclude/%s-token-type.h\n", parser_name);
-  fprintf(of, "\t$(CC) $(COPTS) "
-              "-o obj/%s-parser.o "
-              "-c src/%s-parser.c\n",
-                parser_name, parser_name);
+  fprintf(of, "\t$(CC) $(CFLAGS_ALL) -fPIC\\\n");
+  fprintf(of, "\t\t-o obj/%s-parser.o \\\n", parser_name);
+  fprintf(of, "\t\t-c src/%s-parser.c\n", parser_name);
   fprintf(of, "\n");
+
   fprintf(of, "obj/%s-token.o: "
               "src/%s-token.c \\\n",
                 parser_name, parser_name);
   fprintf(of, "\t\tinclude/%s-token.h \\\n", parser_name);
   fprintf(of, "\t\tinclude/%s-token-type.h \\\n", parser_name);
   fprintf(of, "\t\tinclude/%s-token-util.h\n", parser_name);
-  fprintf(of, "\t$(CC) $(COPTS) "
-              "-o obj/%s-token.o "
-              "-c src/%s-token.c\n",
-                parser_name, parser_name);
+  fprintf(of, "\t$(CC) $(CFLAGS_ALL) -fPIC\\\n");
+  fprintf(of, "\t\t-o obj/%s-token.o \\\n", parser_name);
+  fprintf(of, "\t\t-c src/%s-token.c\n", parser_name);
   fprintf(of, "\n");
+
   fprintf(of, "obj/%s-token-util.o: "
               "src/%s-token-util.c \\\n",
                 parser_name, parser_name);
   fprintf(of, "\t\tinclude/%s-token.h \\\n", parser_name);
   fprintf(of, "\t\tinclude/%s-token-type.h \\\n", parser_name);
   fprintf(of, "\t\tinclude/%s-token-util.h\n", parser_name);
-  fprintf(of, "\t$(CC) $(COPTS) "
-              "-o obj/%s-token-util.o "
-              "-c src/%s-token-util.c\n",
-                parser_name, parser_name);
+  fprintf(of, "\t$(CC) $(CFLAGS_ALL) -fPIC\\\n");
+  fprintf(of, "\t\t-o obj/%s-token-util.o \\\n", parser_name);
+  fprintf(of, "\t\t-c src/%s-token-util.c\n", parser_name);
   fprintf(of, "\n");
   fprintf(of, "clean:\n");
   fprintf(of, "\t@rm -f obj/*.o\n");
@@ -3363,7 +3410,7 @@ boolean generator_get_doxygen_flag(void)
 
   /*!
      \brief Set doxygen use flag for code generator.
-     \param boolean true or false
+     \param flag true or false
   */
 
 void generator_set_doxygen_flag(boolean flag)
@@ -3383,7 +3430,7 @@ char * generator_get_file_name(void)
 
   /*!
      \brief Set file name for code documenation for code generator.
-     \param "char *" file name
+     \param file_name string containing file name for generated code documents
   */
 
 void generator_set_file_name(char *file_name)
@@ -3404,7 +3451,7 @@ char * generator_get_project_brief(void)
 
   /*!
      \brief Set brief project name for code documenation for code generator.
-     \param "char *" brief project name
+     \param brief string containing brief project name
   */
 
 void generator_set_project_brief(char *brief)
@@ -3424,7 +3471,7 @@ char * generator_get_version(void)
 
   /*!
      \brief Set version for code documenation for code generator.
-     \param "char *" version
+     \param version string containing version
   */
 
 void generator_set_version(char *version)
@@ -3444,7 +3491,7 @@ char * generator_get_author(void)
 
   /*!
      \brief Set author for code documenation for code generator.
-     \param "char *" author
+     \param author string containing author
   */
 
 void generator_set_author(char *author)
@@ -3464,7 +3511,7 @@ char * generator_get_email(void)
 
   /*!
      \brief Set email for code documenation for code generator.
-     \param "char *" email
+     \param email string containing email address of author
   */
 
 void generator_set_email(char *email)
@@ -3485,7 +3532,7 @@ int generator_get_first_year(void)
 
   /*!
      \brief Set first copyright year for code documenation for code generator.
-     \param int first copyright year
+     \param year integer first copyright year
   */
 
 void generator_set_first_year(int year)
@@ -3511,7 +3558,7 @@ char * generator_get_license(void)
 
   /*!
      \brief Set license text for code documenation for code generator.
-     \param "char *" license text
+     \param license string containing license text
   */
 
 void generator_set_license(char *license)
@@ -3612,6 +3659,7 @@ static void emit_source_comment_header(FILE *of)
               appropriate.
 
      \param project string containing desired prepended project name
+     \param file_name string containing rest of file name
 
      \retval "char *" string containing full file name for comment block
 

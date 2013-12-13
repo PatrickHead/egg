@@ -1,24 +1,17 @@
 CC = gcc
 ifeq ($(DEBUG),on)
-  COPTS = -g -Wall -O0 -I include -I parser/include
+  COPTS = -g -Wall -O0 -I include -I parser/include -L lib
 else
-  COPTS = -O3 -I include -I parser/include
+  COPTS = -O3 -I include -I parser/include -L lib
 endif
 
 #all: embryo tests git docs
 all: embryo tests git 
 
-_parser: obj/input.o \
-		obj/callback.o \
-		obj/strapp.o
-	@(cd parser/include; ln -fs ../../include/common.h)
-	@(cd parser/include; ln -fs ../../include/input.h)
-	@(cd parser/include; ln -fs ../../include/callback.h)
-	@(cd parser/include; ln -fs ../../include/strapp.h)
-	@(cd parser/obj; ln -fs ../../obj/input.o)
-	@(cd parser/obj; ln -fs ../../obj/callback.o)
-	@(cd parser/obj; ln -fs ../../obj/strapp.o)
-	@make --no-print-directory -C parser
+_parser: libegg-common
+	@EGG_LIBRARY_PATH=../lib \
+		EGG_INCLUDE_PATH=../include \
+		make --no-print-directory -C parser
 
 tests: test-stdin test-file test-buffer test-callback
 
@@ -27,19 +20,15 @@ embryo: _parser bin/embryo
 bin/embryo: obj/embryo.o \
 		obj/generator.o \
 		obj/map.o \
-		obj/callback.o \
-		obj/mkdir_p.o
+    lib/libegg-common.so.1.0
 	$(CC) $(COPTS) -o bin/embryo \
 		obj/embryo.o \
 		obj/generator.o \
 		obj/map.o \
-		obj/callback.o \
-		obj/mkdir_p.o \
 		parser/obj/egg-parser.o \
 		parser/obj/egg-token.o \
 		parser/obj/egg-token-util.o \
-		obj/input.o \
-		obj/strapp.o
+		-legg-common
 
 obj/embryo.o: src/embryo.c \
 		parser/include/egg-parser.h \
@@ -68,7 +57,7 @@ obj/token-util.o: src/token-util.c \
 obj/input.o: src/input.c \
 		include/input.h \
 		include/common.h
-	$(CC) $(COPTS) -o obj/input.o -c src/input.c
+	$(CC) $(COPTS) -fPIC -o obj/input.o -c src/input.c
 
 obj/generator.o: src/generator.c \
 		parser/include/egg-token.h \
@@ -86,14 +75,39 @@ obj/map.o: src/map.c \
 
 obj/strapp.o: src/strapp.c \
 		include/strapp.h
-	$(CC) $(COPTS) -o obj/strapp.o -c src/strapp.c
+	$(CC) $(COPTS) -fPIC -o obj/strapp.o -c src/strapp.c
                   
 obj/mkdir_p.o: src/mkdir_p.c
-	$(CC) $(COPTS) -o obj/mkdir_p.o -c src/mkdir_p.c
+	$(CC) $(COPTS) -fPIC -o obj/mkdir_p.o -c src/mkdir_p.c
                   
 obj/callback.o: src/callback.c \
 		include/callback.h
-	$(CC) $(COPTS) -o obj/callback.o -c src/callback.c
+	$(CC) $(COPTS) -fPIC -o obj/callback.o -c src/callback.c
+
+libegg-common: lib/libegg-common.a lib/libegg-common.so.1.0
+
+lib/libegg-common.so.1.0: obj/callback.o \
+		obj/input.o \
+		obj/strapp.o \
+		obj/mkdir_p.o
+	$(CC) $(COPTS) --shared -Wl,-soname,libegg-common.so.1 \
+		-o lib/libegg-common.so.1.0 \
+		obj/callback.o \
+		obj/input.o \
+		obj/strapp.o \
+		obj/mkdir_p.o
+	@(cd lib; ln -sf libegg-common.so.1.0 libegg-common.so.1)
+	@(cd lib; ln -sf libegg-common.so.1 libegg-common.so)
+
+lib/libegg-common.a: obj/callback.o \
+		obj/input.o \
+		obj/strapp.o \
+		obj/mkdir_p.o
+	ar crD lib/libegg-common.a \
+		obj/callback.o \
+		obj/input.o \
+		obj/strapp.o \
+		obj/mkdir_p.o
                   
 test-callback: test/callback/callback
 
@@ -171,15 +185,16 @@ doc/reference-manual/latex/refman.tex: doc/reference-manual/doxygen.cfg \
 		parser/include/*.h \
 		parser/src/*.c \
     doc/reference-manual/.regen
-	@doxygen doc/reference-manual/doxygen.cfg
-	@(cd doc/reference-manual/latex; make)
-	@(cd doc/reference-manual/html; scp -r * root@phs1:/var/www/htdocs)
+	@echo Making Reference Manual
+	@doxygen doc/reference-manual/doxygen.cfg > /dev/null
+	@(cd doc/reference-manual/latex; make) > /dev/null
+	@(cd doc/reference-manual/html; scp -r * root@phs1:/var/www/htdocs) > /dev/null
 
 doc/reference-manual/.regen:
 	@touch doc/reference-manual/.regen
 
 code-stats:
-	@wc -l include/*.h src/*.c parser/include/*.h parser/src/*.c test/*/*.c doc/* misc/* Makefile parser/Makefile
+	@wc -l include/*.h src/*.c parser/include/*.h parser/src/*.c test/*/*.c doc/[A-Z]* doc/.egg misc/* Makefile parser/Makefile
 
 clean:
 	@rm -f bin/embryo

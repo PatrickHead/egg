@@ -3,7 +3,7 @@
 
     \brief Source code for embryo parser generator.
 
-    \version 20131211163725
+    \version 20131213053213
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -606,6 +606,15 @@ static int create_directories(char *top)
   if (!path)
     return -1;
   sprintf(path, "%s/%s", top, "obj");
+  r = mkdir_p(path, 0777);
+  free(path);
+  if (r)
+    return -1;
+
+  path = (char *)malloc(strlen(top) + strlen("/lib") + 1);
+  if (!path)
+    return -1;
+  sprintf(path, "%s/%s", top, "lib");
   r = mkdir_p(path, 0777);
   free(path);
   if (r)

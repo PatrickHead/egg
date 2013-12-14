@@ -1,3 +1,7 @@
+SHELL = /bin/sh
+
+.SUFFIXES:
+
 CC = gcc
 ifeq ($(DEBUG),on)
   COPTS = -g -Wall -O0 -I include -I parser/include -L lib
@@ -15,12 +19,11 @@ _parser: libegg-common
 
 tests: test-stdin test-file test-buffer test-callback
 
-embryo: _parser bin/embryo
+embryo: _parser libegg-common bin/embryo
 
 bin/embryo: obj/embryo.o \
 		obj/generator.o \
-		obj/map.o \
-    lib/libegg-common.so.1.0
+		obj/map.o
 	$(CC) $(COPTS) -o bin/embryo \
 		obj/embryo.o \
 		obj/generator.o \

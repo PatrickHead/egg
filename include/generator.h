@@ -64,16 +64,6 @@ void generate_token_util_header(FILE *of, char *parser_name);
 
 void generate_walker_source(FILE *of, char *parser_name, egg_token *t);
 
-void generate_input_source(FILE *of, char *parser_name);
-
-void generate_input_header(FILE *of, char *parser_name);
-
-void generate_strapp_source(FILE *of, char *parser_name);
-
-void generate_strapp_header(FILE *of, char *parser_name);
-
-void generate_common_header(FILE *of, char *parser_name);
-
 void generate_makefile(FILE *of, char *parser_name);
 
   // Utility functions for managing settings within the generator

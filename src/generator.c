@@ -1583,7 +1583,7 @@ void generate_token_type_header(FILE *of,
     
      This function generates the source code for \<PROJECT\>-token-util.c\n
      \n
-     The token utililty source file contains the \<PROJECT\>_token_type_to_string
+     The token utility source file contains the \<PROJECT\>_token_type_to_string
      function definition.
     
      \param of          FILE * of open output file to write source code
@@ -1733,7 +1733,7 @@ void generate_token_util_source(FILE *of,
     
      This function generates the source code for \<PROJECT\>-token-util.h\n
      \n
-     The token utililty header file contains the \<PROJECT\>_token_type_to_string
+     The token utility header file contains the \<PROJECT\>_token_type_to_string
      function declaration.
     
      \param of          FILE * of open output file to write source code
@@ -2266,6 +2266,7 @@ void generate_makefile(FILE *of,
   fprintf(of, "\n");
   fprintf(of, "clean:\n");
   fprintf(of, "\t@rm -f obj/*.o\n");
+  fprintf(of, "\t@rm -f lib/*\n");
   fprintf(of, "\t@rm -f bin/%s-walker\n", parser_name);
   fprintf(of, "\n");
 

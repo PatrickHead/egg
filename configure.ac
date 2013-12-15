@@ -30,6 +30,8 @@ AC_CONFIG_FILES([
   Makefile
   src/Makefile
   include/Makefile
+  doc/Makefile
+  tools/Makefile
 ])
 
 AC_OUTPUT

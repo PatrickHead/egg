@@ -1,1 +1,1 @@
-EXTRA_DIST = auto-timestamp.sh
+EXTRA_DIST = autogen.sh auto-timestamp.sh

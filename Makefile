@@ -27,8 +27,8 @@ bin/embryo: obj/embryo.o \
 		obj/embryo.o \
 		obj/generator.o \
 		obj/map.o \
-		-legg-common \
-		-legg-parser
+		-legg-parser \
+		-legg-common
 
 obj/embryo.o: src/embryo.c \
 		include/egg-parser.h \
@@ -41,8 +41,8 @@ obj/embryo.o: src/embryo.c \
 bin/egg-walker: obj/egg-walker.o
 	$(CC) $(CFLAGS) -o bin/egg-walker \
 		obj/egg-walker.o \
-		-legg-common \
-		-legg-parser
+		-legg-parser \
+		-legg-common
 
 obj/input.o: src/input.c \
 		include/input.h \
@@ -262,8 +262,8 @@ clean:
 	@rm -rf doc/reference-manual/man
 	@rm -rf doc/reference-manual/xml
 
-version:
-	@tools/auto-version.sh
+timestamp:
+	@tools/auto-timestamp.sh
 	@touch doc/reference-manual/.regen
 
 git: .git
@@ -289,7 +289,7 @@ git: .git
 	@git add test/input/*.c
 	@git add test/callback/*.c
 
-commit: version
+commit: timestamp
 	git commit -a
 
 push:

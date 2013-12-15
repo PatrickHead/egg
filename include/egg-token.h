@@ -4,7 +4,7 @@
 
   \brief Source code for egg-token.h
 
-  \version 0
+  \version 20131214200452
 
   \author Patrick Head mailto:patrickhead@gmail.com
 

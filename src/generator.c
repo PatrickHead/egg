@@ -3,7 +3,7 @@
 
     \brief Source code for parser code generation routines for EGG grammars.
 
-    \version 20131213060317
+    \version 20131214200758
 
     \author Patrick Head   mailto:patrickhead@gmail.com
 

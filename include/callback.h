@@ -3,7 +3,7 @@
 
     \brief Header file for callback system.
 
-    \version 20131212033455
+    \version 20131214200144
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -57,7 +57,7 @@
     \brief Callback table entry
   */
 
-typedef struct callback_entry
+typedef struct
 {
     /*! \brief unique name of callback entry */
   char *tag;
@@ -73,7 +73,7 @@ typedef struct callback_entry
     \brief Callback table
   */
 
-typedef struct callback_table
+typedef struct
 {
     /*! \brief number of entries */
   int size;

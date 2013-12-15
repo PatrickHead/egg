@@ -9,6 +9,6 @@ in tutorial form by Jack W. Crenshaw PHD.  embryo is a pure recursive
 descent parser.
 
 Other code modules are also added to provide utility functionality,
-such as a separate grammar framework generation function library, an
-error library, etc.
+such as a separate grammar framework generation function library.
+
 

@@ -3,7 +3,7 @@
 
     \brief Header file for parser input source.
 
-    \version 20131212065815
+    \version 20131214200211
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -42,7 +42,7 @@
            character position of the input source.
   */
 
-typedef struct input_location
+typedef struct
 {
     /*! \brief Line number of location in input source */
   int line_number;

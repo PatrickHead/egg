@@ -31,6 +31,7 @@ AC_CONFIG_FILES([
   src/Makefile
   include/Makefile
   doc/Makefile
+  doc/reference-manual/Makefile
   tools/Makefile
 ])
 

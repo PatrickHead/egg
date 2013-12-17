@@ -1,1 +1,22 @@
-doc/README
+
+embryo
+======
+
+embryo is a generic parser generator that uses the Expression Grammar, Grammer
+(EGG) grammar format for input.  This parser is intended to be able to parse,
+verify and generate a grammar parser framework from any grammar defined in EGG.
+
+The resultant parser design uses many of the concepts developed and documented
+in tutorial form by Jack W. Crenshaw PHD.  embryo produces pure recursive
+descent parsers.
+
+Other code modules are also added to provide utility functionality, such as a
+separate grammar framework generation function library, an input source
+function library, an input location tracking mechanism, and a callback
+mechanism for parsers that need to work "on-the-fly" such as interpreters.
+
+For more information on installing the EGG system, including embryo please refer
+to the INSTALL file and other documentation in doc/
+
+Also, a complete set of user guide, tutorial, and reference manual can be built
+and installed from these sources.

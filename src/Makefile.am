@@ -1,5 +1,5 @@
-CFLAGS = -O3 -I $(top_srcdir)/include
-LDFLAGS =
+AM_CFLAGS = -O3 -I $(top_srcdir)/include
+AM_LDFLAGS =
 
 bin_PROGRAMS = embryo egg-walker
 

@@ -1,2 +1,14 @@
 ACLOCAL_AMFLAGS = -I m4
+
 SUBDIRS = src include doc tools
+
+EXTRA_DIST = AUTHORS ChangeLog COPYING INSTALL NEWS README
+
+docdir = $(datadir)/doc/@PACKAGE@
+doc_DATA = AUTHORS ChangeLog COPYING INSTALL NEWS README
+
+parser-code: src/embryo
+	src/embryo -p egg -g hs -d . doc/.egg \
+		--email=patrickhead@gmail.com \
+		--author "Patrick Head" \
+		--use-doxygen=true

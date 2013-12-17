@@ -1,8 +1,9 @@
-EXTRA_DIST = .egg printable.egg egg.pdf INSTALL LICENSE PROJECT README TODOS VERSION
+EXTRA_DIST = .egg printable.egg egg.pdf PROJECT TODOS VERSION
+
 SUBDIRS = reference-manual
 
 docdir = $(datadir)/doc/@PACKAGE@
-doc_DATA = .egg printable.egg egg.pdf INSTALL LICENSE PROJECT README TODOS VERSION
+doc_DATA = .egg printable.egg egg.pdf PROJECT TODOS VERSION
 
 printable.egg: $(srcdir)/.egg
 	@echo Creating printable.egg

@@ -80,6 +80,7 @@ DONE      3)  Add generic (syntax checking only) parser for any project.
 
 WIP       4)  Project Management utilities.
               NOTE:  restructured parser specific Makefile to be more independent
+              NOTE:  Need to add GNU autotools support for generated code
 
           5)  Template Makefile for high level project management
 
@@ -99,24 +100,30 @@ WIP       4)  Project Management utilities.
 
                 B)  ABNF to EGG
 
-          8)  Speed optimizations for parser code.
+          8)  Speed optimizations for generated parser code.
 
         Stage V:  start 2013-12-03
 
           1)  Deployment and maintenance environments:
 
 TEST            A)  Version control
+                    NOTE:  Using timestamp for individual source files.
+                    NOTE:  No actual version control is yet implemented
 
-PART            B)  GIT repository support (both official EGG/Embryo and user
+80%             B)  GIT repository support (both official EGG/Embryo and user
                     project)
+                    NOTE:  Complete, except for adding a PUBLIC repo
+                    NOTE:  Cancel user project based GIT, as this is a
+                           user choice.
 
-                C)  GNU package support
+DONE            C)  GNU package support
 
-                D)  Source tarball
+DONE            D)  Source tarball
+                    NOTE:  This is part of GNU autotools, 'make dist'
 
                 E)  RPMS from above
 
-                F)  RPM and DEB from above
+                F)  RPM, DEB, slackpkg from above
 
                 G)  Sourceforge, Freshmeat and/or equivalent
 

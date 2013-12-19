@@ -4,7 +4,7 @@ SUBDIRS = src include doc tools
 
 EXTRA_DIST = AUTHORS ChangeLog COPYING INSTALL NEWS README
 
-docdir = $(datadir)/doc/@PACKAGE@
+docdir = $(datadir)/doc/@PACKAGE@-@VERSION@
 doc_DATA = AUTHORS ChangeLog COPYING INSTALL NEWS README
 
 parser-code: src/embryo

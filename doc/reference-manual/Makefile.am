@@ -1,5 +1,7 @@
 EXTRA_DIST = doxygen.cfg DoxygenLayout.xml
 
+docdir = $(datadir)/doc/@PACKAGE@-@VERSION@
+
 latex/refman.pdf: latex/refman.tex
 
 latex/refman.tex: $(srcdir)/doxygen.cfg \
@@ -25,10 +27,12 @@ clean-local:
 install-data-local: install-pdf-local install-html-local
 
 install-pdf-local:
-	@cp latex/refman.pdf $(pdfdir)/egg-internals.pdf
+	@mkdir -p $(docdir)
+	@cp latex/refman.pdf $(docdir)/egg-internals.pdf
 
 install-html-local:
-	@cp -r html $(htmldir)
+	@mkdir -p $(docdir)
+	@cp -r html $(docdir)
 
 uninstall-local:
-	@rm -rf $(pdfdir)/egg-internals.pdf $(htmldir)/html
+	@rm -rf $(docdir)/egg-internals.pdf $(docdir)/html

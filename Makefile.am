@@ -12,3 +12,6 @@ parser-code: src/embryo
 		--email=patrickhead@gmail.com \
 		--author "Patrick Head" \
 		--use-doxygen=true
+
+clean-local:
+	@if [ -d packages ]; then rm -f packages/*; fi

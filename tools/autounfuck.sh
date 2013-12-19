@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-find . -name 'Makefile.in' -exec rm {} \;
+find . -name 'Makefile.in' -exec rm -f {} \;
 rm -rf autom4te.cache
 rm -f config.h.in
 rm -f config.h.in~

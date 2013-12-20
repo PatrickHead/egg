@@ -1,1 +1,1 @@
-EXTRA_DIST = autogen.sh auto-timestamp.sh makepak.sh
+EXTRA_DIST = autogen auto-timestamp makepak

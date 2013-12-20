@@ -114,16 +114,19 @@ TEST            A)  Version control
                     project)
                     NOTE:  Complete, except for adding a PUBLIC repo
                     NOTE:  Cancel user project based GIT, as this is a
-                           user choice.
+                           user choice and is not a generic configuration.
 
 DONE            C)  GNU package support
 
 DONE            D)  Source tarball
                     NOTE:  This is part of GNU autotools, 'make dist'
 
-                E)  RPMS from above
+KINDA           E)  RPMS from above
+                    NOTE:  The egg.spec file works for this, but using
+                           checkinstall, it is not supported.
 
-                F)  RPM, DEB, slackpkg from above
+DONE            F)  RPM, DEB, slackpkg from above
+                    NOTE:  Very generic binary packages, using checkinstall
 
                 G)  Sourceforge, Freshmeat and/or equivalent
 

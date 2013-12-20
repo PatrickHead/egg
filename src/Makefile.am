@@ -20,6 +20,6 @@ libegg_parser_la_LDFLAGS = -version-info 1:0:1
 .PHONE: timestamps
 
 timestamps:
-	@$(top_srcdir)/tools/auto-timestamp.sh $(top_srcdir)
+	@$(top_srcdir)/tools/auto-timestamp $(top_srcdir)
 
 all: timestamps all-am

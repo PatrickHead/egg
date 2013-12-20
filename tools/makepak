@@ -19,13 +19,63 @@ echo "Creating Binary Packages"
 
 echo "Creating Slackware Package"
 
-checkinstall --install=no -S -y --pkgname=$PKGNAME --pkgversion=$PKGVERSION --pkgrelease=$PKGRELEASE --pkggroup='Development/Tools' --maintainer='patrickhead@gmail.com' --strip=yes --stripso=yes --gzman=yes --newslack --pakdir=packages --backup=no --addso=yes
+if which checkinstall && which makepkg > /dev/null
+then
+	checkinstall -S -y \
+		--install=no \
+    --pkgname=$PKGNAME \
+    --pkgversion=$PKGVERSION \
+    --pkgrelease=$PKGRELEASE \
+    --pkggroup='Development/Tools' \
+    --maintainer='patrickhead@gmail.com' \
+    --strip=yes \
+		--stripso=yes \
+    --gzman=yes \
+    --newslack \
+    --pakdir=packages \
+    --backup=no \
+    --addso=yes
+fi
 
 echo "Creating RPM Package"
 
-checkinstall --install=no -R -y --pkgname=$PKGNAME --pkgversion=$PKGVERSION --pkgrelease=$PKGRELEASE --pkggroup='Development/Tools' --maintainer='patrickhead@gmail.com' --strip=yes --stripso=yes --gzman=yes --pakdir=packages --backup=no --addso=yes --spec=~/rpmbuild/SPECS/egg.spec
+if which checkinstall && which rpmbuild > /dev/null
+then
+  if ! [ -d ~/rpmbuild ]
+  then
+		mkdir -p "$HOME/rpmbuild/{RPMS/x86_64,RPMS/noarch,RPMS/i386,SOURCES,SPECS,BUILD,BUILDROOT,SRPMS,tmp}"
+  fi
+	checkinstall -R -y \
+		--install=no \
+		--pkgname=$PKGNAME \
+		--pkgversion=$PKGVERSION \
+		--pkgrelease=$PKGRELEASE \
+		--pkggroup='Development/Tools' \
+		--maintainer='patrickhead@gmail.com' \
+		--strip=yes \
+		--stripso=yes \
+		--gzman=yes \
+		--pakdir=packages \
+		--backup=no \
+		--addso=yes \
+		--spec=misc/egg.spec
+fi
 
 echo "Creating Debian Package"
 
-checkinstall --install=no -D -y --pkgname=$PKGNAME --pkgversion=$PKGVERSION --pkgrelease=$PKGRELEASE --pkggroup='Development/Tools' --maintainer='patrickhead@gmail.com' --strip=yes --stripso=yes --gzman=yes --pakdir=packages --backup=no --addso=yes 
-
+if which checkinstall && which dpkg > /dev/null
+then
+	checkinstall -D -y \
+		--install=no \
+		--pkgname=$PKGNAME \
+		--pkgversion=$PKGVERSION \
+		--pkgrelease=$PKGRELEASE \
+		--pkggroup='Development/Tools' \
+		--maintainer='patrickhead@gmail.com' \
+		--strip=yes \
+		--stripso=yes \
+		--gzman=yes \
+		--pakdir=packages \
+		--backup=no \
+		--addso=yes 
+fi

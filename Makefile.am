@@ -1,6 +1,6 @@
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = src include doc tools
+SUBDIRS = src include doc tools misc
 
 EXTRA_DIST = AUTHORS ChangeLog COPYING INSTALL NEWS README packages
 

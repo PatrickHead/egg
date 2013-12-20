@@ -13,9 +13,14 @@ PKGNAME=`echo $tmp | cut -d, -f1`
 PKGVERSION=`echo $tmp | cut -d, -f2`
 PKGRELEASE=1
 
-mkdir packages
+PKGGROUP="Development/Tools"
+PKGAUTHOR="patrickhead@gmail.com"
+
+mkdir -p packages
 
 echo "Creating Binary Packages"
+
+make dist
 
 echo "Creating Slackware Package"
 
@@ -26,8 +31,8 @@ then
     --pkgname=$PKGNAME \
     --pkgversion=$PKGVERSION \
     --pkgrelease=$PKGRELEASE \
-    --pkggroup='Development/Tools' \
-    --maintainer='patrickhead@gmail.com' \
+    --pkggroup="$PKGGROUP" \
+    --maintainer="$PKGAUTHOR" \
     --strip=yes \
 		--stripso=yes \
     --gzman=yes \
@@ -50,8 +55,8 @@ then
 		--pkgname=$PKGNAME \
 		--pkgversion=$PKGVERSION \
 		--pkgrelease=$PKGRELEASE \
-		--pkggroup='Development/Tools' \
-		--maintainer='patrickhead@gmail.com' \
+		--pkggroup="$PKGGROUP" \
+		--maintainer="$PKGAUTHOR" \
 		--strip=yes \
 		--stripso=yes \
 		--gzman=yes \
@@ -70,8 +75,8 @@ then
 		--pkgname=$PKGNAME \
 		--pkgversion=$PKGVERSION \
 		--pkgrelease=$PKGRELEASE \
-		--pkggroup='Development/Tools' \
-		--maintainer='patrickhead@gmail.com' \
+		--pkggroup="$PKGGROUP" \
+		--maintainer="$PKGAUTHOR" \
 		--strip=yes \
 		--stripso=yes \
 		--gzman=yes \

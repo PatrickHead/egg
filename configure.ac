@@ -33,6 +33,7 @@ AC_CONFIG_FILES([
   doc/Makefile
   doc/reference-manual/Makefile
   tools/Makefile
+  misc/Makefile
 ])
 
 AC_OUTPUT

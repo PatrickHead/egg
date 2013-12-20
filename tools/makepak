@@ -1,5 +1,14 @@
 #!/usr/bin/env sh
 
+if [ $# -eq 1 ]
+then
+  if [ "$1" = "-d" -o "$1" = "--delete" ]
+  then
+    rm -rf packages
+    exit 0
+  fi
+fi
+
 echo "Gathering Useful Package Information"
 
 if [ ! -e configure.ac ]
@@ -16,7 +25,7 @@ PKGRELEASE=1
 PKGGROUP="Development/Tools"
 PKGAUTHOR="patrickhead@gmail.com"
 
-mkdir -p packages
+mkdir -p -m 777 packages
 
 echo "Creating Binary Packages"
 

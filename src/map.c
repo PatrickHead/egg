@@ -3,7 +3,7 @@
 
     \brief Source code for line mapping routines.
 
-    \version 20131212071909
+    \version 20131221055311
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -503,5 +503,71 @@ int phrase_map_list_count_items(phrase_map_item *list)
   }
 
   return count;
+}
+
+  /*!
+
+     \brief Reduce an EGG phrase map to just top-level phrases.
+    
+     This function finds all the top-level phrases in an EGG grammar phrase map.
+     A top-level phrase is defined as a phrase in an EGG grammar that has no
+     dependent phrases.  In other words, no other EGG grammar phrases make
+     reference to a top-level phrase.\n
+     \n
+     This is useful for any code generation that needs to be able to make
+     calls to or reports of specific sub-sets of a grammar at a top level.
+     The \<PROJECT\>-walker utility is an example of the use of top-level
+     phrases.
+
+     \warning This function modifies the contents of the passed list of
+              \e phrase_map_item, specifically by deleting all phrase map items
+              that do not contain EGG grammar phrases that qualify as top-level
+              phrases.
+    
+     \param list address of an array of \e phrase_map_item
+    
+  */
+
+void phrase_map_list_isolate_top_level_phrases(phrase_map_item **list)
+{
+  phrase_map_item *ppmi;
+  phrase_map_item *ppmi2;
+  phrase_map_item *upmi;
+
+  if (!list)
+    return;
+
+  if (!*list)
+    return;
+
+  ppmi = *list;
+  while (ppmi)
+  {
+    upmi = ppmi->uses;
+    while (upmi)
+    {
+      ppmi2 = *list;
+      while (ppmi2)
+      {
+        if (!strcmp(ppmi2->name, upmi->name))
+          if (strcmp(ppmi->name, upmi->name))
+            ppmi2->name[0] = ' ';
+        
+        ppmi2 = ppmi2->next;
+      }
+      upmi = upmi->next;
+    }
+    ppmi = ppmi->next;
+  }
+
+  ppmi = *list;
+  while (ppmi)
+  {
+    if (ppmi->name[0] == ' ')
+      phrase_map_item_delete(list, ppmi);
+    ppmi = ppmi->next;
+  }
+
+  return;
 }
 

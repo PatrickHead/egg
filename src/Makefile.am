@@ -1,13 +1,15 @@
 AM_CFLAGS = -O3 -I $(top_srcdir)/include
 AM_LDFLAGS =
 
-bin_PROGRAMS = embryo egg-walker
+bin_PROGRAMS = embryo egg-walker egg-mapper
 
 lib_LTLIBRARIES = libegg-common.la libegg-parser.la
 
 LDADD = libegg-common.la libegg-parser.la
 
 embryo_SOURCES = embryo.c generator.c map.c
+
+egg_mapper_SOURCES = egg-mapper.c map.c
 
 egg_walker_SOURCES = egg-walker.c
 

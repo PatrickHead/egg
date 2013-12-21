@@ -3,7 +3,7 @@
 
     \brief Source code for parser code generation routines for EGG grammars.
 
-    \version 20131214200758
+    \version 20131221055452
 
     \author Patrick Head   mailto:patrickhead@gmail.com
 
@@ -101,7 +101,6 @@ static int get_year(void);
 static void emit_indent(FILE *of);
 static void emit_phrase_comment_lines(FILE *of, char *s);
 static void emit_source_comment_header(FILE *of);
-static void isolate_top_level_phrases(phrase_map_item **pmi);
 static char * make_file_name(char *project, char *file_name);
 
   // Module global values
@@ -1862,7 +1861,7 @@ void generate_walker_source(FILE *of,
     // Create a top level phrase map of all grammar phrases
 
   pml = phrase_map(t);
-  isolate_top_level_phrases(&pml);
+  phrase_map_list_isolate_top_level_phrases(&pml);
 
     // Emit the file level comment block
 
@@ -1949,7 +1948,7 @@ void generate_walker_source(FILE *of,
   while (pmi)
   {
     phrase_name = fix_identifier(strdup(pmi->name));
-    fprintf(of, "  boolean walk_%s;\n", phrase_name);
+    fprintf(of, "  boolean walk_%s = false;\n", phrase_name);
     free(phrase_name);
     pmi = pmi->next;
   }
@@ -3683,71 +3682,5 @@ static char * make_file_name(char *project, char *file_name)
   sprintf(fn, "%s-%s", project, file_name);
 
   return fn;
-}
-
-  /*!
-
-     \brief Generic helper function for code generation functions.
-    
-     This function finds all the top-level phrases in an EGG grammar phrase map.
-     A top-level phrase is defined as a phrase in an EGG grammar that has no
-     dependent phrases.  In other words, no other EGG grammar phrases make
-     reference to a top-level phrase.\n
-     \n
-     This is useful for any code generation that needs to be able to make
-     calls to or reports of specific sub-sets of a grammar at a top level.
-     The \<PROJECT\>-walker utility is an example of the use of top-level
-     phrases.
-
-     \warning This function modifies the contents of the passed list of
-              \e phrase_map_item, specifically by deleting all phrase map items
-              that do not contain EGG grammar phrases that qualify as top-level
-              phrases.
-    
-     \param list address of an array of \e phrase_map_item
-    
-  */
-
-static void isolate_top_level_phrases(phrase_map_item **list)
-{
-  phrase_map_item *ppmi;
-  phrase_map_item *ppmi2;
-  phrase_map_item *upmi;
-
-  if (!list)
-    return;
-
-  if (!*list)
-    return;
-
-  ppmi = *list;
-  while (ppmi)
-  {
-    upmi = ppmi->uses;
-    while (upmi)
-    {
-      ppmi2 = *list;
-      while (ppmi2)
-      {
-        if (!strcmp(ppmi2->name, upmi->name))
-          if (strcmp(ppmi->name, upmi->name))
-            ppmi2->name[0] = ' ';
-        
-        ppmi2 = ppmi2->next;
-      }
-      upmi = upmi->next;
-    }
-    ppmi = ppmi->next;
-  }
-
-  ppmi = *list;
-  while (ppmi)
-  {
-    if (ppmi->name[0] == ' ')
-      phrase_map_item_delete(list, ppmi);
-    ppmi = ppmi->next;
-  }
-
-  return;
 }
 

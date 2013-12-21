@@ -4,7 +4,7 @@
 
   \brief Source code for grammar specific walking/dumping utility
 
-  \version 20131214114410
+  \version 20131221020530
 
   \author Patrick Head mailto:patrickhead@gmail.com
 
@@ -70,7 +70,7 @@ int main(int argc, char **argv)
     { "grammar", 0, 0, 0 }
   };
   boolean syntax_only = false;
-  boolean walk_grammar;
+  boolean walk_grammar = false;
   egg_token *t;
   char *input_file;
 

@@ -3,7 +3,7 @@
 
     \brief Source code for embryo parser generator.
 
-    \version 20131213053213
+    \version 20131221060552
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -36,7 +36,6 @@
 #include "generator.h"
 #include "mkdir_p.h"
 #include "egg-parser.h"
-
 
 static void usage(char *program_name);
 static char *build_file_name(char *dir, char *project_name, char *file_name);

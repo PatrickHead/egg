@@ -3,7 +3,7 @@
 
     \brief Header file for line mapping routines.
 
-    \version 20131214200653
+    \version 20131221055412
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -64,6 +64,7 @@ phrase_map_item *phrase_map_list_append_item_by_name(phrase_map_item **list,
                                                      boolean dups_allowed);
 int phrase_map_list_get_item_index(phrase_map_item *list, char *name);
 int phrase_map_list_count_items(phrase_map_item *list);
+void phrase_map_list_isolate_top_level_phrases(phrase_map_item **list);
 
 #endif // MAP_H
 

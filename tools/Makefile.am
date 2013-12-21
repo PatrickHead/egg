@@ -1,1 +1,1 @@
-EXTRA_DIST = autogen auto-timestamp makepak
+EXTRA_DIST = autogen auto-timestamp makepak map2gv

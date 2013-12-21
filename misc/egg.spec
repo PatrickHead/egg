@@ -1,5 +1,5 @@
 Name:           egg
-Version:        0.2.0
+Version:        0.2.1
 Release:        1
 Summary:        Parser generation tools for EGG grammars.
 #Source0:        http://www.patrickhead.net/projects/egg/%{name}-%{version}.tar.gz 
@@ -31,6 +31,7 @@ rm -rf %{buildroot}
 %doc AUTHORS ChangeLog COPYING INSTALL NEWS README doc/printable.egg doc/egg.pdf doc/PROJECT doc/TODOS doc/VERSION doc/reference-manual/html
 %{_bindir}/embryo 
 %{_bindir}/egg-walker 
+%{_bindir}/egg-mapper 
 %{_libdir}/libegg-common.*
 %{_libdir}/libegg-parser.*
 %{_includedir}/egg/callback.h

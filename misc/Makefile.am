@@ -1,1 +1,1 @@
-EXTRA_DIST = egg.spec
+EXTRA_DIST = egg.spec map2gv.xslt

@@ -1,0 +1,597 @@
+EGG User Guide
+
+Preface
+(the motivation for this document, and EGG itself)
+
+Introduction
+
+  EGG is several things.  Firstly, EGG is the name of a very specific and strictly defined BNF style grammar definition language.   Secondly, the name EGG is loosely an acronym for Expression Grammar, Grammer.  This acronym is neither exactly precise, nor official.  The name EGG is mostly intended to imply the beginning of something, particularly the beginning of a formal grammar, which can grow into a complete parser for that grammar.
+
+  EGG also serves as the foundation, a starting point, for creating a precisely defined grammar.  From this grammar definition, the source code for a parser can be generated.
+
+  This User Guide contains the official documention for the EGG language itself, and  the usage documentation for three associated utilities -- embryo, egg-walker, and egg-mapper.  These three utilities are the standard parser code generator, and associated grammar checking and diagramming utilities.  Details for the usage and command line options for each of these utilities is documented.  Additionally, the output that each of these utilities produces is explained in detail.
+
+  A step-by-step tutorial is included in this User Guide, to serve as both a grammar writing guide for EGG definitions, and to illustrate the work flow for generating a parser from the grammar that is defined in EGG.
+
+  Each chapter in this User Guide contains a high level statement of purpose, which is followed by sections that progressively get more detailed in nature.  For a first time reader of this User Guide, and especially for those new to BNF style grammar definition languages, it is suggested that reading the introductory sections of each chapter, and perusing the examples sections may provide a more meaningful learning experience.
+
+  It is likely that the example sections of each chapter, and the tutorial chapter will be all that is necessary to get a working knowledge of how to implement a grammar in EGG and build a parser for that grammar.
+
+
+Contents
+	1. EGG
+		Brief History
+    Purpose and Design Goals
+		Dissecting an EGG
+		Example of an EGG
+	2. embryo
+		Purpose
+		Invocation
+		Options Explained
+		Output
+		Examples
+	3. embryo Output Explained
+	4. egg-walker
+		Purpose
+		Invocation
+		Options Explained
+		Output
+		Examples
+	5. egg-walker Output Explained
+	6. egg-mapper
+		Purpose
+		Invocation
+		Options Explained
+		Output
+		Examples
+	7. egg-mapper Output Explained
+	8. Tutorial: Creating a parser from an EGG
+		Simple Example
+		An EGG EGG
+		SPICE model
+	APPENDIX A:  Terms
+	Bibliography
+	Index
+
+1. EGG
+
+  Brief History
+
+  In the late 1950s and early 1960s, much innovative work was being performed in the area of computer language development and formalization.  Borrowing from other works in areas such as mathematics and linguistics, John Backus, while working on the computer programming language ALGOL, proposed a method of precisely defining the grammar of ALGOL and its syntax.  Peter Naur later suggested this notation become known as Backus Normal Form.  Donald Knuth later proprosed that the name of this notation be Backus-Naur Form, as the notation was not strictly a "normal" form, as defined in computing, and because Naur also contributed to its refinement.
+
+  Backus-Naur Form has since been adopted as a major standard for defining most any computer progamming language, as well as data structures, instruction sets for processors and virtual machines and other concepts.  Backus-Naur Form is commonly known simply by its acronym, BNF.
+
+  BNF is a way of describing what are known as context free grammars.  To qualify as a context free grammar, a grammar must be able to be described by what are known as production rules.  Production rules are simply a way of stating that some named thing on the left side of the rule can be replaced by a thing or series of things on the right side of the rule.  What are the things in such production rules?  On the left side of the rule is the name of the rule itself, which is an abstract concept.  On the right side of the rule, a single or series of terminal values (literal values), and/or names of other grammar rules can exist.
+
+  A production rule can best be illustrated by example:
+
+    <number> ::= <digit> | <digit> <number>
+
+    <digit> ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+
+  In the above example we have two production rules.   The first rule <number> is defined as either a single digit, or a digit followed by another <number>.  The net effect of this rule is that a number is any sequence of 1 or more digits.  The second rule <digit> is defined as one of either a literal '0' character, or a literal '1' character, or a literal '2' character, and so forth.
+
+  Two important concepts exist in the <digit> rule.  First the concept is that of alternation in a rule.  A rule can match something, or something else, etc.  The second concept is that of a terminal value.  Terminal values are those items that can not be further defined by additional production rules.  Typically these are literal characters as in the above example, or strings of characters, such as 'PRINT'.  Terminals may also indicate a class of characters, such as <digit> which itself is left up to some external mechanism to provide. Terminals are also described as being atomic.  They can not be broken down any further.
+
+  Over time, many variants of BNF have been proposed, and some of those formalized into international standards, such as EBNF and ABNF.  Most of these variants address some of the perceived short comings of the original BNF.  Namely, the very non-intuitive syntax of indicating "or more" by including a recursive element in a right side rule definition.  In the above example a "| <digit> <number>" fragment is used, which in BNF means a digit followed by another number, which of course can expand to an infinitely long sequence of digits.
+
+  Also, defining a quantified sequence of items in a BNF production rule is cumbersome at best.  For instance, to define that a product code can be a sequence of 2, 3, 4, or 5 digits, a BNF rule would look like this:
+
+    <product code> ::= <digit> <digit>
+                     | <digit> <digit> <digit>
+                     | <digit> <digit> <digit> <digit>
+                     | <digit> <digit> <digit> <digit> <digit>
+
+  Another possible issue with the original BNF is that rule names are denoted by the '<' and '>' brackets.  This in itself is not a problem, but then an ambiguity arises when a terminal character is a literal '<' or '>' character.  For instance:
+    <special instruction> ::= <bold>
+
+  Does the above rule mean that <special instruction> is an instance of another
+  rule named <bold>, or is it the literal sequence of characters '<', followed by 'bold' and '>'?
+ 
+  Also, since terminal characters in BNF are simply unadorned in any way, the grammars that BNF define are limited to the ASCII character set, or something very
+similar such as EBCDIC as literal characters.
+
+  These shortcomings, both perceived and real, have led to many different variants of BNF.  Some variants are formal, such as the aforementioned EBNF and ABNF.  Some are simply convenient alternatives for internal usage in a given organization or project.  Almost all of the BNF variants are attempts to make grammar definition more concise, with fewer production rules, or more readable, or to eliminate ambiguities, or to add other conveniences to the BNF definition.
+
+  This leads us to EGG, which is dubbed by the creator of EGG as "Yet Another BNF."  YAB was actually considered as a name for EGG, but has potentially unpleasant connotations in some human languages and circles, so EGG was chosen as the official name.
+
+  Purpose and Design Goals
+
+  The intent of EGG is to define a BNF style language that satisfies two design requirements.
+
+    -  EGG is designed to be easy to read and understand.
+    -  EGG is designed to be used in the automatic production of parser source code.
+
+    Syntax Simplification
+
+    While any well formed BNF is capable of defining a grammar, one of the main design goals of EGG is to add a few syntactic elements to make defining a quantified number of items in a sequence reasonably easy to understand.  In addition, another design goal of EGG is to eliminate alternative ways of describing a grammar element or phrase.  For instance, some BNF systems may allow an asterisk ('*') to indicate zero or more instances of the preceding grammar item.   That same BNF system may also allow a more specific quantifier syntax, such as 'item[2-5]', which may indicate that two through five instances of item may occur in a sequence.
+
+    Allowing both styles of quantification shortcutting syntax, while convenient, is redundant.  EGG eliminates this type of redundant syntax.  In EGG, there is generally only one syntactically correct way to describe a grammar element.
+
+    A side effect of the simplified nature of the EGG syntax is to promote consistent ways of defining different types of grammar constructs.  For instance, in EGG, there are no specific grouping operators, therefore only a single grammar item can be quantified.  This eliminates alternative and redundant styles of defining quantified sequences.
+
+    Parser Source Code Generation
+
+    From its conception, EGG was designed to assist in the automatic generation of parser source code.  This source code can then be included in a larger project.  Several design decisions for the syntax of EGG have been made which balance the requirements of an author of a grammar with the requirements for automatically generating source code from that grammar.
+
+    EGG is designed to produce recursive descent style parsers, but nothing in the EGG language should preclude the generation of other types of parsers.
+
+  Elements of the EGG Syntax
+
+  From a high level, the syntax of EGG is fairly simple and straightforward.  In this section, each element of the EGG grammar itself will be explained in detail.
+
+  The most fundamental element of an EGG grammar definition is what is formally
+  named a phrase.  A phrase consists of a phrase name (phrase-name), followed
+  by an equal sign ('='), followed by a definition, followed by a terminating
+  semicolon (';').
+
+  EGG itself is canonically defined using the EGG language.  Each phrase that makes up the entirety of the EGG grammar is detailed below.
+
+  The EGG grammar is broken down into a few basic sections.
+
+    - Grammar Structure
+    - Types
+    - Symbols
+    - Character Classes
+    - ASCII Character Set
+
+  Grammar Structure
+
+    Grammar Structure elements are essentially the only elements that an author
+    of a grammar using EGG will need to understand.  All the additional phrases
+    which define EGG are useful in formalizing the detailed syntactic elements
+    of an EGG grammar.  A grasp of only the Grammar Structure elements
+    should yield a reasonably intuitive understanding of an EGG definition.
+
+    grammar
+
+      This is the foundational phrase for the EGG grammar.  It emcompasses the
+      entire collection of phrases that make up an EGG grammar.
+
+      grammar is defined as a sequence of any number of grammar-elements
+      followed by an optional non-grammar-element.
+
+    grammar-element
+
+      This phrase allows non essential parts of an EGG definition to exist, such
+      as comments and white space proceeding other phrase definitions.
+
+      grammar-element is defined as an optional non-grammar-element followed by
+      a phrase.
+
+    phrase
+
+      This is the most fundamental definition of the EGG grammar. All EGG
+      grammar definitions are composed of a collection of phrases.
+
+      phrase is defined as a phrase-name, followed by an optional
+      non-grammar-element, followed by an equal sign ('='), followed by an
+      optional non-grammar-element, followed by a definition, followed by an
+      optional non-grammar-element, followed by a semicolon (';").
+
+    definition
+
+      definition is defined as a sequence, followed by any number of
+      definition-continuation elements (including none).
+
+    definition-continuation
+
+      definition-continuation is defined as an optional non-grammar-element,
+      followed by the alternation-symbol ('|'), followed by an optional
+      non-grammar-element, followed by a sequence.
+
+    sequence
+
+      sequence is defined as an item followed by any number of
+      sequence-continuation elements.
+
+    sequence-continuation
+
+      sequence-continuation is defined as an optional non-grammar-element,
+      followed by a concatenation-symbol ('+'), followed by an optional
+      non-grammar-element, followed by an item.
+
+    item
+
+      item is defined as an atom, followed by an optional quantifier.
+
+    atom
+
+      atom is defined as one of either a literal, or a phrase-name.
+
+  Types
+
+    These phrases formalize and refine the syntax for individual EGG elements,
+    such as how a quantifier, phrase-name or literal is expressed.
+
+    quantifier
+
+      quantifier is defined as an open-brace ('{'), followed by an integer,
+      followed by an optional quantifier-option, followed by a
+      close-brace ('}').
+
+    quantifier-option
+
+      quantifier-option is defined as a comma (','), followed by a
+      quantifier-item.
+
+    quantifier-item
+
+      quantifier-item is defined as one of either an integer, or an
+      asterisk ('*').
+
+    phrase-name
+
+      phrase-name is defined as a letter, followed by any number of
+      phrase-name-character elements (including none).
+
+    non-grammar-element
+
+      non-grammar-element is defined as a sequence of one or more
+      non-grammar-item elements.
+
+    non-grammar-item
+
+      non-grammar-item is defined as one of either a control-character, or
+      an illumination.
+
+    illumination
+
+      illumination is defined as one of either a white-space, or a comment.
+
+    comment
+
+      comment is defined as a comment-start-symbol ('(*'), followed by any
+      number of a sequence of comment-item elements (including none), followed
+      by a comment-end-symbol ('*)).
+
+    comment-item
+
+      comment-item is defined as one of either a comment, or a
+      comment-character.
+
+    literal
+
+      literal is defined as one of either a single-quoted-literal, or a
+      quoted-literal, or an absolute-literal.
+
+    single-quoted-literal
+
+      single-quoted-literal is defined as a single-quote ('), followed by a
+      sequence of one or more single-quoted-character elements, followed by
+      a single-quote (').
+
+    quoted-literal
+
+      quoted-literal is defined as a quote ("), followed by a sequence of one
+      or more quoted-character elements, followed by a quote (").
+
+    absolute-literal
+
+      absolute-literal is defined as a slash ('/'), followed by a sequence of
+      any number of space (' ') elements (including none), followed by an
+      integer, followed by a sequence of any number of space (' ') elements
+      (including none), followed by a slash ('/').
+
+    integer
+
+      integer is defined as one of either a binary-integer, or an octal-integer,
+      or a hexadecimal-integer, or a decimal-integer.
+
+    binary-integer
+
+      binary-integer is defined as a zero ('0'), followed by a binary-indicator,
+      followed by a sequence of one or more binary-digit elements.
+
+    octal-integer
+
+      octal-integer is defined as a zero ('0'), followed by a octal-indicator,
+      followed by a sequence of one or more octal-digit elements.
+
+    hexadecimal-integer
+
+      hexadecimal-integer is defined as a zero ('0'), followed by a
+      hexadecimal-indicator, followed by a sequence of one or more
+      hexadecimal-digit elements.
+
+    decimal-integer
+
+     decimal-integer is defined as a sequence of one or more decimal-integers
+     elements.
+
+  Symbols
+
+    These phrases define a few specific symbol elements in the EGG grammar that
+    either are more than one character long, or are an integral and common
+    part of the EGG grammar itself.
+
+    comment-start-symbol
+
+      comment-start-symbol is defined as an open-parenthesis '(', followed by
+      an asterisk ('*').
+
+    comment-end-symbol
+
+      comment-end-symbol is defined as an asterisk ('*'), followed by a
+      close-parenthesis ')'.
+
+    alternation-symbol
+
+      alternation-symbol is defined as a bar ('|').
+
+    concatenation-symbol
+
+      concatenation-symbol is defined as plus ('+').
+
+    phrase-terminator-symbol
+
+      phrase-terminator-symbol is defined as a semicolon (';').
+
+  Character Classes
+
+    These phrases define some commonly used classes (groups) of characters that
+    are useful in other EGG grammar elements, such as a phrase-name, an integer,
+    etc.
+
+    control-character
+
+      control-character is defined as one of either a nul, soh, stx, etx, eot,
+      enq, ack, bel, bs, so, si, dle, dc1, dc2, dc3, dc4, nak, syn, etb, can,
+      em, sub, esc, fs, gs, rs, us, or a del grammar element.
+
+    upper-case-character
+
+      upper-case-characters is defined as one of either an A, B, C, D, E, F,
+      G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, or a Z grammar
+      element.
+
+    lower-case-character
+
+      lower-case-characters is defined as one of either an a, b, c, d, e, f,
+      g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, OR z grammar
+      element.
+    
+    letter
+
+      letter is defined as one of either an upper-case-letter, or a
+      lower-case-letter grammar element.
+
+    binary-digit
+
+      binary-digit is defined as one of either a zero, or a one grammar element. 
+
+    octal-digit
+
+      octal-digit is defined as one of either a zero, one, two, three, four,
+      five, six, or a seven grammar element.
+
+    decimal-digit
+
+      decimal-digit is defined as one of either a zero, one, two, three, four,
+      five, six, seven, eight or a nine grammar element.
+
+    hexadecimal-digit
+
+      hexadecimal-digit is defined as one of either a zero, one, two, three,
+      four, five, six, seven, eight, nine, A, B, C, D, E, F, a, b, c, d, e, or
+      an f grammar element.
+
+    white-space
+
+      white-space is defined as one of either a space, ht, lf, vt, ff, or a cr
+      grammar element.
+
+    common-character
+
+      common-character is defined as one of either an exclamation-point,
+      number-sign, dollar, percent, ampersand, plus, comma, minus, period,
+      colon, semicolon, less-than, equal, greater-than, question-mark, at,
+      open-bracket, back-slash, close-bracket, carat, underscore, back-quote,
+      open-brace, bar, close-brace, tilde, letter, or a decimal-digit grammar
+      element.
+
+    literal-character
+
+      literal-character is defined as one of either a common-character,
+      space, open-parenthesis, close-parenthesis, or an asterisk grammar
+      element.
+
+    comment-basic-character
+
+      comment-basic-character is defined as one of either a common-character,
+      white-space, quote, single-quote, or a slash grammar element.
+
+    non-comment-start-character
+
+      non-comment-start-character is defined as one of either a
+      comment-basic-character, or a close-parenthesis grammar element.
+
+    non-comment-end-character
+
+      non-comment-end-character is defined as one of either a
+      comment-basic-character, or an open-parenthesis grammar element.
+
+    non-comment-start-sequence
+
+      non-comment-start-sequence is defined as an open-parenthesis '(', followed
+      by a non-comment-start-character.
+
+    non-comment-end-sequence
+
+      non-comment-end-sequence is defined as an asterisk ('*'), followed by a
+      non-comment-end-character.
+
+    comment-character
+
+      comment-character is defined as one of either a comment-basic-character,
+      non-comment-start-sequence, non-comment-end-sequence, or a
+      close-parenthesis grammar element.
+
+    single-quoted-character
+
+      single-quoted-character is defined as one of either a literal-character,
+      or a quote (").
+
+    quoted-character
+
+      quoted-character is defined as one of either a literal-character, or a
+      single-quote (').
+
+    phrase-conjugator
+
+      phrase-conjugator is defined as one of either an underscore ('_'), or
+      a minus ('-').
+
+    phrase-name-character
+
+      phrase-name is defined as one of either a letter, decimal-digit, or a
+      phrase-conjugator grammar element.
+
+    binary-indicator
+
+      binary-indicator is defined as one of either a b, or a B grammar element.
+
+    octal-indicator
+
+      octal-indicator is defined as one of either an o, or an O grammar element.
+
+    hexadecimal-indicator
+
+      hexadecimal-indicator is defined as one of either an x, or an X grammar
+      element.
+
+  ASCII Character Set
+
+    The EGG definition includes phrases for each of the 128 ASCII characters
+    defined in the ASCII character set.  This has two disctinct implications.
+
+    The first implication is that an EGG definition must use the ASCII 
+    character set, and that all 128 characters in the ASCII set will be
+    properly handled by the standard EGG parser.
+
+    The second implication is that while an EGG definition must itself use
+    the ASCII character set, any grammar it defines, and its associated
+    parser is NOT required to use ASCII as its base character coding. For
+    example, a grammar can be defined that is specific to a locale's character
+    set, but the EGG definition still must use ASCII.  The resulting parser
+    need not know anything about ASCII to properly parse the defining grammar.
+
+    In other words, a grammar can be defined in EGG that describes the syntax
+    for a configuration file that is in the Klingon language.  The resultant
+    parser will parse the configuration file in Klingon encoding, not needing
+    to know anything about the ASCII (US English) character set.
+
+    NOTE:  The descriptions for each individual ASCII character have been
+           omitted from this section.  Please refer to the canonical EGG
+           definition file for EGG itself, or an ASCII table for further
+           details.
+
+  An Example Grammar Defined in EGG
+
+    A very simple EGG definition follows:
+
+      (* A comment *)
+      command = add | delete | list ;
+
+      add = 'add' + code ;
+
+      delete-command = 'delete' | 'del' ;
+
+      delete = (* an inline comment *) delete-command + code ;
+
+      list = 'list' + code{0,1} ;
+
+      code = code-chars{1,*} ;
+
+      code-chars = 'A'|'B'|'C'|'D' ;
+
+   An alternate, yet syntactically correct and equivalent definition could
+   also be:
+
+      (*a very compact example EGG definition*)
+      command=add|delete|list;
+      add='add'+code;
+      delete-command='delete'|'del';
+      delete=delete-command+code;
+      list='list'+code{0,1};
+      code=code-chars{1,*};
+      code-chars='A'|'B'|'C'|'D';
+
+   In the above example, a grammar has been defined that consists of one
+   top level phrase named command.
+
+   A command can be either an add, delete, or list.
+
+   An add is the literal string 'add' followed by a code.
+
+   A delete is the literal string 'delete' or the literal string 'del', then
+   followed by a code.
+
+   A list is the literal string 'list' followed by an optional code.
+
+   A code is simply a sequence, in any order, or one or more literal 'A', 'B'
+   'C', or 'D' characters.
+
+   In this grammar, all of the following examples would parse without error:
+
+     addABCD
+     delABCD
+     list
+     listABCD
+     addC
+     addCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCBBBBCCCCCCCCCA
+
+   but, the following would cause a parser failure:
+
+     add ABCD  (Note that the example grammar does not allow for spaces)
+     add       (A code is required)
+
+
+2. embryo
+  Purpose
+  Invocation
+  Options Explained
+  Output
+  Examples
+
+
+3. embryo Output Explained
+
+
+4. egg-walker
+  Purpose
+  Invocation
+  Options Explained
+  Output
+  Examples
+
+
+5. egg-walker Output Explained
+
+
+6. egg-mapper
+  Purpose
+  Invocation
+  Options Explained
+  Output
+  Examples
+
+
+7. egg-mapper Output Explained
+
+
+8. Tutorial: Creating a parser from an EGG
+  Simple Example
+  An EGG EGG
+  SPICE model
+
+
+APPENDIX A:  Terms
+
+
+Bibliography
+
+
+Index
+
+

@@ -4,7 +4,7 @@
     \brief Source code for string append function.
     \brief In the spirit of the standard C string functions.
 
-    \version 20131209035052
+    \timestamp 20131225233844
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 

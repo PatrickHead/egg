@@ -6,7 +6,7 @@
     \note Currently, this source is not implemented in any portion of the
           \b EGG/embryo system.
 
-    \version 20131212042006
+    \timestamp 20131225233844
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 

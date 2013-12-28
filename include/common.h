@@ -3,7 +3,7 @@
 
     \brief Header file for common type definitions.
 
-    \version 20131215085006
+    \timestamp 20131225233843
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 

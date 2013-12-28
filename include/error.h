@@ -3,7 +3,7 @@
 
     \brief Header file for generic error handling routines.
 
-    \version 20131215084959
+    \timestamp 20131225233843
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 

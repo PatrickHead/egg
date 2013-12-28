@@ -3,7 +3,7 @@
 
     \brief Header file for line mapping routines.
 
-    \version 20131221055412
+    \timestamp 20131225233843
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 

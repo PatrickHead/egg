@@ -3,7 +3,7 @@
 
     \brief Header file for "mkdir -p" like function.
 
-    \version 20131207175824
+    \timestamp 20131225233843
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 

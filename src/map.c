@@ -3,7 +3,7 @@
 
     \brief Source code for line mapping routines.
 
-    \version 20131221055311
+    \timestamp 20131225233844
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 

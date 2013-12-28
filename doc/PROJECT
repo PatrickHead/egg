@@ -24,7 +24,7 @@ DONE    Stage II:  start 2013-10-27
 
         Stage III:  start 2013-11-01
 
-          1)  Develop parser generation code:
+DONE      1)  Develop parser generation code:
                 A)  embryo
 
           2)  Develop generator support code:
@@ -92,7 +92,8 @@ WIP       4)  Project Management utilities.
 
                 C)  EGG to XSchema
 
-                D)  Grammar mapping/diagramming utility
+DONE            D)  Grammar mapping/diagramming utility
+                    egg-mapper - generates XML file with 3 maps
 
           7)  Converters:
 

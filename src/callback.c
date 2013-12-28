@@ -3,7 +3,7 @@
 
     \brief Source code for callback system.
 
-    \version 20131212035931
+    \timestamp 20131226044545
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -45,9 +45,9 @@
 
     Generally, an individual software function may create a callback entry into
     the callback table.  The only requirement for the entry is a name.  In
-    addition, this initiating function then will trigger callbacks for
+    addition, this initiating function then will trigger callbacks at
     entry into the initiating function, and at each location in the initiating
-    function were a successful, or failed return will occur.
+    function where a successful, or failed return will occur.
   */
 
   // Required system headers

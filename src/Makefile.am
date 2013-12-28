@@ -1,4 +1,4 @@
-AM_CFLAGS = -O3 -I $(top_srcdir)/include
+AM_CFLAGS = -O3 -I .. -I $(top_srcdir)/include
 AM_LDFLAGS =
 
 bin_PROGRAMS = embryo egg-walker egg-mapper

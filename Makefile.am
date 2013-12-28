@@ -11,7 +11,8 @@ parser-code: src/embryo
 	src/embryo -p egg -g hs -d . doc/.egg \
 		--email=patrickhead@gmail.com \
 		--author "Patrick Head" \
-		--use-doxygen=true
+		--use-doxygen=true \
+    --code-version=$$(grep AC_INIT configure.ac | sed -e 's/^[^,]*,\[\(.*\)],.*$$/\1/')
 
 clean-local:
 	@if [ -d packages ]; then rm -f packages/*; fi

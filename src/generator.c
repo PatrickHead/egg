@@ -3,7 +3,7 @@
 
     \brief Source code for parser code generation routines for EGG grammars.
 
-    \version 20131221055452
+    \timestamp 20131228020754
 
     \author Patrick Head   mailto:patrickhead@gmail.com
 
@@ -112,7 +112,7 @@ static char *_pns_f = NULL;
 static boolean _use_doxygen = false;
 static char * _file_name = "Unknown";
 static char * _project_brief = "";
-static char * _version = "0";
+static char * _version = "0.0.1";
 static char * _author = "Anonymous";
 static char * _email = "";
 static int _first_year = 2013;
@@ -1887,6 +1887,7 @@ void generate_walker_source(FILE *of,
     // Emit code for function declarations
 
   fprintf(of, "static void usage(char *program_name);\n");
+  fprintf(of, "static void version(void);\n");
   fprintf(of, "static void walk(%s_token *t, int level);\n", parser_name);
   fprintf(of, "\n");
 
@@ -1936,12 +1937,11 @@ void generate_walker_source(FILE *of,
   {
     fprintf(of, "    { \"");
     fprintf(of, "%s", pmi->name);
-    fprintf(of, "\", 0, 0, 0 }");
-    if (pmi->next)
-      fprintf(of, ",");
+    fprintf(of, "\", 0, 0, 0 },\n");
     fprintf(of, "\n");
     pmi = pmi->next;
   }
+  fprintf(of, "    { 0, 0, 0, 0 }\n");
   fprintf(of, "  };\n");
   fprintf(of, "  boolean syntax_only = false;\n");
   pmi = pml;
@@ -1955,7 +1955,7 @@ void generate_walker_source(FILE *of,
   fprintf(of, "  %s_token *t;\n", parser_name);
   fprintf(of, "  char *input_file;\n");
   fprintf(of, "\n");
-  fprintf(of, "  while ((c = getopt_long(argc, argv, \"sh\", long_opts, "
+  fprintf(of, "  while ((c = getopt_long(argc, argv, \"svh\", long_opts, "
               "&long_index)) != -1)\n");
   fprintf(of, "  {\n");
   fprintf(of, "    switch (c)\n");
@@ -1982,6 +1982,9 @@ void generate_walker_source(FILE *of,
   fprintf(of, "      case 's':\n");
   fprintf(of, "        syntax_only = true;\n");
   fprintf(of, "        break;\n");
+  fprintf(of, "      case 'v':\n");
+  fprintf(of, "        version();\n");
+  fprintf(of, "        return 0;\n");
   fprintf(of, "      case 'h':\n");
   fprintf(of, "      default:\n");
   fprintf(of, "        usage(argv[0]);\n");
@@ -2057,6 +2060,9 @@ void generate_walker_source(FILE *of,
   fprintf(of, "\n");
   fprintf(of, "  fprintf(stderr, \"\\n\");\n");
   fprintf(of, "  fprintf(stderr, \"Usage:  %%s\\n\", program_name);\n");
+  fprintf(of, "  fprintf(stderr, \"          [-s]\\n\");\n");
+  fprintf(of, "  fprintf(stderr, \"          [-h]\\n\");\n");
+  fprintf(of, "  fprintf(stderr, \"          [-v]\\n\");\n");
   pmi = pml;
   while (pmi)
   {
@@ -2073,6 +2079,35 @@ void generate_walker_source(FILE *of,
   fprintf(of, "  fprintf(stderr, \"                  NONE or '-' implies input "
               "from STDIN.\\n\");\n");
   fprintf(of, "  fprintf(stderr, \"\\n\");\n");
+  fprintf(of, "\n");
+  fprintf(of, "  return;\n");
+  fprintf(of, "}\n");
+  fprintf(of, "\n");
+
+    // Emit comment block for <PROJECT>-walker's version() function
+
+  fprintf(of, "  /*%s\n", (_use_doxygen) ? "!" : "");
+  fprintf(of, "\n");
+  fprintf(of, "     %s Display command version.\n",
+                (_use_doxygen) ? "\\brief" : "");
+  fprintf(of, "\n");
+  fprintf(of, "     This function displays the current version of this "
+              "command.\n");
+  fprintf(of, "\n");
+  fprintf(of, "  */\n");
+  fprintf(of, "\n");
+
+    // Emit code for <PROJECT>-walker's usage() function
+
+  fprintf(of, "static void version(void)\n");
+  fprintf(of, "{\n");
+  fprintf(of, "printf(\"\\n\"\n");
+  fprintf(of, "       \"%s-walker - %s grammar walker.\\n\"\n",
+                parser_name, parser_name);
+  fprintf(of, "       \"%*.*s          Version %s\\n\"\n",
+                (int)strlen(parser_name), (int)strlen(parser_name), " ",
+                _version);
+  fprintf(of, "       \"\\n\");\n");
   fprintf(of, "\n");
   fprintf(of, "  return;\n");
   fprintf(of, "}\n");

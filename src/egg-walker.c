@@ -4,7 +4,7 @@
 
   \brief Source code for grammar specific walking/dumping utility
 
-  \version 20131221020530
+  \version 0.2.1
 
   \author Patrick Head mailto:patrickhead@gmail.com
 
@@ -38,6 +38,7 @@
 #include "egg-parser.h"
 
 static void usage(char *program_name);
+static void version(void);
 static void walk(egg_token *t, int level);
 
   /*!
@@ -67,14 +68,16 @@ int main(int argc, char **argv)
   int long_index;
   struct option long_opts[] =
   {
-    { "grammar", 0, 0, 0 }
+    { "grammar", 0, 0, 0 },
+
+    { 0, 0, 0, 0 }
   };
   boolean syntax_only = false;
   boolean walk_grammar = false;
   egg_token *t;
   char *input_file;
 
-  while ((c = getopt_long(argc, argv, "sh", long_opts, &long_index)) != -1)
+  while ((c = getopt_long(argc, argv, "svh", long_opts, &long_index)) != -1)
   {
     switch (c)
     {
@@ -91,6 +94,9 @@ int main(int argc, char **argv)
       case 's':
         syntax_only = true;
         break;
+      case 'v':
+        version();
+        return 0;
       case 'h':
       default:
         usage(argv[0]);
@@ -147,6 +153,9 @@ static void usage(char *program_name)
 
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage:  %s\n", program_name);
+  fprintf(stderr, "          [-s]\n");
+  fprintf(stderr, "          [-h]\n");
+  fprintf(stderr, "          [-v]\n");
   fprintf(stderr, "          [--grammar]\n");
   fprintf(stderr, "          [<file name>]\n");
   fprintf(stderr, "\n");
@@ -156,6 +165,24 @@ static void usage(char *program_name)
                   "grammar.\n");
   fprintf(stderr, "                  NONE or '-' implies input from STDIN.\n");
   fprintf(stderr, "\n");
+
+  return;
+}
+
+  /*!
+
+     \brief Display command version.
+
+     This function displays the current version of this command.
+
+  */
+
+static void version(void)
+{
+printf("\n"
+       "egg-walker - egg grammar walker.\n"
+       "             Version 0.2.1\n"
+       "\n");
 
   return;
 }

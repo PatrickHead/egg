@@ -1,4 +1,6 @@
 #!/usr/bin/env sh
 
+echo Pushing to backup
 git push backup master
-git push brawndo master
+echo Pushing to c1
+git push c1 master

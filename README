@@ -50,7 +50,7 @@ to each parser when needed.   Many possibilities exist for such needs.
 
 While the embryo parser currently produces correct grammar parsing code and
 said code is hopefully quite "unfragile", it is recognized by the initial author
-of this package that the code generated is far from being the most efficient
+of this package that the generated code is far from being the most efficient
 code possible.
 
 From a code style viewpoint, the generated code is quite consistent, but

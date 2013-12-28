@@ -4,7 +4,7 @@
 
   \brief Source code for grammer phrase parsing functions
 
-  \version 20131214114410
+  \version 0.2.1
 
   \author Patrick Head mailto:patrickhead@gmail.com
 
@@ -12109,7 +12109,7 @@ egg_token *phrase_conjugator(void)
 
     \par "EGG Phrase Definition"
     \verbatim
-    phrase-name-character = letter | decimal_digit | phrase-conjugator ;
+    phrase-name-character = letter | decimal-digit | phrase-conjugator ;
     \endverbatim
 
     \retval "egg_token *" on synctactical match of phrase

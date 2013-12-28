@@ -4,7 +4,7 @@
 
   \brief Source code for EGG grammar mapping utility
 
-  \version 20131221065723
+  \timestamp 20131228021350
 
   \author Patrick Head mailto:patrickhead@gmail.com
 
@@ -35,6 +35,7 @@
 
   // Project specific headers
 
+#include "config.h"
 #include "common.h"
 #include "input.h"
 #include "egg-token.h"
@@ -45,6 +46,7 @@
   // Function declarations
 
 static void usage(char *program_name);
+static void version(void);
 static void map(FILE *of, egg_token *t);
 static void map_phrases(FILE *of, egg_token *t);
 static void map_phrase_usage(FILE *of, egg_token *t);
@@ -80,7 +82,9 @@ int main(int argc, char **argv)
   struct option long_opts[] =
   {
     { "output", 0, 0, 'o' },
-    { "help", 0, 0, 'h' }
+    { "version", 0, 0, 'v' },
+    { "help", 0, 0, 'h' },
+    { 0, 0, 0, 0 }
   };
   boolean raw_output = false;
   boolean graphviz_output = false;
@@ -90,13 +94,16 @@ int main(int argc, char **argv)
   char *output_file = NULL;
   FILE *of = NULL;
 
-  while ((c = getopt_long(argc, argv, "o:h", long_opts, &long_index)) != -1)
+  while ((c = getopt_long(argc, argv, "o:vh", long_opts, &long_index)) != -1)
   {
     switch (c)
     {
       case 'o':
         output_file = strdup(optarg);
         break;
+      case 'v':
+        version();
+        return 0;
       case 'h':
       default:
         usage(argv[0]);
@@ -158,17 +165,37 @@ static void usage(char *program_name)
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage:  %s\n", program_name);
   fprintf(stderr, "          [-o|--output <output file>]\n");
-  fprintf(stderr, "          [--graphviz]\n");
-  fprintf(stderr, "          [--c]\n");
+  fprintf(stderr, "          [-v|--version]\n");
+  fprintf(stderr, "          [-h|--help]\n");
   fprintf(stderr, "          [<file name>]\n");
   fprintf(stderr, "\n");
   fprintf(stderr, "  where:\n");
   fprintf(stderr, "\n");
-  fprintf(stderr, "    <file name>   = pathname to any file that uses a 'egg' "
+  fprintf(stderr, "    <file name>   = pathname to any EGG definition file."
                   "grammar.\n");
   fprintf(stderr, "                    NONE or '-' implies input from STDIN.\n");
   fprintf(stderr, "    <output file> = pathname to generated XML file.\n");
   fprintf(stderr, "\n");
+
+  return;
+}
+
+  /*!
+
+     \brief Display command version.
+    
+     This function displays the current version of this command.
+    
+  */
+
+static void version(void)
+{
+  printf("\n"
+         "egg-mapper - EGG definition mapper.\n"
+         "             Version "
+         VERSION
+         "\n"
+         "\n");
 
   return;
 }
@@ -300,7 +327,8 @@ static void map_phrases(FILE *of, egg_token *t)
 
             // Get any subsequent items in this sequence
 
-          seqcon = egg_token_find(def->descendant, egg_token_type_sequence_continuation);
+          seqcon = egg_token_find(def->descendant,
+                                  egg_token_type_sequence_continuation);
           while (seqcon)
           {
 						it = egg_token_find(seqcon->descendant, egg_token_type_item);
@@ -316,7 +344,8 @@ static void map_phrases(FILE *of, egg_token *t)
 
             // Look for subsequent sequences in definition
 
-          defcon = egg_token_find(def->descendant, egg_token_type_definition_continuation);
+          defcon = egg_token_find(def->descendant,
+                                  egg_token_type_definition_continuation);
           while (defcon)
           {
               // Grab the sequence

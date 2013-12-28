@@ -3,7 +3,7 @@
 
     \brief Source code for embryo parser generator.
 
-    \version 20131221060552
+    \timestamp 20131228014801
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -24,11 +24,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+  // Required system headers
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <getopt.h>
 
+  // Project specific headers
+
+#include "config.h"
 #include "common.h"
 #include "input.h"
 #include "egg-token.h"
@@ -38,6 +43,7 @@
 #include "egg-parser.h"
 
 static void usage(char *program_name);
+static void version(void);
 static char *build_file_name(char *dir, char *project_name, char *file_name);
 static char *build_path(char *dir, char *sub);
 static int create_directories(char *top);
@@ -79,7 +85,9 @@ int main(int argc, char **argv)
       { "email", 1, 0, 1003 },
       { "first-year", 1, 0, 1004 },
       { "license-text", 1, 0, 1005 },
-      { "help", 0, 0, 'h' }
+      { "version", 0, 0, 'v' },
+      { "help", 0, 0, 'h' },
+      { 0, 0, 0, 0 }
     };
   char *directory = NULL;
   char *generate_list = NULL;
@@ -100,7 +108,7 @@ int main(int argc, char **argv)
   FILE *fo;
   char *path;
 
-  while ((c = getopt_long(argc, argv, "g:d:o:p:h", long_opts, NULL)) != -1)
+  while ((c = getopt_long(argc, argv, "g:d:o:p:vh", long_opts, NULL)) != -1)
   {
     switch (c)
     {
@@ -145,6 +153,9 @@ int main(int argc, char **argv)
       case 1005:
         license_text = strdup(optarg);
         break;
+      case 'v':
+        version();
+        return 0;
       case 'h':
       default:
         usage(argv[0]);
@@ -411,7 +422,7 @@ static void usage(char *program_name)
 
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage:  "
-                  "%s \n"
+                  "%s\n"
                   "          <-p | --project-name=> <project name> \n"
                   "          [<-g | --generate-list=> <generate list>] \n"
                   "          [<-d | --directory=> <output directory>] \n"
@@ -422,8 +433,18 @@ static void usage(char *program_name)
                   "          [--email=<email address>] \n"
                   "          [--first-year=<4 digit year>] \n"
                   "          [--license-text=<license string>] \n"
-                  "          [<egg file name>]\n",
-           program_name);
+                  "          [<egg file name>]\n"
+                  "\n"
+                  "  --or--\n"
+                  "\n"
+                  "        %s\n"
+                  "          <-v | --version>\n"
+                  "\n"
+                  "  --or--\n"
+                  "\n"
+                  "        %s\n"
+                  "          <-h | --help>\n",
+           program_name, program_name, program_name);
   fprintf(stderr, "\n");
   fprintf(stderr, "  where:\n");
   fprintf(stderr, "\n");
@@ -448,6 +469,26 @@ static void usage(char *program_name)
                   "file.  NONE or '-' \n"
                   "                         implies input from STDIN.\n");
   fprintf(stderr, "\n");
+
+  return;
+}
+
+  /*!
+
+     \brief Display command version.
+    
+     This function displays the current version of this command.
+    
+  */
+
+static void version(void)
+{
+  printf("\n"
+         "embryo - EGG parser source code generator.\n"
+         "         Version "
+         VERSION
+         "\n"
+         "\n");
 
   return;
 }

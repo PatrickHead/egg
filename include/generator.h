@@ -3,7 +3,7 @@
 
     \brief Header file for parser code generation routines for EGG grammars.
 
-    \version 20131214020848
+    \timestamp 20131225233843
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 

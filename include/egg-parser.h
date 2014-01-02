@@ -4,7 +4,7 @@
 
   \brief Source code for egg-parser.h
 
-  \version 0.2.1
+  \version 0.2.2
 
   \author Patrick Head mailto:patrickhead@gmail.com
 

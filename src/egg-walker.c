@@ -4,7 +4,7 @@
 
   \brief Source code for grammar specific walking/dumping utility
 
-  \version 0.2.1
+  \version 0.2.2
 
   \author Patrick Head mailto:patrickhead@gmail.com
 
@@ -181,7 +181,7 @@ static void version(void)
 {
 printf("\n"
        "egg-walker - egg grammar walker.\n"
-       "             Version 0.2.1\n"
+       "             Version 0.2.2\n"
        "\n");
 
   return;

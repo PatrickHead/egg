@@ -3,7 +3,7 @@
 
     \brief Source code for embryo parser generator.
 
-    \timestamp 20131228014801
+    \timestamp 20131228025240
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -642,6 +642,11 @@ static int create_directories(char *top)
   if (r)
     return -1;
 
+/*
+
+2013-12-28 PTH
+Commented out, until intregration with autotools is designed and implemented.  These directories are superfluous in the EGG project, and probably not needed in a regular Makefile either, and even so, if needed in a Makefile, it can handle the creation there.
+
   path = (char *)malloc(strlen(top) + strlen("/obj") + 1);
   if (!path)
     return -1;
@@ -668,6 +673,7 @@ static int create_directories(char *top)
   free(path);
   if (r)
     return -1;
+*/
 
   return 0;
 }

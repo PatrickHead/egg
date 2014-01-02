@@ -4,7 +4,7 @@
 
   \brief Source code for EGG grammar mapping utility
 
-  \timestamp 20131228021350
+  \timestamp 20140102052221
 
   \author Patrick Head mailto:patrickhead@gmail.com
 
@@ -171,8 +171,7 @@ static void usage(char *program_name)
   fprintf(stderr, "\n");
   fprintf(stderr, "  where:\n");
   fprintf(stderr, "\n");
-  fprintf(stderr, "    <file name>   = pathname to any EGG definition file."
-                  "grammar.\n");
+  fprintf(stderr, "    <file name>   = pathname to any EGG definition file.\n");
   fprintf(stderr, "                    NONE or '-' implies input from STDIN.\n");
   fprintf(stderr, "    <output file> = pathname to generated XML file.\n");
   fprintf(stderr, "\n");

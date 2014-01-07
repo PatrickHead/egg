@@ -1,25 +1,25 @@
 /*!
-    \file mkdir_p.c
+    @file mkdir_p.c
 
-    \brief Source code for "mkdir -p" like function.
+    @brief Source code for "mkdir -p" like function.
 
-    \timestamp 20131225233844
+    @timestamp Mon, 06 Jan 2014 15:23:31 +0000
 
-    \author Patrick Head  mailto:patrickhead@gmail.com
+    @author Patrick Head  mailto:patrickhead@gmail.com
 
-    \copyright Copyright (C) 2013  Patrick Head
+    @copyright Copyright (C) 2013  Patrick Head
 
-    \license
+    @license
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.\n
-    \n
+    (at your option) any later version.@n
+    @n
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.\n
-    \n
+    GNU General Public License for more details.@n
+    @n
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -34,16 +34,16 @@
 
   /*!
 
-     \brief Create a directory hierarchy in same spirit as "mkdir -p" command.
+     @brief Create a directory hierarchy in same spirit as "mkdir -p" command.
     
      This utility function will create a directory hierarchy much like the 
      POSIX "mkdir -p" command, filling in any missing directory elements
      necessary to complete the directory creation.
     
-     \param pathname string containing path of new directory(s) to create
-     \param mode     mode_t permissions for newly created directories
+     @param pathname string containing path of new directory(s) to create
+     @param mode     mode_t permissions for newly created directories
     
-     \retval  0 success
+     @retval  0 success
              -1 failure
 
   */

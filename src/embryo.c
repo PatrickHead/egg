@@ -1,25 +1,25 @@
 /*!
-    \file embryo.c
+    @file embryo.c
 
-    \brief Source code for embryo parser generator.
+    @brief Source code for embryo parser generator.
 
-    \timestamp 20131228025240
+    @timestamp Mon, 06 Jan 2014 15:20:56 +0000
 
-    \author Patrick Head  mailto:patrickhead@gmail.com
+    @author Patrick Head  mailto:patrickhead@gmail.com
 
-    \copyright Copyright (C) 2013  Patrick Head
+    @copyright Copyright (C) 2013  Patrick Head
 
-    \license
+    @license
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.\n
-    \n
+    (at your option) any later version.@n
+    @n
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.\n
-    \n
+    GNU General Public License for more details.@n
+    @n
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -50,9 +50,9 @@ static int create_directories(char *top);
 
   /*!
 
-     \brief main function for \b embryo utility command.
+     @brief main function for @b embryo utility command.
     
-     This is the main function for the \b embryo utility.\n
+     This is the main function for the @b embryo utility.@n
        - Accepts and parses command line arguments
        - Initializes the input source
        - Creates directories required for generated source code files
@@ -60,11 +60,11 @@ static int create_directories(char *top);
          arguments
        - Cleans up input source and other data
     
-     \param argc count of command line arguments
-     \param argv array of command line argument strings
+     @param argc count of command line arguments
+     @param argv array of command line argument strings
     
-     \retval 0 success
-     \retval 1 any failure
+     @retval 0 success
+     @retval 1 any failure
 
   */
 
@@ -405,12 +405,12 @@ int main(int argc, char **argv)
 
   /*!
 
-     \brief Displays usage/help message in conventional format.
+     @brief Displays usage/help message in conventional format.
     
-     This function displays a help and usage message for the \b embryo
+     This function displays a help and usage message for the @b embryo
      utility in the mostly ubiquitous POSIX/GNU format.
     
-     \param program_name string containing the program name used in the
+     @param program_name string containing the program name used in the
                          usage message
     
   */
@@ -475,7 +475,7 @@ static void usage(char *program_name)
 
   /*!
 
-     \brief Display command version.
+     @brief Display command version.
     
      This function displays the current version of this command.
     
@@ -495,23 +495,23 @@ static void version(void)
 
   /*!
 
-     \brief Builds a pathname for a file.
+     @brief Builds a pathname for a file.
     
-     This function builds a \e pathname for a file that will be created by
-     the \b embryo utility.  This \e pathname consists of the user supplied
+     This function builds a @e pathname for a file that will be created by
+     the @b embryo utility.  This @e pathname consists of the user supplied
      project directory, if any, followed by the user supplied project name,
      followed by the base file name.
 
-     \warning This function returns a pointer to dynamically allocated memory.
+     @warning This function returns a pointer to dynamically allocated memory.
               It is the caller's responsibility to free this memory when
               appropriate.
     
-     \param dir          string containing the project storage directory, if any
+     @param dir          string containing the project storage directory, if any
             NULL         for no specific project directory
-     \param project_name string containing the name of the project
-     \param file_name    string containing the name of the file to be generated
+     @param project_name string containing the name of the project
+     @param file_name    string containing the name of the file to be generated
     
-     \retval "char *"    string containing \e pathname of file to be generated
+     @retval "char *"    string containing @e pathname of file to be generated
 
   */
 
@@ -554,20 +554,20 @@ static char *build_file_name(char *dir, char *project_name, char *file_name)
 
   /*!
 
-     \brief Builds a directory path from two directory components.
+     @brief Builds a directory path from two directory components.
     
      This function essentially appends a sub-directory path component to
      a known parent directory path.
     
-     \warning This function returns a pointer to dynamically allocated memory.
+     @warning This function returns a pointer to dynamically allocated memory.
               It is the caller's responsibility to free this memory when
               appropriate.
     
-     \param dir string containing parent directory path component
-     \param sub string containing sub-directory path component
+     @param dir string containing parent directory path component
+     @param sub string containing sub-directory path component
     
-     \retval "char *" string containing new directory path
-     \retval NULL     failure
+     @retval "char *" string containing new directory path
+     @retval NULL     failure
 
   */
 
@@ -592,7 +592,7 @@ static char *build_path(char *dir, char *sub)
 
   /*!
 
-     \brief Creates all project related directories.
+     @brief Creates all project related directories.
     
      This function creates all essential project related directories and
      sub-directories for a project.  All sub-directories are created under a
@@ -605,10 +605,10 @@ static char *build_path(char *dir, char *sub)
        - \<PROJECT\>/bin sub-directory
        - \<PROJECT\>/obj sub-directory
     
-     \param top string containing the top-level project directory
+     @param top string containing the top-level project directory
     
-     \retval  0 success
-     \retval -1 failure
+     @retval  0 success
+     @retval -1 failure
 
   */
 

@@ -1,26 +1,26 @@
 /*!
 
-  \file egg-token-util.c
+  @file egg-token-util.c
 
-  \brief Source code for grammer specific token utility functions
+  @brief Source code for grammer specific token utility functions
 
-  \version 0.2.2
+  @version 0.2.3
 
-  \author Patrick Head mailto:patrickhead@gmail.com
+  @author Patrick Head mailto:patrickhead@gmail.com
 
-  \copyright Copyright (C) 2013 Patrick Head
+  @copyright Copyright (C) 2013-2014 Patrick Head
 
-  \license
+  @license
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.\n
-  \n
+  (at your option) any later version.@n
+  @n
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.\n
-  \n
+  GNU General Public License for more details.@n
+  @n
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see   \<http://www.gnu.org/licenses/\>.
 
@@ -28,7 +28,7 @@
 
   /*!
 
-    \file egg-token-util.c
+    @file egg-token-util.c
 
     This is the source code file for the egg grammar token utility
     functions module.
@@ -46,13 +46,13 @@
 
   /*!
 
-    \brief Returns a string representation of egg_token.
+    @brief Returns a string representation of egg_token.
 
-    \warning This function returns a pointer to dynamically allocated memory.
+    @warning This function returns a pointer to dynamically allocated memory.
           It is the caller's responsibility to free this memory when
           appropriate.
 
-    \param t egg_token * to egg_token to string-ize
+    @param t egg_token * to egg_token to string-ize
 
   */
 

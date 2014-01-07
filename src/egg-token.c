@@ -1,26 +1,26 @@
 /*!
 
-  \file egg-token.c
+  @file egg-token.c
 
-  \brief Source code for grammer specific token handling functions
+  @brief Source code for grammer specific token handling functions
 
-  \version 0.2.2
+  @version 0.2.3
 
-  \author Patrick Head mailto:patrickhead@gmail.com
+  @author Patrick Head mailto:patrickhead@gmail.com
 
-  \copyright Copyright (C) 2013 Patrick Head
+  @copyright Copyright (C) 2013-2014 Patrick Head
 
-  \license
+  @license
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.\n
-  \n
+  (at your option) any later version.@n
+  @n
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.\n
-  \n
+  GNU General Public License for more details.@n
+  @n
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see   \<http://www.gnu.org/licenses/\>.
 
@@ -28,7 +28,7 @@
 
   /*!
 
-    \file egg-token.c
+    @file egg-token.c
 
     This is the source code file for the egg grammar token and
     token tree management functions module.
@@ -45,16 +45,16 @@
 
   /*!
 
-    \brief Create a new egg_token
+    @brief Create a new egg_token
 
-    \warning This function returns a pointer to dynamically allocated memory.
+    @warning This function returns a pointer to dynamically allocated memory.
              It is the caller's responsibility to free this memory when 
              appropriate.
 
-    \param type egg_token_type
+    @param type egg_token_type
 
-    \retval "egg_token *" new egg_token
-    \retval NULL failure
+    @retval "egg_token *" new egg_token
+    @retval NULL failure
 
   */
 
@@ -77,12 +77,12 @@ egg_token *egg_token_new(egg_token_type type)
 
   /*!
 
-    \brief Free the memory associated with egg_token
+    @brief Free the memory associated with egg_token
 
-    \warning This function does NOT perform any unlinking of the freed token.
-    \sa egg_token_unlink()
+    @warning This function does NOT perform any unlinking of the freed token.
+    @sa egg_token_unlink()
 
-    \param t egg_token *
+    @param t egg_token *
 
   */
 
@@ -98,14 +98,14 @@ void egg_token_free(egg_token *t)
 
   /*!
 
-    \brief Link egg_token into an existing token tree
+    @brief Link egg_token into an existing token tree
 
-    \param t   existing egg_token *
-    \param dir egg_token_direction
-    \param n   egg_token * to link
+    @param t   existing egg_token *
+    @param dir egg_token_direction
+    @param n   egg_token * to link
 
-    \retval true  success
-    \retval false failure
+    @retval true  success
+    @retval false failure
 
   */
 
@@ -164,13 +164,13 @@ boolean egg_token_add(egg_token *t, egg_token_direction dir, egg_token *n)
 
   /*!
 
-    \brief Delete egg_token from an existing token tree, if any
+    @brief Delete egg_token from an existing token tree, if any
 
     This function unlinks egg_token from an existing token 
     tree, if required.
     Also, the memory associated with egg_token is freed.
 
-    \param t egg_token *
+    @param t egg_token *
 
   */
 
@@ -190,12 +190,12 @@ void egg_token_delete(egg_token *t)
 
   /*!
 
-    \brief Unlink egg_token from an existing token tree
+    @brief Unlink egg_token from an existing token tree
 
-    \warning This function does NOT perform any freeing of the unlinked token.
-    \sa egg_token_free()
+    @warning This function does NOT perform any freeing of the unlinked token.
+    @sa egg_token_free()
 
-    \param t egg_token *
+    @param t egg_token *
 
   */
 
@@ -219,11 +219,11 @@ void egg_token_unlink(egg_token *t)
 
   /*!
 
-    \brief Returns egg_token_type of egg_token
+    @brief Returns egg_token_type of egg_token
 
-    \param t egg_token *
+    @param t egg_token *
 
-    \retval egg_token_type
+    @retval egg_token_type
 
   */
 
@@ -237,10 +237,10 @@ egg_token_type egg_token_get_type(egg_token *t)
 
   /*!
 
-    \brief Sets egg_token_type of egg_token
+    @brief Sets egg_token_type of egg_token
 
-    \param t    egg_token *
-    \param type egg_token_type
+    @param t    egg_token *
+    @param type egg_token_type
 
   */
 
@@ -254,11 +254,11 @@ void egg_token_set_type(egg_token *t, egg_token_type type)
 
   /*!
 
-    \brief Returns pointer to ascendant of egg_token
+    @brief Returns pointer to ascendant of egg_token
 
-    \param t egg_token *
+    @param t egg_token *
 
-    \retval "egg_token *"
+    @retval "egg_token *"
 
   */
 
@@ -272,10 +272,10 @@ egg_token *egg_token_get_ascendant(egg_token *t)
 
   /*!
 
-    \brief Sets pointer to ascendant of egg_token
+    @brief Sets pointer to ascendant of egg_token
 
-    \param t existing egg_token *
-    \param a ascendant of egg_token *
+    @param t existing egg_token *
+    @param a ascendant of egg_token *
 
   */
 
@@ -289,11 +289,11 @@ void egg_token_set_ascendant(egg_token *t, egg_token *a)
 
   /*!
 
-    \brief Returns pointer to descendant of egg_token
+    @brief Returns pointer to descendant of egg_token
 
-    \param t egg_token *
+    @param t egg_token *
 
-    \retval "egg_token *"
+    @retval "egg_token *"
 
   */
 
@@ -307,10 +307,10 @@ egg_token *egg_token_get_descendant(egg_token *t)
 
   /*!
 
-    \brief Sets pointer to descendant of egg_token
+    @brief Sets pointer to descendant of egg_token
 
-    \param t existing egg_token *
-    \param d descendant of egg_token *
+    @param t existing egg_token *
+    @param d descendant of egg_token *
 
   */
 
@@ -324,11 +324,11 @@ void egg_token_set_descendant(egg_token *t, egg_token *d)
 
   /*!
 
-    \brief Returns pointer to previous egg_token
+    @brief Returns pointer to previous egg_token
 
-    \param t egg_token *
+    @param t egg_token *
 
-    \retval "egg_token *"
+    @retval "egg_token *"
 
   */
 
@@ -342,10 +342,10 @@ egg_token *egg_token_get_previous(egg_token *t)
 
   /*!
 
-    \brief Sets pointer to previous egg_token
+    @brief Sets pointer to previous egg_token
 
-    \param t existing egg_token *
-    \param p previous egg_token *
+    @param t existing egg_token *
+    @param p previous egg_token *
 
   */
 
@@ -359,11 +359,11 @@ void egg_token_set_previous(egg_token *t, egg_token *p)
 
   /*!
 
-    \brief Returns pointer to next egg_token
+    @brief Returns pointer to next egg_token
 
-    \param t egg_token *
+    @param t egg_token *
 
-    \retval "egg_token *"
+    @retval "egg_token *"
 
   */
 
@@ -377,10 +377,10 @@ egg_token *egg_token_get_next(egg_token *t)
 
   /*!
 
-    \brief Sets pointer to next egg_token
+    @brief Sets pointer to next egg_token
 
-    \param t existing egg_token *
-    \param n next egg_token *
+    @param t existing egg_token *
+    @param n next egg_token *
 
   */
 
@@ -394,13 +394,13 @@ void egg_token_set_next(egg_token *t, egg_token *n)
 
   /*!
 
-    \brief Find next egg_token of specified egg_token_type
+    @brief Find next egg_token of specified egg_token_type
 
-    \param t    existing egg_token *
-    \param type egg_token_type
+    @param t    existing egg_token *
+    @param type egg_token_type
 
-    \retval "egg_token *" found egg_token
-    \retval NULL failure, including NOT FOUND
+    @retval "egg_token *" found egg_token
+    @retval NULL failure, including NOT FOUND
 
   */
 
@@ -427,19 +427,19 @@ egg_token *egg_token_find(egg_token *t, egg_token_type type)
 
   /*!
 
-    \brief Returns string representation of egg_token
+    @brief Returns string representation of egg_token
 
-    \warning This is a recursive function, therefore parameter s can NOT point to static
+    @warning This is a recursive function, therefore parameter s can NOT point to static
               memory.
 
-    \warning This function returns a pointer to dynamically allocated memory.
+    @warning This function returns a pointer to dynamically allocated memory.
              It is the caller's responsibility to free this memory when
              appropriate.
 
-    \param t existing egg_token *
-    \param s char * of existing string, can be NULL
+    @param t existing egg_token *
+    @param s char * of existing string, can be NULL
 
-    \retval "char *" string, can be NULL if s is NULL
+    @retval "char *" string, can be NULL if s is NULL
 
   */
 

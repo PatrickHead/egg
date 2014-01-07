@@ -3,7 +3,7 @@
 
     \brief Header file for parser input source.
 
-    \timestamp 20131225233843
+    \timestamp Thu, 26 Dec 2013 04:38:43 +0000
 
     \author Patrick Head  mailto:patrickhead@gmail.com
 

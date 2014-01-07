@@ -1,32 +1,32 @@
 /*!
-    \file map.c
+    @file map.c
 
-    \brief Source code for line mapping routines.
+    @brief Source code for line mapping routines.
 
-    \timestamp 20131225233844
+    @timestamp Mon, 06 Jan 2014 15:23:22 +0000
 
-    \author Patrick Head  mailto:patrickhead@gmail.com
+    @author Patrick Head  mailto:patrickhead@gmail.com
 
-    \copyright Copyright (C) 2013  Patrick Head
+    @copyright Copyright (C) 2013  Patrick Head
 
-    \license
+    @license
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.\n
-    \n
+    (at your option) any later version.@n
+    @n
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.\n
-    \n
+    GNU General Public License for more details.@n
+    @n
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
   /*!
 
-    \file map.c
+    @file map.c
 
     This is the source code file for EGG grammar phrase mapping function module.
 
@@ -53,16 +53,16 @@ static void all_phrase_names(egg_token *t, phrase_map_item *pmi);
 
   /*!
 
-     \brief Create an list of \e phrase_map_item.
+     @brief Create an list of @e phrase_map_item.
 
      This function creates a list of phrase map items, each of which contain
      the phrase name of each phrase in any EGG grammar token tree.  The list is
      ordered in the same way as the EGG grammar itself.
     
-     \param g egg_token * to root of EGG grammar token tree.
+     @param g egg_token * to root of EGG grammar token tree.
     
-     \retval "phrase_map_item *" to head of phrase_map
-     \retval NULL                failure
+     @retval "phrase_map_item *" to head of phrase_map
+     @retval NULL                failure
 
   */
 
@@ -114,15 +114,15 @@ phrase_map_item *phrase_map(egg_token *g)
 
   /*!
 
-     \brief Create an list of \e phrase_map_item of phrases referenced in a
+     @brief Create an list of @e phrase_map_item of phrases referenced in a
             given phrase's definition.
 
      This function creates a list of phrase map items, each of which contain
      the phrase name of each phrase referenced by a phrase's definition for
      a given phrase.
     
-     \param t   egg_token * to a single phrase token
-     \param pmi phrase_map_item * to a phrase_map_item for a phrase-name token
+     @param t   egg_token * to a single phrase token
+     @param pmi phrase_map_item * to a phrase_map_item for a phrase-name token
     
   */
 
@@ -156,19 +156,19 @@ static void all_phrase_names(egg_token *t, phrase_map_item *pmi)
 
   /*!
 
-     \brief Create a new \e phrase_map_item structure
+     @brief Create a new @e phrase_map_item structure
 
-     This function allocates and initializes new \e phrase_map_item structure.
+     This function allocates and initializes new @e phrase_map_item structure.
 
-     \warning This function returns a pointer to dynamically allocated memory.
+     @warning This function returns a pointer to dynamically allocated memory.
               It is the caller's responsibility to free this memory by calling
-              the corresponding \e phrase_map_item_free function when
+              the corresponding @e phrase_map_item_free function when
               appropriate.
     
-     \param name string containing phrase-name
+     @param name string containing phrase-name
     
-     \retval "phrase_map_item *" to new \e phrase_map_item
-     \retval NULL                failure
+     @retval "phrase_map_item *" to new @e phrase_map_item
+     @retval NULL                failure
 
   */
 
@@ -190,13 +190,13 @@ phrase_map_item *phrase_map_item_new(char *name)
 
   /*!
 
-     \brief Frees the memory associated with a dynamically allocated
-            \e phrase_map_item.
+     @brief Frees the memory associated with a dynamically allocated
+            @e phrase_map_item.
 
-     This function frees the allocated memory of a \e phrase_map_item and
+     This function frees the allocated memory of a @e phrase_map_item and
      its contained phrase-name string.
 
-     \param pmi phrase_map_item * to an existing phrase_map_item
+     @param pmi phrase_map_item * to an existing phrase_map_item
     
   */
 
@@ -215,19 +215,19 @@ void phrase_map_item_free(phrase_map_item *pmi)
 
   /*!
 
-     \brief Unlinks a \e phrase_map_item from a phrase map list.
+     @brief Unlinks a @e phrase_map_item from a phrase map list.
 
-     This function unlinks a specific \e phrase_map_item from an existing
+     This function unlinks a specific @e phrase_map_item from an existing
      phrase map list.
 
-     \note The \e list argument passed may be altered by this function to
+     @note The @e list argument passed may be altered by this function to
            reflect a new head of list.
 
-     \warning This function does NOT free the allocated memory for a dynamically
-              allocated \e phrase_map_item.
+     @warning This function does NOT free the allocated memory for a dynamically
+              allocated @e phrase_map_item.
 
-     \param list address of the head of an existing phrase map list
-     \param pmi  phrase_map_item * of specific phrase_map_item to unlink
+     @param list address of the head of an existing phrase map list
+     @param pmi  phrase_map_item * of specific phrase_map_item to unlink
     
   */
 
@@ -273,16 +273,16 @@ void phrase_map_item_unlink(phrase_map_item **list, phrase_map_item *pmi)
 
   /*!
 
-     \brief Deletes a \e phrase_map_item from a phrase map list.
+     @brief Deletes a @e phrase_map_item from a phrase map list.
 
-     This function deletes a specific \e phrase_map_item from an existing
-     phrase map list and frees the allocated memory of the \e phrase_map_item.
+     This function deletes a specific @e phrase_map_item from an existing
+     phrase map list and frees the allocated memory of the @e phrase_map_item.
 
-     \note The \e list argument passed may be altered by this function to
+     @note The @e list argument passed may be altered by this function to
            reflect a new head of list.
 
-     \param list address of the head of an existing phrase map list
-     \param pmi  phrase_map_item * of specific phrase_map_item to unlink
+     @param list address of the head of an existing phrase map list
+     @param pmi  phrase_map_item * of specific phrase_map_item to unlink
     
   */
 
@@ -317,12 +317,12 @@ void phrase_map_item_delete(phrase_map_item **list, phrase_map_item *pmi)
 
   /*!
 
-     \brief Deletes an entire phrase map list.
+     @brief Deletes an entire phrase map list.
 
      This function deletes an entire phrase map list, freeing all associated
      memory allocated to all items in the list.
 
-     \param list phrase_map_item * to head of phrase_map_list
+     @param list phrase_map_item * to head of phrase_map_list
     
   */
 
@@ -339,16 +339,16 @@ void phrase_map_list_delete(phrase_map_item *list)
 
   /*!
 
-     \brief Finds a \e phrase_map_item in a phrase map list by name.
+     @brief Finds a @e phrase_map_item in a phrase map list by name.
 
      This function finds an item in a phrase map list by name and returns
      a pointer to the found item.
 
-     \param list phrase_map_item * to head of phrase_map_list
-     \param name string containing the phrase-name of the item to find
+     @param list phrase_map_item * to head of phrase_map_list
+     @param name string containing the phrase-name of the item to find
     
-     \retval "phrase_map_item *" to found item
-     \retval NULL                failure
+     @retval "phrase_map_item *" to found item
+     @retval NULL                failure
   */
 
 phrase_map_item *phrase_map_list_find_item_by_name(phrase_map_item *list,
@@ -376,25 +376,25 @@ phrase_map_item *phrase_map_list_find_item_by_name(phrase_map_item *list,
 
   /*!
 
-     \brief Appends a new \e phrase_map_item to the end of a phrase map list.
+     @brief Appends a new @e phrase_map_item to the end of a phrase map list.
 
-     This function will create a new \e phrase_map_item for a given phrase-name
+     This function will create a new @e phrase_map_item for a given phrase-name
      and append the new item to the end of the phrase map list.
 
-     \note By definition, a properly formed EGG grammer will never contain
+     @note By definition, a properly formed EGG grammer will never contain
            a duplicate phrase-name for each EGG phrase, but any phrase
            definition may contain multiple references to the same phrase, so
            this function allows for duplicate names in phrase map list to
-           accomodate the building of the \e uses list in each
-           \e phrase_map_item in the higher level phrase map list.
+           accomodate the building of the @e uses list in each
+           @e phrase_map_item in the higher level phrase map list.
 
-     \param list address of phrase_map_item * to head of phrase map list
-     \param name string containing the phrase-name of the item to find
-     \param dups_allowed boolean flag to allow/deny duplicate phrase-name in
+     @param list address of phrase_map_item * to head of phrase map list
+     @param name string containing the phrase-name of the item to find
+     @param dups_allowed boolean flag to allow/deny duplicate phrase-name in
                          phrase map list
     
-     \retval "phrase_map_item *" to found item
-     \retval NULL                failure
+     @retval "phrase_map_item *" to found item
+     @retval NULL                failure
   */
 
 phrase_map_item *phrase_map_list_append_item_by_name(phrase_map_item **list,
@@ -434,18 +434,18 @@ phrase_map_item *phrase_map_list_append_item_by_name(phrase_map_item **list,
 
   /*!
 
-     \brief Returns index offset of a named \e phrase_map_item in a phrase
+     @brief Returns index offset of a named @e phrase_map_item in a phrase
             map list.
 
-     This function will locate a \e phrase_map_item in an existing phrase map
+     This function will locate a @e phrase_map_item in an existing phrase map
      list, and return the 0 (zero) based ordinal position of the
-     \e phrase_map_item in the phrase map list.
+     @e phrase_map_item in the phrase map list.
 
-     \param list phrase_map_item * to head of phrase_map_list
-     \param name string containing the phrase-name of the item to find
+     @param list phrase_map_item * to head of phrase_map_list
+     @param name string containing the phrase-name of the item to find
     
-     \retval int ordinal position of found phrase_map_item
-     \retval -1  failure
+     @retval int ordinal position of found phrase_map_item
+     @retval -1  failure
   */
 
 int phrase_map_list_get_item_index(phrase_map_item *list, char *name)
@@ -475,16 +475,16 @@ int phrase_map_list_get_item_index(phrase_map_item *list, char *name)
 
   /*!
 
-     \brief Returns a count of all \e phrase_map_item in a phrase
+     @brief Returns a count of all @e phrase_map_item in a phrase
             map list.
 
-     This function returns a shallow count of all \e phrase_map_item in an
+     This function returns a shallow count of all @e phrase_map_item in an
      existing phrase map list.
 
-     \param list phrase_map_item * to head of phrase_map_list
+     @param list phrase_map_item * to head of phrase_map_list
     
-     \retval int count of items
-     \retval -1  failure
+     @retval int count of items
+     @retval -1  failure
   */
 
 int phrase_map_list_count_items(phrase_map_item *list)
@@ -507,24 +507,24 @@ int phrase_map_list_count_items(phrase_map_item *list)
 
   /*!
 
-     \brief Reduce an EGG phrase map to just top-level phrases.
+     @brief Reduce an EGG phrase map to just top-level phrases.
     
      This function finds all the top-level phrases in an EGG grammar phrase map.
      A top-level phrase is defined as a phrase in an EGG grammar that has no
      dependent phrases.  In other words, no other EGG grammar phrases make
-     reference to a top-level phrase.\n
-     \n
+     reference to a top-level phrase.@n
+     @n
      This is useful for any code generation that needs to be able to make
      calls to or reports of specific sub-sets of a grammar at a top level.
-     The \<PROJECT\>-walker utility is an example of the use of top-level
+     The @<PROJECT@>-walker utility is an example of the use of top-level
      phrases.
 
-     \warning This function modifies the contents of the passed list of
-              \e phrase_map_item, specifically by deleting all phrase map items
+     @warning This function modifies the contents of the passed list of
+              @e phrase_map_item, specifically by deleting all phrase map items
               that do not contain EGG grammar phrases that qualify as top-level
               phrases.
     
-     \param list address of an array of \e phrase_map_item
+     @param list address of an array of @e phrase_map_item
     
   */
 

@@ -1,28 +1,28 @@
 /*!
 
-  \file egg-mapper.c
+  @file egg-mapper.c
 
-  \brief Source code for EGG grammar mapping utility
+  @brief Source code for EGG grammar mapping utility
 
-  \timestamp 20140102052221
+  @timestamp Tue, 07 Jan 2014 22:49:59 +0000
 
-  \author Patrick Head mailto:patrickhead@gmail.com
+  @author Patrick Head mailto:patrickhead@gmail.com
 
-  \copyright Copyright (C) 2013 Patrick Head
+  @copyright Copyright (C) 2013 Patrick Head
 
-  \license
+  @license
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.\n
-  \n
+  (at your option) any later version.@n
+  @n
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.\n
-  \n
+  GNU General Public License for more details.@n
+  @n
   You should have received a copy of the GNU General Public License
-  along with this program.  If not, see   \<http://www.gnu.org/licenses/\>.
+  along with this program.  If not, see   @<http://www.gnu.org/licenses/@>.
 
 */
 
@@ -56,20 +56,20 @@ static long convert_integer(egg_token *integer);
 
   /*!
 
-     \brief main function for \b egg-mapper utility command.
+     @brief main function for @b egg-mapper utility command.
 
-     This is the main function for the \b egg-mapper utility.\n
+     This is the main function for the @b egg-mapper utility.@n
        - Accepts and parses command line arguments
        - Initializes the input source
        - Maps all the phrases for the EGG input file
        - Outputs map data, based on user options
        - Cleans up input source and other data
 
-     \param argc count of command line arguments
-     \param argv array of command line argument strings
+     @param argc count of command line arguments
+     @param argv array of command line argument strings
 
-     \retval 0 success
-     \retval 1 any failure
+     @retval 0 success
+     @retval 1 any failure
 
   */
 
@@ -78,17 +78,14 @@ int main(int argc, char **argv)
   int c;
   extern char *optarg;
   extern int optind;
-  int long_index;
+  int long_index = 0;
   struct option long_opts[] =
   {
-    { "output", 0, 0, 'o' },
+    { "output", 1, 0, 'o' },
     { "version", 0, 0, 'v' },
     { "help", 0, 0, 'h' },
     { 0, 0, 0, 0 }
   };
-  boolean raw_output = false;
-  boolean graphviz_output = false;
-  boolean c_output = false;
   egg_token *t;
   char *input_file;
   char *output_file = NULL;
@@ -142,17 +139,24 @@ int main(int argc, char **argv)
 
   map(of, t);
 
+  if (output_file)
+  {
+    if (of)
+      fclose(of);
+    free(output_file);
+  }
+
   return 0;
 }
 
   /*!
 
-     \brief Displays usage/help message in conventional format.
+     @brief Displays usage/help message in conventional format.
 
-     This function displays a help and usage message for the \b egg-mapper
+     This function displays a help and usage message for the @b egg-mapper
      utility in the mostly ubiquitous POSIX/GNU format.
 
-     \param program_name string containing the program name used in the
+     @param program_name string containing the program name used in the
                          usage message
 
   */
@@ -181,7 +185,7 @@ static void usage(char *program_name)
 
   /*!
 
-     \brief Display command version.
+     @brief Display command version.
     
      This function displays the current version of this command.
     
@@ -201,7 +205,7 @@ static void version(void)
 
   /*!
 
-     \brief Map the phrases in an egg_token tree.
+     @brief Map the phrases in an egg_token tree.
 
      This function maps an egg_token tree, and emits phrase map data.
      The data consists of three parts:
@@ -209,8 +213,8 @@ static void version(void)
        2. A map of the phrases that use each phrase in the grammar.
        3. A list of of each top-level phrase.
 
-     \param of point to open file for output
-     \param t  egg_token * to root of egg_token tree
+     @param of point to open file for output
+     @param t  egg_token * to root of egg_token tree
 
   */
 
@@ -248,15 +252,15 @@ static void map(FILE *of, egg_token *t)
 
   /*!
 
-     \brief Map the phrases in an egg_token tree.
+     @brief Map the phrases in an egg_token tree.
 
      This function maps an egg_token tree, and emits phrase map data.
      The data is a XML representation of containing a map of each phrase
      in an EGG grammar, including literals.  Basically, this is the nearly
      complete XML representation of an EGG grammar definition file.
 
-     \param of point to open file for output
-     \param t  egg_token * to root of egg_token tree
+     @param of point to open file for output
+     @param t  egg_token * to root of egg_token tree
 
   */
 
@@ -403,13 +407,13 @@ static void map_phrases(FILE *of, egg_token *t)
 
   /*!
 
-     \brief Generate the XML associated with any EGG item token type.
+     @brief Generate the XML associated with any EGG item token type.
 
      This function outputs the XML fragments that describe an EGG item
      token type.
 
-     \param of point to open file for output
-     \param t  egg_token * to root of egg_token tree
+     @param of point to open file for output
+     @param t  egg_token * to root of egg_token tree
 
   */
 
@@ -593,11 +597,11 @@ static void emit_item(FILE *of, egg_token *item)
 
   /*!
 
-     \brief Converts an EGG integer token type token into an actual integer.
+     @brief Converts an EGG integer token type token into an actual integer.
 
-     \param t  egg_token * to integer token
+     @param t  egg_token * to integer token
 
-     \retval long integer representation of integer token
+     @retval long integer representation of integer token
   */
 
 static long convert_integer(egg_token *integer)
@@ -662,13 +666,13 @@ static long convert_integer(egg_token *integer)
 
   /*!
 
-     \brief Map the usage of each phrase in an EGG grammar.
+     @brief Map the usage of each phrase in an EGG grammar.
 
      This function emits the XML listing every phrase the references each
      phrase in an EGG grammar.
 
-     \param of point to open file for output
-     \param t  egg_token * to root of egg_token tree
+     @param of point to open file for output
+     @param t  egg_token * to root of egg_token tree
 
   */
 
@@ -755,7 +759,7 @@ static void map_phrase_usage(FILE *of, egg_token *t)
 
   /*!
 
-     \brief Map the top-level phrases in an EGG grammar.
+     @brief Map the top-level phrases in an EGG grammar.
 
      This creates the XML that contains a list of all the top-level phrases
      in an EGG grammar.
@@ -763,8 +767,8 @@ static void map_phrase_usage(FILE *of, egg_token *t)
      A top-level phrase is defined as any phrase in an EGG grammar that is
      not referenced (used) by any other phrase in that grammar.
 
-     \param of point to open file for output
-     \param t  egg_token * to root of egg_token tree
+     @param of point to open file for output
+     @param t  egg_token * to root of egg_token tree
 
   */
 

@@ -1,32 +1,32 @@
 /*!
-    \file input.c
+    @file input.c
 
-    \brief Source code for parser input source.
+    @brief Source code for parser input source.
 
-    \timestamp 20131225233844
+    @timestamp Mon, 06 Jan 2014 15:22:31 +0000
 
-    \author Patrick Head   mailto:patrickhead@gmail.com
+    @author Patrick Head   mailto:patrickhead@gmail.com
 
-    \copyright Copyright (C) 2013  Patrick Head
+    @copyright Copyright (C) 2013  Patrick Head
 
-    \license
+    @license
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.\n
-    \n
+    (at your option) any later version.@n
+    @n
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.\n
-    \n
+    GNU General Public License for more details.@n
+    @n
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
   /*!
 
-    \file input.c
+    @file input.c
 
     This is the source code file for a generic input source module. 
 
@@ -50,38 +50,38 @@
 #define CHUNK 512
 
   /*!
-    \brief Definintion of source types
+    @brief Definintion of source types
   */
 
 typedef enum
 {
-    /*! \brief UNKNOWN source type */
+    /*! @brief UNKNOWN source type */
   source_type_none = 0,
-    /*! \brief Regular file source type */
+    /*! @brief Regular file source type */
   source_type_file,
-    /*! \brief STDIN source type */
+    /*! @brief STDIN source type */
   source_type_stdin,
-    /*! \brief User supplied string buffer source type */
+    /*! @brief User supplied string buffer source type */
   source_type_buffer
 } source_type;
 
   /*!
-    \brief Definintion of global source tracking data
+    @brief Definintion of global source tracking data
   */
 
 static struct
 {
-    /*! \brief Input source type */
+    /*! @brief Input source type */
   source_type type;
-    /*! \brief Transient file pointer for file source type */
+    /*! @brief Transient file pointer for file source type */
   FILE *file;
-    /*! \brief Input buffer, either dynamic or user supplied */
+    /*! @brief Input buffer, either dynamic or user supplied */
   unsigned char *buffer;
-    /*! \brief Current input tracking position */
+    /*! @brief Current input tracking position */
   long  position;
-    /*! \brief Total size of input source in bytes */
+    /*! @brief Total size of input source in bytes */
   long  size;
-    /*! \brief Input EOF flag */
+    /*! @brief Input EOF flag */
   boolean eof;
 } _source;
 
@@ -103,32 +103,32 @@ static long _search_line_number(long position, long ilow, long ihigh);
 
   /*!
 
-     \brief Initialize an input source.
+     @brief Initialize an input source.
     
      This function initializes an input source.
-     - If the \b source parameter is NULL, then \e stdin will be read into a
+     - If the @b source parameter is NULL, then @e stdin will be read into a
        dynamically allocated buffer.
-     - If the \b source parameter is a string containing no new-line characters,
+     - If the @b source parameter is a string containing no new-line characters,
        then the string is considered a file pathname, and that file will be
        read into a dynamically allocated buffer.
-     - If the \b source parameter is a string containing at least one new-line
+     - If the @b source parameter is a string containing at least one new-line
        characer, then this string is used as the input buffer in place.
     
-     \note The input tracking position is initially set to 0
+     @note The input tracking position is initially set to 0
     
-     \note All input source lines are mapped for later line/char tracking.
+     @note All input source lines are mapped for later line/char tracking.
     
-     \note This function is not re-entrant.  Only one input source can be
+     @note This function is not re-entrant.  Only one input source can be
      managed at a time with this function.
     
-     \todo If deemed necessary, implement a multiple input source mechanism.
+     @todo If deemed necessary, implement a multiple input source mechanism.
     
-     \param source NULL\n
-                   pathname\n
-                   string with at least one new-line\n
+     @param source NULL@n
+                   pathname@n
+                   string with at least one new-line@n
     
-     \retval true  success
-     \retval false failure
+     @retval true  success
+     @retval false failure
 
   */
 
@@ -236,7 +236,7 @@ boolean input_initialize(char *source)
 
   /*!
 
-     \brief Destroy and cleanup an input source.
+     @brief Destroy and cleanup an input source.
     
      This function destroys any allocated buffer associated with an input
      source.  Also, the input tracking position is reset to 0, and the line
@@ -275,14 +275,14 @@ void input_cleanup(void)
 
   /*!
 
-     \brief Fetch and return the next byte from an input source.
+     @brief Fetch and return the next byte from an input source.
     
      This function reads the next byte from an input source and returns that
      byte.  If the input source is at its end, then the EOF condition is
      marked.  Also, the input tracking position is updated.
     
-     \retval byte value of byte that was read
-     \retval 0    on any condition where byte can not be read.
+     @retval byte value of byte that was read
+     @retval 0    on any condition where byte can not be read.
 
   */
 
@@ -309,9 +309,9 @@ byte input_byte(void)
 
   /*!
 
-     \brief Returns current input tracking position.
+     @brief Returns current input tracking position.
     
-     \retval long position
+     @retval long position
 
   */
 
@@ -322,12 +322,12 @@ long input_get_position(void)
 
   /*!
 
-     \brief Set input tracking position.
+     @brief Set input tracking position.
     
-     \param pos
+     @param pos
 
-     \retval true  success
-     \retval false failure
+     @retval true  success
+     @retval false failure
 
   */
 
@@ -360,10 +360,10 @@ boolean input_set_position(long pos)
 
   /*!
 
-     \brief Return input source EOF condition.
+     @brief Return input source EOF condition.
     
-     \retval true  EOF
-     \retval false otherwise
+     @retval true  EOF
+     @retval false otherwise
 
   */
 
@@ -374,15 +374,15 @@ boolean input_eof(void)
 
   /*!
 
-     \brief Retrieve current input location information.
+     @brief Retrieve current input location information.
     
      This function calculates the current input line and character location
-     and fills in a user supplied \e input_location struct.
+     and fills in a user supplied @e input_location struct.
     
-     \param loc pointer to \e input_location struct
+     @param loc pointer to @e input_location struct
 
-     \retval true  success
-     \retval false failure
+     @retval true  success
+     @retval false failure
 
   */
 
@@ -413,7 +413,7 @@ boolean input_get_location(input_location *loc)
 
   /*!
 
-     \brief Resets _source structure to all default values
+     @brief Resets _source structure to all default values
     
   */
 
@@ -425,7 +425,7 @@ static void _clear_source(void)
 
   /*!
 
-     \brief Creates a line number mapping array.
+     @brief Creates a line number mapping array.
     
      This function creates a global line mapping array for detailed input
      source location tracking.  Each array element corresponds to a line
@@ -433,10 +433,10 @@ static void _clear_source(void)
      from the beginning of the input source of the first byte in the
      corresponding line.
 
-     \note Currently, a line is defined by a string of bytes that end with
+     @note Currently, a line is defined by a string of bytes that end with
            the literal new-line ASCII character.
 
-     \see \e _line_map
+     @see @e _line_map
     
   */
 
@@ -473,19 +473,19 @@ static void _map_lines(void)
 
   /*!
 
-     \brief Find a line number based on input tracking position.
+     @brief Find a line number based on input tracking position.
     
      This function returns the mapped line number based on the input tracking
-     \e position.
+     @e position.
 
-     \note This function simply serves as the head call to the recursive
-           function \e _search_line_number.
+     @note This function simply serves as the head call to the recursive
+           function @e _search_line_number.
 
-     \see \e _search_line_number
+     @see @e _search_line_number
     
-     \param position
+     @param position
 
-     \retval long line number
+     @retval long line number
 
   */
 
@@ -496,21 +496,21 @@ static long _find_line_number(long position)
 
   /*!
 
-     \brief Perform binary search for input line number.
+     @brief Perform binary search for input line number.
     
      This function returns the mapped line number based on the input tracking
-     \e position.
+     @e position.
 
-     \note This function is recursive.  Normally should be called from
-           function \e _find_line_number.
+     @note This function is recursive.  Normally should be called from
+           function @e _find_line_number.
 
-     \see \e _find_line_number
+     @see @e _find_line_number
     
-     \param position   target position in input source
-     \param ilow       low end line number for search
-     \param ihigh      high end line number for search
+     @param position   target position in input source
+     @param ilow       low end line number for search
+     @param ihigh      high end line number for search
 
-     \retval long      line number of target position in input source
+     @retval long      line number of target position in input source
 
   */
 

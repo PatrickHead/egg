@@ -3,7 +3,7 @@
 
     @brief Source code for parser code generation routines for EGG grammars.
 
-    @timestamp Mon, 06 Jan 2014 15:12:54 +0000
+    @timestamp Mon, 03 Feb 2014 01:58:26 +0000
 
     @author Patrick Head   mailto:patrickhead@gmail.com
 
@@ -115,7 +115,7 @@ static char * _project_brief = "";
 static char * _version = "0.0.1";
 static char * _author = "Anonymous";
 static char * _email = "";
-static int _first_year = 2013;
+static int _first_year = -1;
 static char * _license =
     "This program is free software: you can redistribute it and/or modify\n"
     "  it under the terms of the GNU General Public License as published by\n"
@@ -2232,27 +2232,27 @@ void generate_makefile(FILE *of,
   fprintf(of, "\n");
   fprintf(of, "lib/lib%s-parser.so.1.0: obj/%s-parser.o \\\n",
                 parser_name, parser_name);
-  fprintf(of, "		obj/%s-token.o \\\n", parser_name);
-  fprintf(of, "		obj/%s-token-util.o\n", parser_name);
-  fprintf(of, "	$(CC) $(COPTS) --shared -Wl,-soname,lib%s-parser.so.1 \\\n",
+  fprintf(of, "    obj/%s-token.o \\\n", parser_name);
+  fprintf(of, "    obj/%s-token-util.o\n", parser_name);
+  fprintf(of, "  $(CC) $(COPTS) --shared -Wl,-soname,lib%s-parser.so.1 \\\n",
                 parser_name);
-  fprintf(of, "		-o lib/lib%s-parser.so.1.0 \\\n", parser_name);
-  fprintf(of, "		obj/%s-parser.o \\\n", parser_name);
-  fprintf(of, "		obj/%s-token.o \\\n", parser_name);
-  fprintf(of, "		obj/%s-token-util.o\n", parser_name);
-  fprintf(of, "	@(cd lib; ln -sf lib%s-parser.so.1.0 lib%s-parser.so.1)\n",
+  fprintf(of, "    -o lib/lib%s-parser.so.1.0 \\\n", parser_name);
+  fprintf(of, "    obj/%s-parser.o \\\n", parser_name);
+  fprintf(of, "    obj/%s-token.o \\\n", parser_name);
+  fprintf(of, "    obj/%s-token-util.o\n", parser_name);
+  fprintf(of, "  @(cd lib; ln -sf lib%s-parser.so.1.0 lib%s-parser.so.1)\n",
                 parser_name, parser_name);
-  fprintf(of, "	@(cd lib; ln -sf lib%s-parser.so.1 lib%s-parser.so)\n",
+  fprintf(of, "  @(cd lib; ln -sf lib%s-parser.so.1 lib%s-parser.so)\n",
                 parser_name, parser_name);
   fprintf(of, "\n");
   fprintf(of, "lib/lib%s-parser.a: obj/%s-parser.o \\\n",
                 parser_name, parser_name);
-  fprintf(of, "		obj/%s-token.o \\\n", parser_name);
-  fprintf(of, "		obj/%s-token-util.o\n", parser_name);
-  fprintf(of, "	ar crD lib/lib%s-parser.a \\\n", parser_name);
-  fprintf(of, "		obj/%s-parser.o \\\n", parser_name);
-  fprintf(of, "		obj/%s-token.o \\\n", parser_name);
-  fprintf(of, "		obj/%s-token-util.o\n", parser_name);
+  fprintf(of, "    obj/%s-token.o \\\n", parser_name);
+  fprintf(of, "    obj/%s-token-util.o\n", parser_name);
+  fprintf(of, "  ar crD lib/lib%s-parser.a \\\n", parser_name);
+  fprintf(of, "    obj/%s-parser.o \\\n", parser_name);
+  fprintf(of, "    obj/%s-token.o \\\n", parser_name);
+  fprintf(of, "    obj/%s-token-util.o\n", parser_name);
   fprintf(of, "\n");
 
   fprintf(of, "obj/%s-walker.o: src/%s-walker.c \\\n",
@@ -3659,16 +3659,24 @@ static void emit_source_comment_header(FILE *of)
   fprintf(of, "\n");
 
     // emit author
-  if (_first_year != get_year())
-    fprintf(of, "  %sCopyright (C) %4.4d-%4.4d %s\n",
-                  (_use_doxygen) ? "@copyright " : "",
-                  _first_year,
-                  get_year(),
-                  _author);
+  if (_first_year)
+  {
+    if (_first_year != get_year())
+      fprintf(of, "  %sCopyright (C) %4.4d-%4.4d %s\n",
+                    (_use_doxygen) ? "@copyright " : "",
+                    _first_year,
+                    get_year(),
+                    _author);
+    else
+      fprintf(of, "  %sCopyright (C) %4.4d %s\n",
+                    (_use_doxygen) ? "@copyright " : "",
+                    _first_year,
+                    _author);
+  }
   else
     fprintf(of, "  %sCopyright (C) %4.4d %s\n",
                   (_use_doxygen) ? "@copyright " : "",
-                  _first_year,
+                  get_year(),
                   _author);
   fprintf(of, "\n");
 

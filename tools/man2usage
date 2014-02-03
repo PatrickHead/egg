@@ -1,0 +1,132 @@
+#!/usr/bin/env bash
+
+in_synopsis=0
+in_options=0
+indent=0
+indent_size=0
+have_note=0
+did_space=0
+
+sanitize()
+{
+  if [ -z "$1" ]
+  then
+    echo ""
+    return
+  fi
+
+  clean=$(echo "$1" | sed -e 's/\*//g' -e "s/'//g" -e 's/::$//' -e 's/"/\\"/g' -e 's/\\$/\\\\/')
+
+  echo "$clean"
+}
+
+printify()
+{
+  if [ -z "$1" ]
+  then
+    return
+  fi
+
+  printf "  fprintf(stderr,\n"
+  printf "    \"%s\");\n" "$1"
+}
+
+IFS=''
+
+echo "void usage(void)"
+echo "{"
+
+while read -r line
+do
+  case "$line" in
+    '== Synopsis')
+      in_synopsis=1
+      in_options=0
+      printify "\nUSAGE:\n\n"
+      continue
+      ;;
+    '== Options')
+      in_synopsis=0
+      in_options=1
+      printify "\nOPTIONS:\n"
+      continue
+      ;;
+    '== '*)
+      in_synopsis=0
+      in_options=0
+      ;;
+  esac
+
+  if [ $in_synopsis -gt 0 ]
+  then
+    case "$line" in
+      '[verse]')
+        ;;
+      '_'*)
+        ;;
+      *)
+        line=$(sanitize "$line")
+        printify "$(printf "    %s\n" "$line")\n"
+        ;;
+    esac
+  elif [ $in_options -gt 0 ]
+  then
+    case "$line" in
+      *::)
+        line=$(sanitize "$line")
+        #line=$(echo "$line" | sed -e 's/^ *//')
+        printify "\n"
+        printify "$(printf "    %s\n" "$line")\n"
+        ;;
+      '[verse]')
+        printify "\n"
+        while read -r line
+        do
+          line=$(sanitize "$line")
+          if [ -z "$line" ]
+          then
+            break
+          fi
+          printify "$(printf "        %s\n" "$line")\n"
+        done
+        ;;
+      *)
+        line=$(sanitize "$line")
+        if [ -z "$line" ]
+        then
+          continue
+        fi
+        while read -r sub_line
+        do
+          sub_line=$(sanitize "$sub_line")
+          if [ -z "$sub_line" ]
+          then
+            printify "\n"
+            break
+          fi
+          line="$line $sub_line"
+        done
+        (( line_length = 62 ))
+        line=$(echo "$line" | fold -s -w $line_length)
+        line=$(echo "$line" | sed -e 's/ *$//')
+        echo "$line" | while read -r sub_line
+        do
+          if [ -z "$sub_line" ]
+          then
+            printify "\n"
+          else
+            printify "$(printf "        %s\n" "$sub_line")\n"
+          fi
+        done
+        ;;
+    esac
+  fi
+
+done
+
+printify "\n"
+
+echo
+echo "  return;"
+echo "}"
+echo

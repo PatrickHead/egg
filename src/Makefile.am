@@ -19,9 +19,15 @@ libegg_common_la_LDFLAGS = -version-info 1:0:1
 libegg_parser_la_SOURCES = egg-parser.c egg-token.c egg-token-util.c
 libegg_parser_la_LDFLAGS = -version-info 1:0:1
 
-.PHONY: timestamps
+.PHONY: timestamps usage-include-files
 
 timestamps:
 	@$(top_srcdir)/tools/auto-timestamp $(top_srcdir)
 
-all: timestamps all-am
+embryo-usage.inc: $(top_srcdir)/doc/man-pages/embryo.1.txt
+	@cat $(top_srcdir)/doc/man-pages/embryo.1.txt \
+     | $(top_srcdir)/tools/man2usage > embryo-usage.inc
+
+usage-include-files: embryo-usage.inc
+
+all: usage-include-files timestamps all-am

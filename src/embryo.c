@@ -3,7 +3,7 @@
 
     @brief Source code for embryo parser generator.
 
-    @timestamp Fri, 24 Jan 2014 10:49:27 +0000
+    @timestamp Mon, 03 Feb 2014 12:46:50 +0000
 
     @author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -42,7 +42,7 @@
 #include "mkdir_p.h"
 #include "egg-parser.h"
 
-static void usage(char *program_name);
+static void usage(void);
 static void version(void);
 static char *build_file_name(char *dir, char *project_name, char *file_name);
 static char *build_path(char *dir, char *sub);
@@ -158,14 +158,16 @@ int main(int argc, char **argv)
         return 0;
       case 'h':
       default:
-        usage(argv[0]);
+        version();
+        usage();
         return 1;
     }
   }
 
   if (!project_name)
   {
-    usage(argv[0]);
+    version();
+    usage();
     return 1;
   }
 
@@ -415,63 +417,7 @@ int main(int argc, char **argv)
     
   */
 
-static void usage(char *program_name)
-{
-  if (!program_name)
-    program_name = "embryo";
-
-  fprintf(stderr, "\n");
-  fprintf(stderr, "Usage:  "
-                  "%s\n"
-                  "          <-p | --project-name=> <project name> \n"
-                  "          [<-g | --generate-list=> <generate list>] \n"
-                  "          [<-d | --directory=> <output directory>] \n"
-                  "          [<-o | --output-type=> <output type>] \n"
-                  "          [--use-doxygen=<true|false|on|off|0|1>] \n"
-                  "          [--code-version=<version>] \n"
-                  "          [--author=<author>] \n"
-                  "          [--email=<email address>] \n"
-                  "          [--first-year=<4 digit year>] \n"
-                  "          [--license-text=<license string>] \n"
-                  "          [<egg file name>]\n"
-                  "\n"
-                  "  --or--\n"
-                  "\n"
-                  "        %s\n"
-                  "          <-v | --version>\n"
-                  "\n"
-                  "  --or--\n"
-                  "\n"
-                  "        %s\n"
-                  "          <-h | --help>\n",
-           program_name, program_name, program_name);
-  fprintf(stderr, "\n");
-  fprintf(stderr, "  where:\n");
-  fprintf(stderr, "\n");
-  fprintf(stderr, "    <project name>     = the name of the parser.\n");
-  fprintf(stderr, "    <generate list>    = 's', 'h', and/or 'm'.\n");
-  fprintf(stderr, "                           's' = source files (*.c).\n");
-  fprintf(stderr, "                           'h' = header files (*.h).\n");
-  fprintf(stderr, "                           'm' = Makefile.\n");
-  fprintf(stderr, "    <output directory> = the top-level directory where the "
-                  "generated files will \n"
-                  "                         be created.  This implies 'f' for "
-                  "<output type>.\n");
-  fprintf(stderr, "    <output type>      = 'f' or '-'.\n");
-  fprintf(stderr, "                           'f' = generate files.\n");
-  fprintf(stderr, "                           '-' = send output to STDOUT.\n");
-  fprintf(stderr, "    <version>          = abritrary version string.\n");
-  fprintf(stderr, "    <author>           = abritrary author name.\n");
-  fprintf(stderr, "    <email>            = abritrary email address.\n");
-  fprintf(stderr, "    <4 digit year>     = first year of copyright.\n");
-  fprintf(stderr, "    <license string>   = abritrary license information.\n");
-  fprintf(stderr, "    <egg file name>    = pathname to EGG grammar definition "
-                  "file.  NONE or '-' \n"
-                  "                         implies input from STDIN.\n");
-  fprintf(stderr, "\n");
-
-  return;
-}
+#include "embryo-usage.inc"
 
   /*!
 

@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([egg],[0.2.4],[patrickhead@gmail.com])
+AC_INIT([egg],[0.3.0],[patrickhead@gmail.com])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -33,6 +33,7 @@ AC_CONFIG_FILES([
   doc/Makefile
   doc/reference-manual/Makefile
   doc/user-guide/Makefile
+  doc/man-pages/Makefile
   tools/Makefile
   misc/Makefile
 ])

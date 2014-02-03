@@ -1,6 +1,6 @@
 EXTRA_DIST = .egg printable.egg egg.pdf PROJECT TODOS VERSION
 
-SUBDIRS = reference-manual user-guide
+SUBDIRS = reference-manual user-guide man-pages
 
 docdir = $(datadir)/doc/@PACKAGE@-@VERSION@
 doc_DATA = .egg printable.egg egg.pdf PROJECT TODOS VERSION

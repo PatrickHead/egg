@@ -4,7 +4,7 @@
 
   @brief Source code for grammer phrase parsing functions
 
-  @version 0.2.3
+  @version 0.3.1
 
   @author Patrick Head mailto:patrickhead@gmail.com
 
@@ -15102,7 +15102,7 @@ egg_token *grammar_element(void)
 
     @par "EGG Phrase Definition"
     @verbatim
-    grammar = grammar-element{0,*} + non-grammar-element{0,1} ;
+    grammar = grammar-element{1,*} + non-grammar-element{0,1} ;
     @endverbatim
 
     @retval "egg_token *" on synctactical match of phrase
@@ -15154,7 +15154,7 @@ egg_token *grammar(void)
     else
       break;
   }
-  if ((count >= 0))
+  if ((count >= 1))
   {
     count=0;
     while(count < 1)

@@ -320,4 +320,4 @@ phrase = phrase-name
 
 grammar-element = non-grammar-element{0,1} + phrase ;
 
-grammar = grammar-element{0,*} + non-grammar-element{0,1} ;
+grammar = grammar-element{1,*} + non-grammar-element{0,1} ;

@@ -1,5 +1,5 @@
 Name:           egg
-Version:        0.3.0
+Version:        0.3.1
 Release:        1
 Summary:        Parser generation tools for EGG grammars.
 #Source0:        http://www.patrickhead.net/projects/egg/%{name}-%{version}.tar.gz 

@@ -4,7 +4,7 @@
 
   @brief Source code for grammer specific token utility functions
 
-  @version 0.3.2
+  @version 0.4.0
 
   @author Patrick Head mailto:patrickhead@gmail.com
 

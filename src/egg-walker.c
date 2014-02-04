@@ -4,7 +4,7 @@
 
   @brief Source code for grammar specific walking/dumping utility
 
-  @version 0.3.1
+  @version 0.3.2
 
   @author Patrick Head mailto:patrickhead@gmail.com
 
@@ -37,7 +37,7 @@
 #include "egg-token-util.h"
 #include "egg-parser.h"
 
-static void usage(char *program_name);
+static void usage(void);
 static void version(void);
 static void walk(egg_token *t, int level);
 
@@ -99,7 +99,8 @@ int main(int argc, char **argv)
         return 0;
       case 'h':
       default:
-        usage(argv[0]);
+        version();
+        usage();
         return 1;
     }
   }
@@ -141,33 +142,9 @@ int main(int argc, char **argv)
      This function displays a help and usage message for the @b egg-walker
      utility in the mostly ubiquitous POSIX/GNU format.
 
-     @param program_name string containing the program name used in the
-                         usage message
-
   */
 
-static void usage(char *program_name)
-{
-  if (!program_name)
-    program_name = "egg-walker";
-
-  fprintf(stderr, "\n");
-  fprintf(stderr, "Usage:  %s\n", program_name);
-  fprintf(stderr, "          [-s]\n");
-  fprintf(stderr, "          [-h]\n");
-  fprintf(stderr, "          [-v]\n");
-  fprintf(stderr, "          [--grammar]\n");
-  fprintf(stderr, "          [<file name>]\n");
-  fprintf(stderr, "\n");
-  fprintf(stderr, "  where:\n");
-  fprintf(stderr, "\n");
-  fprintf(stderr, "    <file name> = pathname to any file that uses a 'egg' "
-                  "grammar.\n");
-  fprintf(stderr, "                  NONE or '-' implies input from STDIN.\n");
-  fprintf(stderr, "\n");
-
-  return;
-}
+#include "egg-walker-usage.inc"
 
   /*!
 
@@ -179,9 +156,9 @@ static void usage(char *program_name)
 
 static void version(void)
 {
-printf("\n"
+  fprintf(stderr, "\n"
        "egg-walker - egg grammar walker.\n"
-       "             Version 0.3.1\n"
+       "             Version 0.3.2\n"
        "\n");
 
   return;

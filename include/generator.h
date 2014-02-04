@@ -92,4 +92,7 @@ void generator_set_first_year(int year);
 char * generator_get_license(void);
 void generator_set_license(char *license);
 
+boolean generator_get_external_usage_flag(void);
+void generator_set_external_usage_flag(boolean flag);
+
 #endif // GENERATOR_H

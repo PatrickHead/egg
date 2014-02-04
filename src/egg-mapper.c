@@ -4,7 +4,7 @@
 
   @brief Source code for EGG grammar mapping utility
 
-  @timestamp Tue, 07 Jan 2014 22:49:59 +0000
+  @timestamp Tue, 04 Feb 2014 10:07:06 +0000
 
   @author Patrick Head mailto:patrickhead@gmail.com
 
@@ -45,7 +45,7 @@
 
   // Function declarations
 
-static void usage(char *program_name);
+static void usage(void);
 static void version(void);
 static void map(FILE *of, egg_token *t);
 static void map_phrases(FILE *of, egg_token *t);
@@ -103,7 +103,8 @@ int main(int argc, char **argv)
         return 0;
       case 'h':
       default:
-        usage(argv[0]);
+        version();
+        usage();
         return 1;
     }
   }
@@ -156,32 +157,9 @@ int main(int argc, char **argv)
      This function displays a help and usage message for the @b egg-mapper
      utility in the mostly ubiquitous POSIX/GNU format.
 
-     @param program_name string containing the program name used in the
-                         usage message
-
   */
 
-static void usage(char *program_name)
-{
-  if (!program_name)
-    program_name = "egg-mapper";
-
-  fprintf(stderr, "\n");
-  fprintf(stderr, "Usage:  %s\n", program_name);
-  fprintf(stderr, "          [-o|--output <output file>]\n");
-  fprintf(stderr, "          [-v|--version]\n");
-  fprintf(stderr, "          [-h|--help]\n");
-  fprintf(stderr, "          [<file name>]\n");
-  fprintf(stderr, "\n");
-  fprintf(stderr, "  where:\n");
-  fprintf(stderr, "\n");
-  fprintf(stderr, "    <file name>   = pathname to any EGG definition file.\n");
-  fprintf(stderr, "                    NONE or '-' implies input from STDIN.\n");
-  fprintf(stderr, "    <output file> = pathname to generated XML file.\n");
-  fprintf(stderr, "\n");
-
-  return;
-}
+#include "egg-mapper-usage.inc"
 
   /*!
 

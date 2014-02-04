@@ -3,7 +3,7 @@
 
     @brief Source code for embryo parser generator.
 
-    @timestamp Mon, 03 Feb 2014 12:46:50 +0000
+    @timestamp Tue, 04 Feb 2014 10:13:01 +0000
 
     @author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -85,6 +85,7 @@ int main(int argc, char **argv)
       { "email", 1, 0, 1003 },
       { "first-year", 1, 0, 1004 },
       { "license-text", 1, 0, 1005 },
+      { "use-external-usage", 1, 0, 1006 },
       { "version", 0, 0, 'v' },
       { "help", 0, 0, 'h' },
       { 0, 0, 0, 0 }
@@ -100,6 +101,7 @@ int main(int argc, char **argv)
   boolean gen_headers = false;
   boolean gen_makefile = false;
   boolean use_doxygen = false;
+  boolean use_external_usage = false;
   char *code_version = NULL;
   char *author = NULL;
   char *email = NULL;
@@ -153,6 +155,16 @@ int main(int argc, char **argv)
       case 1005:
         license_text = strdup(optarg);
         break;
+      case 1006:
+        if (!strcmp(optarg, "true"))
+          use_external_usage = true;
+        else if (!strcmp(optarg, "on"))
+          use_external_usage = true;
+        else if (!strcmp(optarg, "1"))
+          use_external_usage = true;
+        else
+          use_external_usage = false;
+        break;
       case 'v':
         version();
         return 0;
@@ -200,6 +212,8 @@ int main(int argc, char **argv)
 
   if (license_text)
     generator_set_license(license_text);
+
+  generator_set_external_usage_flag(use_external_usage);
 
   input_file = NULL;
   if (optind < argc)
@@ -411,9 +425,6 @@ int main(int argc, char **argv)
     
      This function displays a help and usage message for the @b embryo
      utility in the mostly ubiquitous POSIX/GNU format.
-    
-     @param program_name string containing the program name used in the
-                         usage message
     
   */
 

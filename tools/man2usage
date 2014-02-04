@@ -74,7 +74,7 @@ do
     case "$line" in
       *::)
         line=$(sanitize "$line")
-        #line=$(echo "$line" | sed -e 's/^ *//')
+        line=$(echo "$line" | sed -e 's/^ *//')
         printify "\n"
         printify "$(printf "    %s\n" "$line")\n"
         ;;
@@ -92,6 +92,7 @@ do
         ;;
       *)
         line=$(sanitize "$line")
+        line=$(echo "$line" | sed -e 's/ *$//' -e 's/^ *//')
         if [ -z "$line" ]
         then
           continue
@@ -99,6 +100,7 @@ do
         while read -r sub_line
         do
           sub_line=$(sanitize "$sub_line")
+          sub_line=$(echo "$sub_line" | sed -e 's/ *$//' -e 's/^ *//')
           if [ -z "$sub_line" ]
           then
             printify "\n"
@@ -108,7 +110,6 @@ do
         done
         (( line_length = 62 ))
         line=$(echo "$line" | fold -s -w $line_length)
-        line=$(echo "$line" | sed -e 's/ *$//')
         echo "$line" | while read -r sub_line
         do
           if [ -z "$sub_line" ]

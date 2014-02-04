@@ -1,0 +1,84 @@
+= EGG-MAPPER(1)
+:doctype: manpage
+:man source: GNU
+:man manual: egg-mapper Command Usage
+
+== Name
+egg-mapper - Generate XML representation of EGG file.
+
+== Synopsis
+[verse]
+_________
+*egg-mapper* [*-o, --output=*'OUTPUT_FILE'] ['EGG_FILE']
+
+*egg-mapper* *-v, --version*
+
+*egg-mapper* *-h, --help*
+_________
+
+== Description
+Generates an XML representation of any *EGG* grammar definition file.  This
+generated XML can be used for automating the creation of documentation for a
+grammar defined in *EGG*, the creation of parsers, or any other purpose that
+may be required or imagined.
+
+== Options
+
+*-h, --help*::
+Display a usage message on *STDERR*, which includes the program version, and
+the information from the *Synopsis* and *Options* sections of this manual.
+
+*-v, --version*::
+Display the program version on *STDERR*.
+
+ [*-o, --output=*'OUTPUT_FILE']::
+Specify the name of the output file for the generated XML.  A single "'-'"
+character will produce output on *STDOUT*.  Defaults to *STDOUT*.
+
+ ['EGG_FILE']::
+Specify the name of the *EGG* file.  A single "'-'" character will read input
+from *STDIN*.  Defaults to *STDIN*.
+
+== Exit Status
+On exit, *egg-mapper* returns
+[verse]
+0 -- on success
+1 -- on any error
+
+== Example
+The following command,
+
+[verse]
+`egg-mapper -o mygrammar.xml mygrammer.egg`
+
+will produce the following file,
+
+[verse]
+'mygrammar.xml'
+
+== Author
+Written by Patrick Head <pth@patrickhead.net>
+
+== Copyright
+(C) 2013-2014 Patrick Head
+
+include::license.txt[]
+
+== Bugs
+Report *egg-mapper* bugs to egg-bugs@patrickhead.net
+
+== Home Page
+*EGG* home page http://www.patrickhead.net/egg
+
+== See Also
+embryo(1), egg-walker(1)
+
+The full documentation for *egg-mapper* and writing grammars in *EGG* is
+maintained as a Texinfo manual.  If the *info* command and the *EGG* package
+are properly installed at your site, the command
+
+[verse]
+`info egg`
+
+should give you access to the complete manual.
+

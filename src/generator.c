@@ -3,7 +3,7 @@
 
     @brief Source code for parser code generation routines for EGG grammars.
 
-    @timestamp Mon, 03 Feb 2014 01:58:26 +0000
+    @timestamp Tue, 04 Feb 2014 11:53:52 +0000
 
     @author Patrick Head   mailto:patrickhead@gmail.com
 
@@ -144,6 +144,7 @@ static char * _license_with_doxygen =
     "  You should have received a copy of the GNU General Public License\n"
     "  along with this program.  If not, see "
     "  \\<http://www.gnu.org/licenses/\\>.";
+static boolean _use_external_usage = false;
 
   /*!
 
@@ -1886,7 +1887,7 @@ void generate_walker_source(FILE *of,
 
     // Emit code for function declarations
 
-  fprintf(of, "static void usage(char *program_name);\n");
+  fprintf(of, "static void usage(void);\n");
   fprintf(of, "static void version(void);\n");
   fprintf(of, "static void walk(%s_token *t, int level);\n", parser_name);
   fprintf(of, "\n");
@@ -1987,7 +1988,8 @@ void generate_walker_source(FILE *of,
   fprintf(of, "        return 0;\n");
   fprintf(of, "      case 'h':\n");
   fprintf(of, "      default:\n");
-  fprintf(of, "        usage(argv[0]);\n");
+  fprintf(of, "        version();\n");
+  fprintf(of, "        usage();\n");
   fprintf(of, "        return 1;\n");
   fprintf(of, "    }\n");
   fprintf(of, "  }\n");
@@ -2043,46 +2045,100 @@ void generate_walker_source(FILE *of,
                 parser_name);
   fprintf(of, "     utility in the mostly ubiquitous POSIX/GNU format.\n");
   fprintf(of, "\n");
-  fprintf(of, "     %sprogram_name string containing the program name used "
-              "in the\n",
-                (_use_doxygen) ? "@param " : "Param: ");
-  fprintf(of, "                         usage message\n");
-  fprintf(of, "\n");
   fprintf(of, "  */\n");
   fprintf(of, "\n");
 
-    // Emit code for <PROJECT>-walker's usage() function
-
-  fprintf(of, "static void usage(char *program_name)\n");
-  fprintf(of, "{\n");
-  fprintf(of, "  if (!program_name)\n");
-  fprintf(of, "    program_name = \"%s-walker\";\n", parser_name);
-  fprintf(of, "\n");
-  fprintf(of, "  fprintf(stderr, \"\\n\");\n");
-  fprintf(of, "  fprintf(stderr, \"Usage:  %%s\\n\", program_name);\n");
-  fprintf(of, "  fprintf(stderr, \"          [-s]\\n\");\n");
-  fprintf(of, "  fprintf(stderr, \"          [-h]\\n\");\n");
-  fprintf(of, "  fprintf(stderr, \"          [-v]\\n\");\n");
-  pmi = pml;
-  while (pmi)
+  if (_use_external_usage)
   {
-    fprintf(of, "  fprintf(stderr, \"          [--%s]\\n\");\n", pmi->name);
-    pmi = pmi->next;
+      // Emit include directive for <PROJECT>-walker's usage() function
+
+    fprintf(of, "#include \"%s-walker-usage.inc\"\n", parser_name);
+    fprintf(of, "\n");
   }
-  fprintf(of, "  fprintf(stderr, \"          [<file name>]\\n\");\n");
-  fprintf(of, "  fprintf(stderr, \"\\n\");\n");
-  fprintf(of, "  fprintf(stderr, \"  where:\\n\");\n");
-  fprintf(of, "  fprintf(stderr, \"\\n\");\n");
-  fprintf(of, "  fprintf(stderr, \"    <file name> = pathname to any file that "
-              "uses a '%s' \"\n", parser_name);
-  fprintf(of, "                  \"grammar.\\n\");\n");
-  fprintf(of, "  fprintf(stderr, \"                  NONE or '-' implies input "
-              "from STDIN.\\n\");\n");
-  fprintf(of, "  fprintf(stderr, \"\\n\");\n");
-  fprintf(of, "\n");
-  fprintf(of, "  return;\n");
-  fprintf(of, "}\n");
-  fprintf(of, "\n");
+  else
+  {
+      // Emit code for <PROJECT>-walker's usage() function
+
+    fprintf(of, "static void usage(void)\n");
+    fprintf(of, "{\n");
+
+    fprintf(of, "  fprintf(stderr, \"\\nUSAGE:\\n\");\n");
+    fprintf(of, "  fprintf(stderr, \"\\n\");\n");
+
+    fprintf(of, "  fprintf(stderr,\n");
+    fprintf(of, "    \"    %s-walker [--grammar] [-s] [EGG_FILE]\\n\");\n",
+      parser_name);
+    fprintf(of, "  fprintf(stderr, \"\\n\");\n");
+
+    fprintf(of, "  fprintf(stderr, \"    %s-walker -v, --version\\n\");\n",
+      parser_name);
+    fprintf(of, "  fprintf(stderr, \"\\n\");\n");
+
+    fprintf(of, "  fprintf(stderr, \"    %s-walker -h, --help\\n\");\n",
+      parser_name);
+    fprintf(of, "  fprintf(stderr, \"\\n\");\n");
+
+    fprintf(of, "  fprintf(stderr, \"\\nOPTIONS:\\n\");\n");
+    fprintf(of, "  fprintf(stderr, \"\\n\");\n");
+
+    fprintf(of, "  fprintf(stderr, \"    -h, --help\\n\");\n");
+    fprintf(of, "  fprintf(stderr, \"\\n\");\n");
+    fprintf(of, "  fprintf(stderr,\n");
+    fprintf(of, "    \"        Display a usage message on STDERR, \"\n");
+    fprintf(of, "    \"which includes the program version.\\n\");\n");
+    fprintf(of, "  fprintf(stderr, \"\\n\");\n");
+
+    fprintf(of, "  fprintf(stderr, \"    -v, --version\\n\");\n");
+    fprintf(of, "  fprintf(stderr, \"\\n\");\n");
+    fprintf(of, "  fprintf(stderr,\n");
+    fprintf(of,
+      "    \"        Display the program version on STDERR.\\n\");\n");
+    fprintf(of, "  fprintf(stderr, \"\\n\");\n");
+
+    fprintf(of, "  fprintf(stderr, \"    [--grammar]\\n\");\n");
+    fprintf(of, "  fprintf(stderr, \"\\n\");\n");
+    fprintf(of, "  fprintf(stderr,\n");
+    fprintf(of, "    \"        Indicates the top-level phrase name from \"\n");
+    fprintf(of, "    \"which the phrase dump will begin.\\n\");\n");
+    fprintf(of, "  fprintf(stderr, \"\\n\");\n");
+    fprintf(of, "  fprintf(stderr,\n");
+    fprintf(of, "    \"        NOTE:  Although the --grammar option is \"\n");
+    fprintf(of, "    \"not strictly required by\\n\");\n");
+    fprintf(of, "  fprintf(stderr,\n");
+    fprintf(of, "    \"               %s-walker, nothing meaningful will \"\n",
+      parser_name);
+    fprintf(of, "    \"be processed without\\n\");\n");
+    fprintf(of, "  fprintf(stderr,\n");
+    fprintf(of, "    \"               this option.\\n\");\n");
+    fprintf(of, "  fprintf(stderr, \"\\n\");\n");
+
+    fprintf(of, "  fprintf(stderr, \"    [-s]\\n\");\n");
+    fprintf(of, "  fprintf(stderr, \"\\n\");\n");
+    fprintf(of, "  fprintf(stderr,\n");
+    fprintf(of,
+      "    \"        Flag to control the output reported.  When \"\n");
+    fprintf(of, "    \"this flag is present, the\\n\");\n");
+    fprintf(of, "  fprintf(stderr,\n");
+    fprintf(of, "    \"        output will be either 'Passed' or \"\n");
+    fprintf(of, "    \"'Failed'.\\n\");\n");
+    fprintf(of, "  fprintf(stderr, \"\\n\");\n");
+
+    fprintf(of, "  fprintf(stderr, \"    [EGG_FILE]\\n\");\n");
+    fprintf(of, "  fprintf(stderr, \"\\n\");\n");
+    fprintf(of, "  fprintf(stderr,\n");
+    fprintf(of,
+      "    \"        Specify the name of the EGG file.  A single '-' \"\n");
+    fprintf(of, "    \"character will read\\n\");\n");
+    fprintf(of, "  fprintf(stderr,\n");
+    fprintf(of,
+      "    \"        input from STDIN.  Defaults to STDIN.\\n\");\n");
+    fprintf(of, "  fprintf(stderr, \"\\n\");\n");
+
+    fprintf(of, "\n");
+    fprintf(of, "  return;\n");
+    fprintf(of, "}\n");
+    fprintf(of, "\n");
+  }
 
     // Emit comment block for <PROJECT>-walker's version() function
 
@@ -2097,11 +2153,11 @@ void generate_walker_source(FILE *of,
   fprintf(of, "  */\n");
   fprintf(of, "\n");
 
-    // Emit code for <PROJECT>-walker's usage() function
+    // Emit code for <PROJECT>-walker's version() function
 
   fprintf(of, "static void version(void)\n");
   fprintf(of, "{\n");
-  fprintf(of, "printf(\"\\n\"\n");
+  fprintf(of, "  fprintf(stderr, \"\\n\"\n");
   fprintf(of, "       \"%s-walker - %s grammar walker.\\n\"\n",
                 parser_name, parser_name);
   fprintf(of, "       \"%*.*s          Version %s\\n\"\n",
@@ -3602,6 +3658,26 @@ void generator_set_license(char *license)
     _license_with_doxygen = license;
   else
     _license = license;
+}
+
+  /*!
+     \brief Get external usage use flag from code generator.
+     \retval boolean external usage use flag
+  */
+
+boolean generator_get_external_usage_flag(void)
+{
+  return _use_external_usage;
+}
+
+  /*!
+     \brief Set external usage use flag for code generator.
+     \param flag true or false
+  */
+
+void generator_set_external_usage_flag(boolean flag)
+{
+  _use_external_usage = flag;
 }
 
   /*!

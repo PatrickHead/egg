@@ -29,20 +29,21 @@ _________
 
 == Description
 Generates the header, source and build files for any grammar defined in an
-*EGG* file.  Depending on command options, *embryo* will produce a parser
-module than can be linked into any project needing such a parser.  *embryo*
-also produces a command that can be used to generically parse and dump the
-results of any file written in the grammar defined by the *EGG* file used to
-produce this parser.  In other words, a test program to help develop the
-grammar itself, and to test various input scenarios against the grammar.
+*EGG* file.  Depending on command options, *embryo* will produce the source
+code for a parser module than can be linked into any project needing such a
+parser.  *embryo* also produces the source code for a command that can be used
+to generically parse and dump the results of any file written in the grammar
+defined by the *EGG* file used to produce this parser.  In other words, a test
+program to help develop the grammar itself, and to test various input scenarios
+against the grammar.
 
 == Options
 
-*-h|--help*::
+*-h, --help*::
 Display a usage message on *STDERR*, which includes the program version, and
 the information from the *Synopsis* and *Options* sections of this manual.
 
-*-v|--version*::
+*-v, --version*::
 Display the program version on *STDERR*.
 
 *-p, --project-name=*'PROJECT_NAME'::

@@ -4,7 +4,7 @@
 
   @brief Source code for egg-token-util.h
 
-  @version 0.4.0
+  @version 0.4.1
 
   @author Patrick Head mailto:patrickhead@gmail.com
 

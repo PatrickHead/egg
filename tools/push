@@ -1,8 +1,6 @@
 #!/usr/bin/env sh
 
 echo Pushing to backup
-git push backup master
-echo Pushing to c1
-git push c1 master
-echo Pushing to c2
-git push c2 master
+git push backup
+echo Pushing to ipa.dude
+git push ipa.dude

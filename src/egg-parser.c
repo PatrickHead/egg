@@ -4,7 +4,7 @@
 
   @brief Source code for grammer phrase parsing functions
 
-  @version 0.4.0
+  @version 0.4.1
 
   @author Patrick Head mailto:patrickhead@gmail.com
 

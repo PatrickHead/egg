@@ -1,6 +1,0 @@
-#!/usr/bin/env sh
-
-echo Pushing to backup
-git push backup
-echo Pushing to ipa.dude
-git push ipa.dude

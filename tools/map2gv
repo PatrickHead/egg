@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ $# != 1 ]
+then
+  echo "Usage $0: <map file>"
+  exit
+fi
+
+xsltproc --output $1.gv misc/map2gv.xslt $1.xml

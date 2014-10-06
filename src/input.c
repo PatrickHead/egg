@@ -66,7 +66,7 @@ typedef enum
 } source_type;
 
   /*!
-    @brief Definintion of global source tracking data
+    @brief Definition of global source tracking data
   */
 
 static struct

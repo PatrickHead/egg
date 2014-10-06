@@ -1,0 +1,6 @@
+*.inc
+.deps
+.libs
+embryo
+egg-mapper
+egg-walker

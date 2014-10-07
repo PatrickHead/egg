@@ -20,7 +20,7 @@ egg_walker_CFLAGS = ${AM_CFLAGS} ${GRAY_CFLAGS}
 egg_walker_LDADD = libegg-parser.la ${GRAY_LIBS}
 
 libegg_parser_la_SOURCES = egg-parser.c egg-token.c egg-token-util.c
-libegg_parser_la_LDFLAGS = -version-info 1:0:1
+libegg_parser_la_LDFLAGS = -release ${PACKAGE_VERSION}
 
 .PHONY: timestamps
 timestamps:

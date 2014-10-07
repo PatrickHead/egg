@@ -3,7 +3,7 @@
 
     @brief Source code for line mapping routines.
 
-    @timestamp Tue, 07 Oct 2014 05:45:40 +0000
+    @timestamp Tue, 07 Oct 2014 06:40:55 +0000
 
     @author Patrick Head  mailto:patrickhead@gmail.com
 

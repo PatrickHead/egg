@@ -38,10 +38,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "strapp.h"
+#include "gray/strapp.h"
 
 #include "egg-token.h"
 #include "egg-token-util.h"
+
+#define FALSE 0
+#define TRUE 1
 
   /*!
 
@@ -104,18 +107,18 @@ void egg_token_free(egg_token *t)
     @param dir egg_token_direction
     @param n   egg_token * to link
 
-    @retval true  success
-    @retval false failure
+    @retval TRUE  success
+    @retval FALSE failure
 
   */
 
-boolean egg_token_add(egg_token *t, egg_token_direction dir, egg_token *n)
+unsigned char egg_token_add(egg_token *t, egg_token_direction dir, egg_token *n)
 {
   if (!t)
-    return false;
+    return FALSE;
 
   if (!n)
-    return false;
+    return FALSE;
 
   switch (dir)
   {
@@ -152,14 +155,14 @@ boolean egg_token_add(egg_token *t, egg_token_direction dir, egg_token *n)
     case egg_token_below:
 
       if (t->descendant)
-        return false;
+        return FALSE;
       t->descendant = n;
       n->ascendant = t;
 
       break;
   }
 
-  return true;
+  return TRUE;
 }
 
   /*!

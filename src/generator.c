@@ -3,7 +3,7 @@
 
     @brief Source code for parser code generation routines for EGG grammars.
 
-    @timestamp Tue, 04 Feb 2014 11:53:52 +0000
+    @timestamp Tue, 07 Oct 2014 06:14:59 +0000
 
     @author Patrick Head   mailto:patrickhead@gmail.com
 
@@ -51,11 +51,13 @@
 #include <ctype.h>
 #include <time.h>
 
+  // Required library headers
+#include "strapp.h"
+
   // Project specific headers
 
 #include "egg-token.h"
 #include "egg-token-util.h"
-#include "strapp.h"
 #include "map.h"
 
   // Module specific header
@@ -103,13 +105,17 @@ static void emit_phrase_comment_lines(FILE *of, char *s);
 static void emit_source_comment_header(FILE *of);
 static char * make_file_name(char *project, char *file_name);
 
+  // Module constants
+#define FALSE 0
+#define TRUE 1
+
   // Module global values
 
 static phrase_map_item *_pml = NULL;
 static int _current_level = 0;
 static char *_pns = NULL;
 static char *_pns_f = NULL;
-static boolean _use_doxygen = false;
+static unsigned char _use_doxygen = FALSE;
 static char * _file_name = "Unknown";
 static char * _project_brief = "";
 static char * _version = "0.0.1";
@@ -144,7 +150,7 @@ static char * _license_with_doxygen =
     "  You should have received a copy of the GNU General Public License\n"
     "  along with this program.  If not, see "
     "  \\<http://www.gnu.org/licenses/\\>.";
-static boolean _use_external_usage = false;
+static unsigned char _use_external_usage = FALSE;
 
   /*!
 
@@ -255,6 +261,12 @@ void generate_parser_source(FILE *of,
   fprintf(of, "\n");
   fprintf(of, "#include \"%s-token.h\"\n", parser_name);
   fprintf(of, "#include \"%s-parser.h\"\n", parser_name);
+  fprintf(of, "\n");
+
+    // Emit code for module constants
+
+  fprintf(of, "#define FALSE 0\n");
+  fprintf(of, "#define TRUE 1\n");
   fprintf(of, "\n");
 
     // Emit code for array of callback entries
@@ -512,9 +524,8 @@ void generate_token_header(FILE *of,
   fprintf(of, "#define %s_TOKEN_H\n", u_parser_name);
   fprintf(of, "\n");
 
-    // Emit project related includes
+    // Emit extra library related includes
 
-  fprintf(of, "#include \"common.h\"\n");
   fprintf(of, "#include \"input.h\"\n");
   fprintf(of, "\n");
 
@@ -602,7 +613,7 @@ void generate_token_header(FILE *of,
                 parser_name, parser_name);
   fprintf(of, "\n");
 
-  fprintf(of, "boolean %s_token_add(%s_token *t,\n",
+  fprintf(of, "unsigned char %s_token_add(%s_token *t,\n",
                 parser_name, parser_name);
   fprintf(of, "  %s_token_direction dir,\n", parser_name);
   fprintf(of, "  %s_token *n);\n", parser_name);
@@ -721,10 +732,22 @@ void generate_token_source(FILE *of,
   fprintf(of, "#include <stdlib.h>\n");
   fprintf(of, "#include <string.h>\n");
   fprintf(of, "\n");
+
+    // Emit code for extra library related header files
+
   fprintf(of, "#include \"strapp.h\"\n");
   fprintf(of, "\n");
+
+    // Emit code for project related header files
+
   fprintf(of, "#include \"%s-token.h\"\n", parser_name);
   fprintf(of, "#include \"%s-token-util.h\"\n", parser_name);
+  fprintf(of, "\n");
+
+    // Emit code for module constants
+
+  fprintf(of, "#define FALSE 0\n");
+  fprintf(of, "#define TRUE 1\n");
   fprintf(of, "\n");
 
     // Emit comment block for <PROJECT>_token_new()
@@ -836,9 +859,9 @@ void generate_token_source(FILE *of,
                 (_use_doxygen) ? "@param " : "       ",
                 parser_name);
   fprintf(of, "\n");
-  fprintf(of, "    %strue  success\n",
+  fprintf(of, "    %sTRUE  success\n",
                 (_use_doxygen) ? "@retval " : "Returns: ");
-  fprintf(of, "    %sfalse failure\n",
+  fprintf(of, "    %sFALSE failure\n",
                 (_use_doxygen) ? "@retval " : "         ");
   fprintf(of, "\n");
   fprintf(of, "  */\n");
@@ -846,16 +869,16 @@ void generate_token_source(FILE *of,
 
     // Emit code for <PROJECT>_token_add()
 
-  fprintf(of, "boolean %s_token_add(%s_token *t, "
+  fprintf(of, "unsigned char %s_token_add(%s_token *t, "
               "%s_token_direction dir, "
               "%s_token *n)\n",
                 parser_name, parser_name, parser_name, parser_name);
   fprintf(of, "{\n");
   fprintf(of, "  if (!t)\n");
-  fprintf(of, "    return false;\n");
+  fprintf(of, "    return FALSE;\n");
   fprintf(of, "\n");
   fprintf(of, "  if (!n)\n");
-  fprintf(of, "    return false;\n");
+  fprintf(of, "    return FALSE;\n");
   fprintf(of, "\n");
   fprintf(of, "  switch (dir)\n");
   fprintf(of, "  {\n");
@@ -896,14 +919,14 @@ void generate_token_source(FILE *of,
                 parser_name);
   fprintf(of, "\n");
   fprintf(of, "      if (t->descendant)\n");
-  fprintf(of, "        return false;\n");
+  fprintf(of, "        return FALSE;\n");
   fprintf(of, "      t->descendant = n;\n");
   fprintf(of, "      n->ascendant = t;\n");
   fprintf(of, "\n");
   fprintf(of, "      break;\n");
   fprintf(of, "  }\n");
   fprintf(of, "\n");
-  fprintf(of, "  return true;\n");
+  fprintf(of, "  return TRUE;\n");
   fprintf(of, "}\n");
   fprintf(of, "\n");
 
@@ -1878,11 +1901,21 @@ void generate_walker_source(FILE *of,
   fprintf(of, "#include <string.h>\n");
   fprintf(of, "#include <getopt.h>\n");
   fprintf(of, "\n");
-  fprintf(of, "#include \"common.h\"\n");
+
+    // Emit code for project related header files
+
   fprintf(of, "#include \"input.h\"\n");
+
+    // Emit code for project related header files
   fprintf(of, "#include \"%s-token.h\"\n", parser_name);
   fprintf(of, "#include \"%s-token-util.h\"\n", parser_name);
   fprintf(of, "#include \"%s-parser.h\"\n", parser_name);
+  fprintf(of, "\n");
+
+    // Emit code for module constants
+
+  fprintf(of, "#define FALSE 0\n");
+  fprintf(of, "#define TRUE 1\n");
   fprintf(of, "\n");
 
     // Emit code for function declarations
@@ -1944,12 +1977,12 @@ void generate_walker_source(FILE *of,
   }
   fprintf(of, "    { 0, 0, 0, 0 }\n");
   fprintf(of, "  };\n");
-  fprintf(of, "  boolean syntax_only = false;\n");
+  fprintf(of, "  unsigned char syntax_only = FALSE;\n");
   pmi = pml;
   while (pmi)
   {
     phrase_name = fix_identifier(strdup(pmi->name));
-    fprintf(of, "  boolean walk_%s = false;\n", phrase_name);
+    fprintf(of, "  unsigned char walk_%s = FALSE;\n", phrase_name);
     free(phrase_name);
     pmi = pmi->next;
   }
@@ -1970,7 +2003,7 @@ void generate_walker_source(FILE *of,
   {
     phrase_name = fix_identifier(strdup(pmi->name));
     fprintf(of, "          case %d:\n", opt_count);
-    fprintf(of, "            walk_%s = true;\n", phrase_name);
+    fprintf(of, "            walk_%s = TRUE;\n", phrase_name);
     fprintf(of, "            break;\n");
     free(phrase_name);
     pmi = pmi->next;
@@ -1981,7 +2014,7 @@ void generate_walker_source(FILE *of,
   fprintf(of, "        }\n");
   fprintf(of, "        break;\n");
   fprintf(of, "      case 's':\n");
-  fprintf(of, "        syntax_only = true;\n");
+  fprintf(of, "        syntax_only = TRUE;\n");
   fprintf(of, "        break;\n");
   fprintf(of, "      case 'v':\n");
   fprintf(of, "        version();\n");
@@ -2772,7 +2805,7 @@ static void generate_item(FILE *of,
       else
       {
         emit_indent(of);
-        fprintf(of, "while(true)\n");
+        fprintf(of, "while(TRUE)\n");
       }
       emit_indent(of);
       fprintf(of, "{\n");
@@ -3491,20 +3524,20 @@ static void emit_phrase_comment_lines(FILE *of, char *s)
 
   /*!
      \brief Get doxygen use flag from code generator.
-     \retval boolean doxygen use flag
+     \retval unsigned char doxygen use flag
   */
 
-boolean generator_get_doxygen_flag(void)
+unsigned char generator_get_doxygen_flag(void)
 {
   return _use_doxygen;
 }
 
   /*!
      \brief Set doxygen use flag for code generator.
-     \param flag true or false
+     \param flag TRUE or FALSE
   */
 
-void generator_set_doxygen_flag(boolean flag)
+void generator_set_doxygen_flag(unsigned char flag)
 {
   _use_doxygen = flag;
 }
@@ -3662,20 +3695,20 @@ void generator_set_license(char *license)
 
   /*!
      \brief Get external usage use flag from code generator.
-     \retval boolean external usage use flag
+     \retval unsigned char external usage use flag
   */
 
-boolean generator_get_external_usage_flag(void)
+unsigned char generator_get_external_usage_flag(void)
 {
   return _use_external_usage;
 }
 
   /*!
      \brief Set external usage use flag for code generator.
-     \param flag true or false
+     \param flag TRUE or FALSE
   */
 
-void generator_set_external_usage_flag(boolean flag)
+void generator_set_external_usage_flag(unsigned char flag)
 {
   _use_external_usage = flag;
 }

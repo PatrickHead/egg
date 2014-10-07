@@ -5,22 +5,22 @@ BUILT_SOURCES = usage-include-files
 
 bin_PROGRAMS = embryo egg-walker egg-mapper
 
-lib_LTLIBRARIES = libegg-common.la libegg-parser.la
-
-LDADD = libegg-common.la libegg-parser.la
+lib_LTLIBRARIES = libegg-parser.la
 
 embryo_SOURCES = embryo.c generator.c map.c
+embryo_CFLAGS = ${AM_CFLAGS} ${GRAY_CFLAGS}
+embryo_LDADD = libegg-parser.la ${GRAY_LIBS}
 
 egg_mapper_SOURCES = egg-mapper.c map.c
+egg_mapper_CFLAGS = ${AM_CFLAGS} ${GRAY_CFLAGS}
+egg_mapper_LDADD = libegg-parser.la ${GRAY_LIBS}
 
 egg_walker_SOURCES = egg-walker.c
-
-libegg_common_la_SOURCES = callback.c input.c strapp.c mkdir_p.c
-libegg_common_la_LDFLAGS = -version-info 1:0:1
+egg_walker_CFLAGS = ${AM_CFLAGS} ${GRAY_CFLAGS}
+egg_walker_LDADD = libegg-parser.la ${GRAY_LIBS}
 
 libegg_parser_la_SOURCES = egg-parser.c egg-token.c egg-token-util.c
 libegg_parser_la_LDFLAGS = -version-info 1:0:1
-
 
 .PHONY: timestamps
 timestamps:

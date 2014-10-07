@@ -4,7 +4,7 @@
 
   @brief Source code for EGG grammar mapping utility
 
-  @timestamp Tue, 04 Feb 2014 10:07:06 +0000
+  @timestamp Tue, 07 Oct 2014 05:46:30 +0000
 
   @author Patrick Head mailto:patrickhead@gmail.com
 
@@ -33,11 +33,12 @@
 #include <string.h>
 #include <getopt.h>
 
+  // Extra library specific headers
+#include "input.h"
+
   // Project specific headers
 
 #include "config.h"
-#include "common.h"
-#include "input.h"
 #include "egg-token.h"
 #include "egg-token-util.h"
 #include "egg-parser.h"

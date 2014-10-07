@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.69])
+AC_PREREQ([2.60])
 AC_INIT([egg],[0.4.1],[pth@patrickhead.net])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_HEADERS([config.h])
@@ -11,6 +11,7 @@ LT_INIT
 
 # Checks for programs.
 AC_PROG_CC
+AM_PROG_CC_C_O
 
 # Checks for libraries.
 
@@ -25,6 +26,9 @@ AC_TYPE_MODE_T
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([memset mkdir strchr strdup strtol])
+
+# Checks for required packages
+PKG_CHECK_MODULES(GRAY, libgray >= 0.1)
 
 AC_CONFIG_FILES([
   Makefile

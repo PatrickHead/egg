@@ -31,11 +31,14 @@
 #include <string.h>
 #include <getopt.h>
 
-#include "common.h"
 #include "input.h"
+
 #include "egg-token.h"
 #include "egg-token-util.h"
 #include "egg-parser.h"
+
+#define FALSE 0
+#define TRUE 1
 
 static void usage(void);
 static void version(void);
@@ -72,8 +75,8 @@ int main(int argc, char **argv)
 
     { 0, 0, 0, 0 }
   };
-  boolean syntax_only = false;
-  boolean walk_grammar = false;
+  unsigned char syntax_only = FALSE;
+  unsigned char walk_grammar = FALSE;
   egg_token *t;
   char *input_file;
 
@@ -85,14 +88,14 @@ int main(int argc, char **argv)
         switch (long_index)
         {
           case 0:
-            walk_grammar = true;
+            walk_grammar = TRUE;
             break;
           default:
             break;
         }
         break;
       case 's':
-        syntax_only = true;
+        syntax_only = TRUE;
         break;
       case 'v':
         version();

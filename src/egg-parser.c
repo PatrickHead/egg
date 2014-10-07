@@ -64,6 +64,9 @@
 #include "egg-token.h"
 #include "egg-parser.h"
 
+#define FALSE 0
+#define TRUE 1
+
 static callback_entry _callbacks[] =
 {
   { "nul", NULL, NULL, NULL },
@@ -12838,7 +12841,7 @@ egg_token *binary_integer(void)
       dir = egg_token_after;
       t1 = t2;
       count=0;
-      while(true)
+      while(TRUE)
       {
         if (egg_token_add(t1, dir, t2 = binary_digit()))
         {
@@ -12927,7 +12930,7 @@ egg_token *octal_integer(void)
       dir = egg_token_after;
       t1 = t2;
       count=0;
-      while(true)
+      while(TRUE)
       {
         if (egg_token_add(t1, dir, t2 = octal_digit()))
         {
@@ -13016,7 +13019,7 @@ egg_token *hexadecimal_integer(void)
       dir = egg_token_after;
       t1 = t2;
       count=0;
-      while(true)
+      while(TRUE)
       {
         if (egg_token_add(t1, dir, t2 = hexadecimal_digit()))
         {
@@ -13095,7 +13098,7 @@ egg_token *decimal_integer(void)
 
   dir = egg_token_below;
   count=0;
-  while(true)
+  while(TRUE)
   {
     if (egg_token_add(t1, dir, t2 = decimal_digit()))
     {
@@ -13287,7 +13290,7 @@ egg_token *single_quoted_literal(void)
     dir = egg_token_after;
     t1 = t2;
     count=0;
-    while(true)
+    while(TRUE)
     {
       if (egg_token_add(t1, dir, t2 = single_quoted_character()))
       {
@@ -13374,7 +13377,7 @@ egg_token *quoted_literal(void)
     dir = egg_token_after;
     t1 = t2;
     count=0;
-    while(true)
+    while(TRUE)
     {
       if (egg_token_add(t1, dir, t2 = quoted_character()))
       {
@@ -13461,7 +13464,7 @@ egg_token *absolute_literal(void)
     dir = egg_token_after;
     t1 = t2;
     count=0;
-    while(true)
+    while(TRUE)
     {
       if (egg_token_add(t1, dir, t2 = space()))
       {
@@ -13479,7 +13482,7 @@ egg_token *absolute_literal(void)
         dir = egg_token_after;
         t1 = t2;
         count=0;
-        while(true)
+        while(TRUE)
         {
           if (egg_token_add(t1, dir, t2 = space()))
           {
@@ -13743,7 +13746,7 @@ egg_token *comment(void)
     dir = egg_token_after;
     t1 = t2;
     count=0;
-    while(true)
+    while(TRUE)
     {
       if (egg_token_add(t1, dir, t2 = comment_item()))
       {
@@ -13986,7 +13989,7 @@ egg_token *non_grammar_element(void)
 
   dir = egg_token_below;
   count=0;
-  while(true)
+  while(TRUE)
   {
     if (egg_token_add(t1, dir, t2 = non_grammar_item()))
     {
@@ -14067,7 +14070,7 @@ egg_token *phrase_name(void)
     dir = egg_token_after;
     t1 = t2;
     count=0;
-    while(true)
+    while(TRUE)
     {
       if (egg_token_add(t1, dir, t2 = phrase_name_character()))
       {
@@ -14663,7 +14666,7 @@ egg_token *sequence(void)
     dir = egg_token_after;
     t1 = t2;
     count=0;
-    while(true)
+    while(TRUE)
     {
       if (egg_token_add(t1, dir, t2 = sequence_continuation()))
       {
@@ -14850,7 +14853,7 @@ egg_token *definition(void)
     dir = egg_token_after;
     t1 = t2;
     count=0;
-    while(true)
+    while(TRUE)
     {
       if (egg_token_add(t1, dir, t2 = definition_continuation()))
       {
@@ -15143,7 +15146,7 @@ egg_token *grammar(void)
 
   dir = egg_token_below;
   count=0;
-  while(true)
+  while(TRUE)
   {
     if (egg_token_add(t1, dir, t2 = grammar_element()))
     {

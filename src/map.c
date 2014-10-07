@@ -3,7 +3,7 @@
 
     @brief Source code for line mapping routines.
 
-    @timestamp Mon, 06 Jan 2014 15:23:22 +0000
+    @timestamp Tue, 07 Oct 2014 05:45:40 +0000
 
     @author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -46,6 +46,11 @@
   // Module specific headers
 
 #include "map.h"
+
+  // Module constants
+
+#define FALSE 0
+#define TRUE 1
 
   // Function declarations
 
@@ -92,7 +97,7 @@ phrase_map_item *phrase_map(egg_token *g)
         {
           s = NULL;
           s = egg_token_to_string(pn->descendant, s);
-          npmi = phrase_map_list_append_item_by_name(&list, s, false);
+          npmi = phrase_map_list_append_item_by_name(&list, s, FALSE);
           if (!npmi)
           {
             free(s);
@@ -141,7 +146,7 @@ static void all_phrase_names(egg_token *t, phrase_map_item *pmi)
   {
     s = NULL;
     s = egg_token_to_string(t->descendant, s);
-    npmi = phrase_map_list_append_item_by_name(&(pmi->uses), s, true);
+    npmi = phrase_map_list_append_item_by_name(&(pmi->uses), s, TRUE);
     free(s);
     if (!npmi)
       return;
@@ -357,10 +362,10 @@ phrase_map_item *phrase_map_list_find_item_by_name(phrase_map_item *list,
   phrase_map_item *tpmi;
 
   if (!list)
-    return false;
+    return FALSE;
 
   if (!name)
-    return false;
+    return FALSE;
 
   tpmi = list;
   while (tpmi)
@@ -390,8 +395,8 @@ phrase_map_item *phrase_map_list_find_item_by_name(phrase_map_item *list,
 
      @param list address of phrase_map_item * to head of phrase map list
      @param name string containing the phrase-name of the item to find
-     @param dups_allowed boolean flag to allow/deny duplicate phrase-name in
-                         phrase map list
+     @param dups_allowed unsigned char flag to allow/deny duplicate phrase-name
+                         in phrase map list
     
      @retval "phrase_map_item *" to found item
      @retval NULL                failure
@@ -399,7 +404,7 @@ phrase_map_item *phrase_map_list_find_item_by_name(phrase_map_item *list,
 
 phrase_map_item *phrase_map_list_append_item_by_name(phrase_map_item **list,
                                                      char *name,
-                                                     boolean dups_allowed)
+                                                     unsigned char dups_allowed)
 {
   phrase_map_item *tpmi;
   phrase_map_item *npmi;

@@ -3,7 +3,7 @@
 
     @brief Source code for embryo parser generator.
 
-    @timestamp Tue, 04 Feb 2014 10:13:01 +0000
+    @timestamp Tue, 07 Oct 2014 06:11:48 +0000
 
     @author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -31,16 +31,20 @@
 #include <string.h>
 #include <getopt.h>
 
+  // Extra library specific headers
+#include "input.h"
+#include "mkdir_p.h"
+
   // Project specific headers
 
 #include "config.h"
-#include "common.h"
-#include "input.h"
 #include "egg-token.h"
 #include "egg-token-util.h"
 #include "generator.h"
-#include "mkdir_p.h"
 #include "egg-parser.h"
+
+#define FALSE 0
+#define TRUE 1
 
 static void usage(void);
 static void version(void);
@@ -97,11 +101,11 @@ int main(int argc, char **argv)
   char *input_file = NULL;
   char *fn;
   egg_token *t;
-  boolean gen_sources = false;
-  boolean gen_headers = false;
-  boolean gen_makefile = false;
-  boolean use_doxygen = false;
-  boolean use_external_usage = false;
+  unsigned char gen_sources = FALSE;
+  unsigned char gen_headers = FALSE;
+  unsigned char gen_makefile = FALSE;
+  unsigned char use_doxygen = FALSE;
+  unsigned char use_external_usage = FALSE;
   char *code_version = NULL;
   char *author = NULL;
   char *email = NULL;
@@ -132,13 +136,13 @@ int main(int argc, char **argv)
         break;
       case 1000:
         if (!strcmp(optarg, "true"))
-          use_doxygen = true;
+          use_doxygen = TRUE;
         else if (!strcmp(optarg, "on"))
-          use_doxygen = true;
+          use_doxygen = TRUE;
         else if (!strcmp(optarg, "1"))
-          use_doxygen = true;
+          use_doxygen = TRUE;
         else
-          use_doxygen = false;
+          use_doxygen = FALSE;
         break;
       case 1001:
         code_version = strdup(optarg);
@@ -157,13 +161,13 @@ int main(int argc, char **argv)
         break;
       case 1006:
         if (!strcmp(optarg, "true"))
-          use_external_usage = true;
+          use_external_usage = TRUE;
         else if (!strcmp(optarg, "on"))
-          use_external_usage = true;
+          use_external_usage = TRUE;
         else if (!strcmp(optarg, "1"))
-          use_external_usage = true;
+          use_external_usage = TRUE;
         else
-          use_external_usage = false;
+          use_external_usage = FALSE;
         break;
       case 'v':
         version();
@@ -187,11 +191,11 @@ int main(int argc, char **argv)
     generate_list = strdup("hs");
 
   if (strchr(generate_list, 's'))
-    gen_sources = true;
+    gen_sources = TRUE;
   if (strchr(generate_list, 'h'))
-    gen_headers = true;
+    gen_headers = TRUE;
   if (strchr(generate_list, 'm'))
-    gen_makefile = true;
+    gen_makefile = TRUE;
 
   if (output_type && !directory)
     directory = strdup(".");

@@ -68,8 +68,8 @@ void generate_makefile(FILE *of, char *parser_name);
 
   // Utility functions for managing settings within the generator
 
-boolean generator_get_doxygen_flag(void);
-void generator_set_doxygen_flag(boolean flag);
+unsigned char generator_get_doxygen_flag(void);
+void generator_set_doxygen_flag(unsigned char flag);
 
 char * generator_get_file_name(void);
 void generator_set_file_name(char *file_name);
@@ -92,7 +92,7 @@ void generator_set_first_year(int year);
 char * generator_get_license(void);
 void generator_set_license(char *license);
 
-boolean generator_get_external_usage_flag(void);
-void generator_set_external_usage_flag(boolean flag);
+unsigned char generator_get_external_usage_flag(void);
+void generator_set_external_usage_flag(unsigned char flag);
 
 #endif // GENERATOR_H

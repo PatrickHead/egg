@@ -44,7 +44,7 @@
 #ifndef EGG_PARSER_H
 #define EGG_PARSER_H
 
-#include "callback.h"
+#include "gray/callback.h"
 
 callback_table *egg_get_callback_table(void);
 

@@ -38,8 +38,7 @@
 #ifndef EGG_TOKEN_H
 #define EGG_TOKEN_H
 
-#include "common.h"
-#include "input.h"
+#include "gray/input.h"
 
 #include "egg-token-type.h"
 
@@ -81,7 +80,7 @@ egg_token *egg_token_new(egg_token_type type);
 
 void egg_token_free(egg_token *t);
 
-boolean egg_token_add(egg_token *t,
+unsigned char egg_token_add(egg_token *t,
   egg_token_direction dir,
   egg_token *n);
 

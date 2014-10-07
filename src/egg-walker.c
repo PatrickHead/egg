@@ -31,8 +31,7 @@
 #include <string.h>
 #include <getopt.h>
 
-#include "input.h"
-
+#include "gray/input.h"
 #include "egg-token.h"
 #include "egg-token-util.h"
 #include "egg-parser.h"

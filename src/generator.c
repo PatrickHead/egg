@@ -3,7 +3,7 @@
 
     @brief Source code for parser code generation routines for EGG grammars.
 
-    @timestamp Tue, 07 Oct 2014 06:14:59 +0000
+    @timestamp Tue, 07 Oct 2014 06:25:54 +0000
 
     @author Patrick Head   mailto:patrickhead@gmail.com
 
@@ -52,7 +52,7 @@
 #include <time.h>
 
   // Required library headers
-#include "strapp.h"
+#include "gray/strapp.h"
 
   // Project specific headers
 
@@ -417,7 +417,7 @@ void generate_parser_header(FILE *of,
 
      // Emit includes
 
-  fprintf(of, "#include \"callback.h\"\n");
+  fprintf(of, "#include \"gray/callback.h\"\n");
   fprintf(of, "\n");
 
     // Emit function declaration for utility functions
@@ -526,7 +526,7 @@ void generate_token_header(FILE *of,
 
     // Emit extra library related includes
 
-  fprintf(of, "#include \"input.h\"\n");
+  fprintf(of, "#include \"gray/input.h\"\n");
   fprintf(of, "\n");
 
     // Emit module related includes
@@ -735,7 +735,7 @@ void generate_token_source(FILE *of,
 
     // Emit code for extra library related header files
 
-  fprintf(of, "#include \"strapp.h\"\n");
+  fprintf(of, "#include \"gray/strapp.h\"\n");
   fprintf(of, "\n");
 
     // Emit code for project related header files
@@ -1904,7 +1904,7 @@ void generate_walker_source(FILE *of,
 
     // Emit code for project related header files
 
-  fprintf(of, "#include \"input.h\"\n");
+  fprintf(of, "#include \"gray/input.h\"\n");
 
     // Emit code for project related header files
   fprintf(of, "#include \"%s-token.h\"\n", parser_name);

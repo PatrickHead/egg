@@ -12,6 +12,7 @@ LT_INIT
 # Checks for programs.
 AC_PROG_CC
 AM_PROG_CC_C_O
+AM_PROG_AR
 
 # Checks for libraries.
 

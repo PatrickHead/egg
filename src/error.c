@@ -6,7 +6,7 @@
     @note Currently, this source is not implemented in any portion of the
           @b EGG/embryo system.
 
-    @timestamp Mon, 06 Jan 2014 15:21:14 +0000
+    @timestamp Fri, 09 Oct 2026 14:07:22 +0000
 
     @author Patrick Head  mailto:patrickhead@gmail.com
 

@@ -3,7 +3,7 @@
 
     @brief Source code for embryo parser generator.
 
-    @timestamp Tue, 07 Oct 2014 06:40:55 +0000
+    @timestamp Fri, 09 Oct 2026 14:07:22 +0000
 
     @author Patrick Head  mailto:patrickhead@gmail.com
 

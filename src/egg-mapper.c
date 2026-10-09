@@ -4,7 +4,7 @@
 
   @brief Source code for EGG grammar mapping utility
 
-  @timestamp Tue, 07 Oct 2014 06:40:55 +0000
+  @timestamp Fri, 09 Oct 2026 14:58:24 +0000
 
   @author Patrick Head mailto:patrickhead@gmail.com
 
@@ -586,15 +586,15 @@ static void emit_item(FILE *of, egg_token *item)
 static long convert_integer(egg_token *integer)
 {
   char *s;
-  long i;
+  long i = 0L;
 
     // Sanity check parameters
 
   if (!integer)
-    return;
+    return 0L;
 
   if (integer->type != egg_token_type_integer)
-    return;
+    return 0L;
 
     // Grab integer defining string from the integer token
 

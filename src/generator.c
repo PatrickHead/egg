@@ -3,7 +3,7 @@
 
     @brief Source code for parser code generation routines for EGG grammars.
 
-    @timestamp Fri, 09 Oct 2026 14:07:22 +0000
+    @timestamp Fri, 09 Oct 2026 15:35:29 +0000
 
     @author Patrick Head   mailto:patrickhead@gmail.com
 
@@ -2299,11 +2299,14 @@ void generate_makefile(FILE *of,
   fprintf(of, "endif\n");
   fprintf(of, "\n");
 
-  fprintf(of, "all: %s-walker\n", parser_name);
+  fprintf(of, "all: obj %s-walker\n", parser_name);
   fprintf(of, "\n");
 
-  fprintf(of, "%s-walker: bin/%s-walker\n",
-                parser_name, parser_name);
+  fprintf(of, "obj:\n");
+  fprintf(of, "\t@mkdir -p obj\n");
+  fprintf(of, "\n");
+
+  fprintf(of, "%s-walker: bin/%s-walker\n", parser_name, parser_name);
   fprintf(of, "\n");
 
   fprintf(of, "bin/%s-walker: obj/%s-walker.o \\\n",
@@ -2321,27 +2324,27 @@ void generate_makefile(FILE *of,
   fprintf(of, "\n");
   fprintf(of, "lib/lib%s-parser.so.1.0: obj/%s-parser.o \\\n",
                 parser_name, parser_name);
-  fprintf(of, "    obj/%s-token.o \\\n", parser_name);
-  fprintf(of, "    obj/%s-token-util.o\n", parser_name);
-  fprintf(of, "  $(CC) $(COPTS) --shared -Wl,-soname,lib%s-parser.so.1 \\\n",
+  fprintf(of, "\t\tobj/%s-token.o \\\n", parser_name);
+  fprintf(of, "\t\tobj/%s-token-util.o\n", parser_name);
+  fprintf(of, "\t$(CC) $(COPTS) --shared -Wl,-soname,lib%s-parser.so.1 \\\n",
                 parser_name);
-  fprintf(of, "    -o lib/lib%s-parser.so.1.0 \\\n", parser_name);
-  fprintf(of, "    obj/%s-parser.o \\\n", parser_name);
-  fprintf(of, "    obj/%s-token.o \\\n", parser_name);
-  fprintf(of, "    obj/%s-token-util.o\n", parser_name);
-  fprintf(of, "  @(cd lib; ln -sf lib%s-parser.so.1.0 lib%s-parser.so.1)\n",
+  fprintf(of, "\t\t-o lib/lib%s-parser.so.1.0 \\\n", parser_name);
+  fprintf(of, "\t\tobj/%s-parser.o \\\n", parser_name);
+  fprintf(of, "\t\tobj/%s-token.o \\\n", parser_name);
+  fprintf(of, "\t\tobj/%s-token-util.o\n", parser_name);
+  fprintf(of, "\t@(cd lib; ln -sf lib%s-parser.so.1.0 lib%s-parser.so.1)\n",
                 parser_name, parser_name);
-  fprintf(of, "  @(cd lib; ln -sf lib%s-parser.so.1 lib%s-parser.so)\n",
+  fprintf(of, "\t@(cd lib; ln -sf lib%s-parser.so.1 lib%s-parser.so)\n",
                 parser_name, parser_name);
   fprintf(of, "\n");
   fprintf(of, "lib/lib%s-parser.a: obj/%s-parser.o \\\n",
                 parser_name, parser_name);
-  fprintf(of, "    obj/%s-token.o \\\n", parser_name);
-  fprintf(of, "    obj/%s-token-util.o\n", parser_name);
-  fprintf(of, "  ar crD lib/lib%s-parser.a \\\n", parser_name);
-  fprintf(of, "    obj/%s-parser.o \\\n", parser_name);
-  fprintf(of, "    obj/%s-token.o \\\n", parser_name);
-  fprintf(of, "    obj/%s-token-util.o\n", parser_name);
+  fprintf(of, "\t\tobj/%s-token.o \\\n", parser_name);
+  fprintf(of, "\t\tobj/%s-token-util.o\n", parser_name);
+  fprintf(of, "\tar crD lib/lib%s-parser.a \\\n", parser_name);
+  fprintf(of, "\t\tobj/%s-parser.o \\\n", parser_name);
+  fprintf(of, "\t\tobj/%s-token.o \\\n", parser_name);
+  fprintf(of, "\t\tobj/%s-token-util.o\n", parser_name);
   fprintf(of, "\n");
 
   fprintf(of, "obj/%s-walker.o: src/%s-walker.c \\\n",

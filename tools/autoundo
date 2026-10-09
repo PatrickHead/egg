@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
 
+make distclean
 find . -name 'Makefile.in' -exec rm -f {} \;
 rm -rf autom4te.cache
 rm -f config.h.in

@@ -3,7 +3,7 @@
 
     @brief Source code for line mapping routines.
 
-    @timestamp Fri, 09 Oct 2026 14:07:22 +0000
+    @timestamp Fri, 09 Oct 2026 15:27:46 +0000
 
     @author Patrick Head  mailto:patrickhead@gmail.com
 
@@ -569,8 +569,11 @@ void phrase_map_list_isolate_top_level_phrases(phrase_map_item **list)
   while (ppmi)
   {
     if (ppmi->name[0] == ' ')
+    {
       phrase_map_item_delete(list, ppmi);
-    ppmi = ppmi->next;
+      ppmi = *list;
+    }
+    else ppmi = ppmi->next;
   }
 
   return;

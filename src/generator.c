@@ -3,7 +3,7 @@
 
     @brief Source code for parser code generation routines for EGG grammars.
 
-    @timestamp Fri, 09 Oct 2026 15:35:29 +0000
+    @timestamp Fri, 09 Oct 2026 18:00:31 +0000
 
     @author Patrick Head   mailto:patrickhead@gmail.com
 
@@ -2536,7 +2536,10 @@ static void generate_phrase(FILE *of,
       fprintf(of, "  %s_token *nt, *t1, *t2;\n", parser_name);
       fprintf(of, "  int count;\n");
       fprintf(of, "  %s_token_direction dir;\n", parser_name);
+      if (egg_token_has_literal(pn))
+        fprintf(of, "  char *s;\n");
       fprintf(of, "\n");
+
       fprintf(of, "  callback_by_index(&_cbt,\n"
                   "                    %d,\n"
                   "                    entry,\n"

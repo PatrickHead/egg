@@ -38,6 +38,8 @@
 #ifndef EGG_TOKEN_H
 #define EGG_TOKEN_H
 
+#include <stdbool.h>
+
 #include "gray/input.h"
 
 #include "egg-token-type.h"
@@ -106,6 +108,8 @@ void egg_token_set_next(egg_token *t, egg_token *n);
 egg_token *egg_token_find(egg_token *t, egg_token_type type);
 
 char *egg_token_to_string(egg_token *t, char *s);
+
+bool egg_token_has_literal(egg_token *t);
 
 #endif // EGG_TOKEN_H
 

@@ -132,8 +132,8 @@ unsigned char egg_token_add(egg_token *t, egg_token_direction dir, egg_token *n)
       n->ascendant = t->ascendant;
 
         // Fix ascendant's descendant pointer, if it is t.
-        // We always want the ascendant's descendent pointer to point to
-        //   the beginning of the list of descendents.
+        // We always want the ascendant's descendant pointer to point to
+        //   the beginning of the list of descendants.
 
       if (t->ascendant)
         if (t->ascendant->descendant == t)
@@ -459,5 +459,27 @@ char *egg_token_to_string(egg_token *t, char *s)
   s = egg_token_to_string(t->next, s);
 
   return s;
+}
+
+  /*!
+
+    @brief Finds any literal token used by a token
+
+    @param t existing egg_token *
+
+    @retval "bool" true if a child is a literal token, otherwise false
+
+  */
+
+bool egg_token_has_literal(egg_token *t)
+{
+  if (!t) return false;
+
+  if (egg_token_find(t, egg_token_type_single_quoted_literal))
+    return true;
+  else if (egg_token_find(t, egg_token_type_quoted_literal))
+    return true;
+
+  return false;
 }
 
